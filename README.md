@@ -1,8 +1,8 @@
-# MOT Manga Store - Website Bán Manga
+# MOT Store - Website Bán Manga
 
 ## 1. Giới thiệu dự án
 
-**MOT Manga Store** là website bán manga được xây dựng phục vụ bài tập lớn môn Công nghệ Web.  
+**MOT Store** là website bán manga được xây dựng phục vụ bài tập lớn môn Công nghệ Web.  
 Hệ thống mô phỏng quy trình mua hàng trực tuyến gồm: xem sản phẩm, tìm kiếm, thêm vào giỏ hàng, thanh toán, xuất hóa đơn và quản lý dữ liệu thông qua trang quản trị dành cho admin.
 
 Dự án được xây dựng theo mô hình **Frontend + Backend + Database**, trong đó frontend sử dụng HTML/CSS/JavaScript, backend sử dụng Node.js và Express, database sử dụng SQLite.
