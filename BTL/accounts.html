@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang cá nhân - Quản lý tài khoản</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth-carousel.css">
+    <link rel="stylesheet" href="styles-cart.css">
+    <link rel="stylesheet" href="accounts.css">
+</head>
+<body>
+    <!-- TOP HEADER BANNER -->
+    <div class="top-header-banner">
+        <img src="assets/images/banner.jpg" alt="Banner Sale">
+    </div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="container nav">
+            <!-- LOGO -->
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/images/logo.png" alt="Logo">
+                </a>
+            </div>
+
+            <!-- MENU -->
+            <nav class="menu">
+                <a href="index.html">TRANG CHỦ</a>
+                <div class="dropdown-wrapper">
+                    <button class="dropdown-btn">
+                        SẢN PHẨM
+                    </button>
+                    <ul class="dropdown-menu">
+                        <p class="dropdown-title">DANH MỤC SẢN PHẨM</p>
+                        <li><a href="#">Văn học nước ngoài</a></li>
+                        <li><a href="#">Văn chương kinh điển</a></li>
+                        <li><a href="#">Việt Nam đương đại</a></li>
+                        <li><a href="#">Văn học tiên chiến</a></li>
+                        <li><a href="#">Sách thiếu nhi</a></li>
+                        <li><a href="#">Truyện tranh</a></li>
+                    </ul>
+                </div>
+                <a href="blog.html">BLOG</a>
+                <a href="contact.html">LIÊN HỆ</a>
+            </nav>
+
+            <!-- RIGHT -->
+            <div class="header-right">
+                <!-- SEARCH -->
+                <div class="search-box">
+                    <input type="text" placeholder="Search">
+                    <button class="search-btn">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+
+                <div class="icons">
+                    <i class="fa-solid fa-bell icon"></i>
+                    <div class="cart-box">
+                        <i class="fa-solid fa-cart-shopping icon"></i>
+                        <span class="badge">0</span>
+                    </div>
+                    <div class="user-circle">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                </div>
+
+                <button class="btn-login" onclick="openAuth()">Login</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="user-profile-dashboard">
+        <div class="profile-dashboard-container">
+            
+            <!-- SIDEBAR TRÁI -->
+            <aside class="profile-sidebar">
+                <div class="avatar-section">
+                    <div class="avatar-placeholder">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <span class="user-badge">Thành viên</span>
+                </div>
+
+                <nav class="sidebar-menu">
+                    <!-- Menu Thông tin tài khoản (có dropdown) -->
+                    <div class="menu-item-group" id="accountGroup">
+                        <div class="menu-item-header" id="accountGroupHeader">
+                            <span class="menu-label">
+                                <i class="fa-regular fa-user"></i>Thông tin tài khoản
+                            </span>
+                            <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                        </div>
+                        <div class="submenu" id="accountSubmenu">
+                            <a href="#" class="submenu-item" data-target="form-ho-so">Hồ sơ cá nhân</a>
+                            <a href="#" class="submenu-item" data-target="form-dia-chi">Địa chỉ</a>
+                            <a href="#" class="submenu-item" data-target="form-doi-mat-khau">Đổi mật khẩu</a>
+                        </div>
+                    </div>
+
+                    <!-- Menu Đơn hàng -->
+                    <a href="#" class="menu-item" data-target="form-don-hang">
+                        <span class="menu-label">
+                            <i class="fa-solid fa-list-check"></i>Đơn hàng của tôi
+                        </span>
+                    </a>
+
+                    <!-- Menu Thông báo -->
+                    <a href="#" class="menu-item" data-target="form-thong-bao">
+                        <span class="menu-label">
+                            <i class="fa-regular fa-bell"></i>Thông báo
+                        </span>
+                    </a>
+
+                    <!-- Menu Voucher -->
+                    <a href="#" class="menu-item" data-target="form-voucher">
+                        <span class="menu-label">
+                            <i class="fa-solid fa-ticket"></i>Voucher
+                        </span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- MAIN CONTENT PHẢI -->
+            <main class="profile-main-content">
+                
+                <!-- TAB 1: HỒ SƠ CÁ NHÂN -->
+                <div id="form-ho-so" class="tab-content active">
+                    <h2 class="content-title">Hồ sơ cá nhân</h2>
+                    <form class="profile-form" onsubmit="handleFormSubmit(event)">
+                        <div class="form-group">
+                            <label class="form-label">Họ <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Nhập họ" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Tên <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Nhập tên" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Số điện thoại</label>
+                            <div class="input-wrapper input-with-action">
+                                <input type="text" placeholder="Nhập số điện thoại">
+                                <a href="#" class="action-link">Thay đổi</a>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <div class="input-wrapper input-with-action">
+                                <input type="email" placeholder="Nhập email">
+                                <a href="#" class="action-link">Thay đổi</a>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Giới tính</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="gender" value="nam">
+                                    <span class="custom-radio"></span> Nam
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="gender" value="nu">
+                                    <span class="custom-radio"></span> Nữ
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit-profile">LƯU THAY ĐỔI</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- TAB 2: ĐỊA CHỈ -->
+                <div id="form-dia-chi" class="tab-content">
+                    <h2 class="content-title">Thêm địa chỉ mới</h2>
+                    <form class="profile-form" onsubmit="handleFormSubmit(event)">
+                        <div class="form-group">
+                            <label class="form-label">Họ<span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Nhập họ">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Tên<span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Nhập tên">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Số điện thoại<span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="tel" placeholder="Nhập số điện thoại">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Quốc gia<span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <select class="custom-select">
+                                    <option value="vn">Việt Nam</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Tỉnh/Thành phố<span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <select class="custom-select">
+                                    <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                                    <option value="hn">Hà Nội</option>
+                                    <option value="hcm">TP. Hồ Chí Minh</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Quận/Huyện<span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <select class="custom-select">
+                                    <option value="">-- Chọn Quận/Huyện --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Xã/Phường<span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <select class="custom-select">
+                                    <option value="">-- Chọn Xã/Phường --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Ngõ, Số<span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Nhập số nhà, tên đường...">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Mã bưu điện</label>
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Ghi chú, ngõ cụt hoặc chung cư...">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit-profile">LƯU THAY ĐỔI</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- TAB 3: ĐỔI MẬT KHẨU -->
+                <div id="form-doi-mat-khau" class="tab-content">
+                    <h2 class="content-title">Đổi mật khẩu</h2>
+                    <form class="profile-form" onsubmit="handleFormSubmit(event)">
+                        <div class="form-group">
+                            <label class="form-label">Mật khẩu hiện tại<span class="required">*</span></label>
+                            <div class="input-wrapper password-container">
+                                <input type="password" placeholder="Nhập mật khẩu hiện tại">
+                                <i class="fa-regular fa-eye toggle-password"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Mật khẩu mới<span class="required">*</span></label>
+                            <div class="input-wrapper password-container">
+                                <input type="password" placeholder="Nhập mật khẩu mới">
+                                <i class="fa-regular fa-eye toggle-password"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Nhập lại mật khẩu mới<span class="required">*</span></label>
+                            <div class="input-wrapper password-container">
+                                <input type="password" placeholder="Nhập lại mật khẩu mới">
+                                <i class="fa-regular fa-eye toggle-password"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit-profile">LƯU THAY ĐỔI</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- TAB 4: ĐƠN HÀNG CỦA TÔI -->
+                <div id="form-don-hang" class="tab-content">
+                    <div class="order-tabs">
+                        <div class="tab-item active" data-filter="all">Tất cả</div>
+                        <div class="tab-item" data-filter="pending">Chờ lấy hàng</div>
+                        <div class="tab-item" data-filter="shipping">Chờ giao hàng</div>
+                        <div class="tab-item" data-filter="delivered">Đã giao</div>
+                        <div class="tab-item" data-filter="return">Trả hàng</div>
+                    </div>
+
+                    <div id="userOrdersList" class="user-orders-list">
+                        <div class="order-card loading-order">Đang tải đơn hàng...</div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: THÔNG BÁO -->
+                <div id="form-thong-bao" class="tab-content">
+                    <div class="notification-tabs">
+                        <div class="tab-item active" data-filter="all">Tất cả</div>
+                        <div class="tab-item" data-filter="Đơn hàng">Đơn hàng</div>
+                        <div class="tab-item" data-filter="Sự kiện">Sự kiện</div>
+                        <div class="tab-item" data-filter="Mã giảm giá">Mã giảm giá</div>
+                        <div class="tab-item" data-filter="Xác nhận">Xác nhận</div>
+                    </div>
+
+                    <div class="notification-card">
+                        <div class="notification-item" data-category="Sự kiện">
+                            <h4 class="notice-title">Cập nhật email ngay để nhận quà từ Mot.vn!</h4>
+                            <p class="notice-body">
+                                Bạn vừa đăng kí tài khoản tại Mọt? Hãy cập nhật email ngay để nhận được các thông báo quà tặng dành cho khách hàng mới! Click ngay vào đây để cập nhật. Đừng quên tiếp tục tham gia mua sắm để nhận được những ưu đãi dành riêng cho khách hàng mới tại Fahasa.com.
+                            </p>
+                        </div>
+
+                        <div class="notification-item" data-category="Đơn hàng">
+                            <h4 class="notice-title">Đặt hàng thành công!!</h4>
+                            <p class="notice-body">
+                                Bạn vừa đặt hàng thành công đơn hàng có mã số 2947384NDH23, bưu kiện sẽ sớm được gửi đi hãy chú ý thông báo và kiểm tra lại thông tin đặt hàng.<br>Cảm ơn bạn đã tin tưởng và ủng hộ Mọt, chúc bạn có một ngày tốt lành, chúng tôi sẽ gửi đi sớm nhất có thể.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 6: VOUCHER -->
+                <div id="form-voucher" class="tab-content">
+                    <div class="voucher-tabs">
+                        <div class="tab-item active" data-filter="my-vouchers">Voucher của tôi</div>
+                        <div class="tab-item" data-filter="partner-vouchers">Voucher đối tác</div>
+                    </div>
+
+                    <div class="voucher-grid" id="userVoucherGrid">
+                        <div class="voucher-card">
+                            <div class="voucher-left">
+                                <i class="fa-solid fa-ticket"></i>
+                            </div>
+                            <div class="voucher-right">
+                                <h3 class="voucher-title">FREESHIP 25K THÀNH VIÊN MỚI</h3>
+                                <p class="voucher-desc">Đơn hàng từ 100K - Giảm 25K phí ship áp dụng đơn hàng từ 200K dành cho thành viên mới</p>
+                                <div class="voucher-footer">
+                                    <div class="code-box">
+                                        <span class="code-text">NEWMBS147KFHA</span>
+                                        <span class="expiry">HSD: 25/05/2026</span>
+                                    </div>
+                                    <button class="btn-copy" data-code="NEWMBS147KFHA">Copy mã</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="voucher-card">
+                            <div class="voucher-left">
+                                <i class="fa-solid fa-ticket"></i>
+                            </div>
+                            <div class="voucher-right">
+                                <h3 class="voucher-title">MÃ GIẢM 10K 20K TOÀN SÀN</h3>
+                                <p class="voucher-desc">Mã giảm giá 10K cho đơn hàng từ 150K / Mã giảm giá 20K cho đơn hàng từ 300K</p>
+                                <div class="voucher-footer">
+                                    <div class="code-box">
+                                        <span class="code-text">FHS10KT05</span>
+                                        <span class="expiry">HSD: 25/05/2026</span>
+                                    </div>
+                                    <button class="btn-copy" data-code="FHS10KT05">Copy mã</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="voucher-card">
+                            <div class="voucher-left">
+                                <i class="fa-solid fa-ticket"></i>
+                            </div>
+                            <div class="voucher-right">
+                                <h3 class="voucher-title">FREESHIP 35K THÀNH VIÊN MỚI</h3>
+                                <p class="voucher-desc">Đơn hàng từ 150K - Giảm 25K phí ship áp dụng đơn hàng từ 200K dành cho thành viên mới</p>
+                                <div class="voucher-footer">
+                                    <div class="code-box">
+                                        <span class="code-text">NEWMBS147KFHA</span>
+                                        <span class="expiry">HSD: 25/05/2026</span>
+                                    </div>
+                                    <button class="btn-copy" data-code="NEWMBS147KFHA">Copy mã</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="voucher-card">
+                            <div class="voucher-left">
+                                <i class="fa-solid fa-ticket"></i>
+                            </div>
+                            <div class="voucher-right">
+                                <h3 class="voucher-title">ƯU ĐÃI ĐỘC QUYỀN MỌT</h3>
+                                <p class="voucher-desc">Không bao gồm giá trị của các sản phẩm sau Manga, Ngoại Văn - Giảm 50K Cho ĐH từ 300K</p>
+                                <div class="voucher-footer">
+                                    <div class="code-box">
+                                        <span class="code-text">NEWMBS147KFHA</span>
+                                        <span class="expiry">HSD: 25/05/2026</span>
+                                    </div>
+                                    <button class="btn-copy" data-code="NEWMBS147KFHA">Copy mã</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <footer class="account-mini-footer clean-account-footer">
+        <div>© 2026 MOT Manga Store</div>
+        <div>Hỗ trợ khách hàng: mot@gmail.com.vn</div>
+    </footer>
+
+    <script src="accounts.js"></script>
+    <script src="data.js"></script>
+    <script src="auth-carousel.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

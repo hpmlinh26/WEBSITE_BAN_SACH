@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Backend API - MOT.vn</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f5f5; color: #222; }
+    .container { max-width: 1100px; margin: 32px auto; padding: 24px; background: #fff; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    h1 { margin-top: 0; color: #c9192e; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+    button { border: 0; background: #c9192e; color: #fff; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; }
+    button.secondary { background: #333; }
+    .status { padding: 12px; border-radius: 8px; background: #f0f0f0; margin-bottom: 16px; }
+    pre { white-space: pre-wrap; background: #151515; color: #e8e8e8; padding: 16px; border-radius: 12px; overflow: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    th, td { border-bottom: 1px solid #eee; padding: 10px; text-align: left; }
+    th { background: #fafafa; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Test Backend API - MOT.vn</h1>
+    <p>Trang này dùng để kiểm tra nhanh Express + SQLite backend. Hãy mở bằng <b>http://localhost:3000/api-test.html</b>.</p>
+    <div class="actions">
+      <button onclick="checkHealth()">Kiểm tra backend</button>
+      <button onclick="loadProducts()">Load sản phẩm</button>
+      <button onclick="createDemoOrder()">Tạo đơn demo</button>
+      <button class="secondary" onclick="location.href='index.html'">Về trang chủ</button>
+      <button class="secondary" onclick="location.href='products-manager.html'">Quản lý sản phẩm</button>
+      <button class="secondary" onclick="location.href='orders-manager.html'">Quản lý đơn hàng</button>
+    </div>
+    <div id="status" class="status">Chưa kiểm tra.</div>
+    <div id="content"></div>
+    <pre id="raw"></pre>
+  </div>
+
+  <script>
+    const statusBox = document.getElementById('status');
+    const content = document.getElementById('content');
+    const raw = document.getElementById('raw');
+
+    async function request(path, options = {}) {
+      const res = await fetch('/api' + path, {
+        headers: { 'Content-Type': 'application/json' },
+        ...options
+      });
+      const data = await res.json();
+      raw.textContent = JSON.stringify(data, null, 2);
+      if (!res.ok) throw new Error(data.message || 'API error');
+      return data;
+    }
+
+    async function checkHealth() {
+      try {
+        const data = await request('/health');
+        statusBox.textContent = data.message + ' - ' + data.time;
+      } catch (err) {
+        statusBox.textContent = 'Backend lỗi: ' + err.message;
+      }
+    }
+
+    async function loadProducts() {
+      try {
+        const products = await request('/products');
+        statusBox.textContent = `Đã load ${products.length} sản phẩm.`;
+        content.innerHTML = `<table>
+          <thead><tr><th>ID</th><th>Tên sách</th><th>Tác giả</th><th>Giá</th><th>Danh mục</th></tr></thead>
+          <tbody>${products.map(p => `<tr><td>${p.id}</td><td>${p.name}</td><td>${p.author || ''}</td><td>${Number(p.price).toLocaleString('vi-VN')}đ</td><td>${p.categoryName || p.category || ''}</td></tr>`).join('')}</tbody>
+        </table>`;
+      } catch (err) {
+        statusBox.textContent = 'Load sản phẩm lỗi: ' + err.message;
+      }
+    }
+
+    async function createDemoOrder() {
+      try {
+        const order = await request('/orders', {
+          method: 'POST',
+          body: JSON.stringify({
+            customerName: 'Khách Test Backend',
+            customerPhone: '0900000000',
+            shippingAddress: 'Hà Nội',
+            paymentMethod: 'cod',
+            items: [{ productId: 1, quantity: 1 }, { productId: 2, quantity: 2 }]
+          })
+        });
+        statusBox.textContent = `Đã tạo đơn hàng #${order.id}, tổng tiền ${Number(order.total).toLocaleString('vi-VN')}đ.`;
+      } catch (err) {
+        statusBox.textContent = 'Tạo đơn lỗi: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>

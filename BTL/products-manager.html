@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Quản lý sản phẩm</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-products-page">
+  <div class="admin-container">
+    <aside class="admin-sidebar">
+      <div class="sidebar-header"><h2>MOT Admin</h2><p>Quản trị manga</p></div>
+            <nav class="sidebar-nav">
+        <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Về trang chủ</a>
+        <a href="products-manager.html" class="nav-item active"><i class="fa-solid fa-book-open"></i> Quản lý sách & danh mục</a>
+        <a href="accounts-manager.html" class="nav-item "><i class="fa-solid fa-users"></i> Quản lý tài khoản</a>
+        <a href="orders-manager.html" class="nav-item "><i class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
+        <a href="vouchers-manager.html" class="nav-item "><i class="fa-solid fa-ticket"></i> Quản lý voucher</a>
+        <a href="orders-manager.html#feedbackAdminSection" class="nav-item "><i class="fa-solid fa-envelope-open-text"></i> Thư phản hồi</a>
+      </nav>
+
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <div><h1>Quản lý sản phẩm</h1><p>Admin có thể thêm danh mục, tên danh mục, ảnh bìa danh mục và sản phẩm sẽ đồng bộ theo danh mục.</p></div>
+        <div class="admin-actions"><button class="btn-add" onclick="openAddCategory()"><i class="fa-solid fa-tag"></i> Thêm danh mục</button><button class="btn-add" onclick="openAddProduct()"><i class="fa-solid fa-plus"></i> Thêm sản phẩm</button></div>
+      </div>
+
+      <section class="admin-section">
+        <h2>Danh mục sản phẩm</h2>
+        <div id="categoriesList" class="category-admin-grid"></div>
+      </section>
+
+      <section class="admin-section">
+        <h2>Danh sách sản phẩm</h2>
+        <table class="admin-table">
+          <thead><tr><th>ID</th><th>Ảnh</th><th>Tên sản phẩm</th><th>Tác giả</th><th>Giá</th><th>Danh mục</th><th>Hành động</th></tr></thead>
+          <tbody id="productsList"></tbody>
+        </table>
+      </section>
+    <footer class="admin-footer-minimal">© 2026 MOT Manga Store Admin</footer>
+    </main>
+  </div>
+
+  <div id="productModal" class="modal" style="display:none">
+    <div class="modal-content wide-modal">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle">Thêm Manga</h2>
+      <form onsubmit="handleSaveProduct(event)">
+        <input type="hidden" id="productId">
+        <div class="form-grid">
+          <div class="form-group"><label>Tên sản phẩm</label><input type="text" id="productName" required></div>
+          <div class="form-group"><label>Tác giả</label><input type="text" id="productAuthor" required></div>
+          <div class="form-group"><label>Giá bán</label><input type="number" id="productPrice" required></div>
+          <div class="form-group"><label>Giá gốc</label><input type="number" id="productOriginalPrice" required></div>
+          <div class="form-group"><label>Giảm giá (%)</label><input type="number" id="productDiscount" value="20"></div>
+          <div class="form-group"><label>Danh mục</label><select id="productCategory" required></select></div>
+          <div class="form-group full"><label>Ảnh bìa / URL / tên file ảnh</label><input type="text" id="productImage" placeholder="VD: assets/products/sach-38.jpg hoặc sach-38.jpg" required></div>
+          <div class="form-group full"><label>Mô tả</label><textarea id="productDescription" rows="3"></textarea></div>
+        </div>
+        <button type="submit" class="btn-save">Lưu sản phẩm</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="categoryModal" class="modal" style="display:none">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="categoryModalTitle">Thêm danh mục</h2>
+      <form onsubmit="handleSaveCategory(event)">
+        <input type="hidden" id="categoryId">
+        <div class="form-group"><label>Tên danh mục</label><input type="text" id="categoryName" placeholder="VD: Manga Shounen" required></div>
+        <div class="form-group"><label>Slug</label><input type="text" id="categorySlug" placeholder="Tự sinh nếu bỏ trống"></div>
+        <div class="form-group"><label>Ảnh bìa danh mục</label><input type="text" id="categoryImage" placeholder="VD: assets/products/sach-38.jpg hoặc sach-38.jpg" required></div>
+        <button type="submit" class="btn-save">Lưu danh mục</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

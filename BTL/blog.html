@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Manga</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="auth-carousel.css">
+</head>
+<body class="blog-page">
+<div class="top-header-banner"><img src="assets/images/banner.jpg" alt="Banner Sale"></div>
+<header class="header">
+  <div class="container nav">
+    <div class="logo"><a href="index.html"><img src="assets/images/logo.png" alt="MOT Manga Store"></a></div>
+    <nav class="menu">
+      <a href="index.html">TRANG CHỦ</a>
+      <div class="dropdown-wrapper">
+        <button class="dropdown-btn" type="button">SẢN PHẨM</button>
+        <ul class="dropdown-menu"><p class="dropdown-title">DANH MỤC MANGA</p></ul>
+      </div>
+      <a href="blog.html">BLOG</a>
+      <a href="contact.html">LIÊN HỆ</a>
+    </nav>
+    <div class="header-right">
+      <div class="search-box">
+        <input type="text" placeholder="Tìm kiếm manga...">
+        <button class="search-btn" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+      <div class="icons">
+        <i class="fa-solid fa-bell icon" title="Thông báo"></i>
+        <div class="cart-box" title="Giỏ hàng"><i class="fa-solid fa-cart-shopping icon"></i><span class="badge">0</span></div>
+        <div class="user-circle" title="Tài khoản"><i class="fa-solid fa-user"></i></div>
+      </div>
+      <button class="btn-login" type="button" onclick="openAuth()">Login</button>
+    </div>
+  </div>
+</header>
+<main class="blog-page-main"><section class="page-hero"><h1>Blog Manga</h1><p>Tin tức, review và gợi ý manga.</p></section><section class="blog-layout"><div class="blog-grid"><article class="blog-card" onclick="alert('Bài viết demo: Top manga đáng đọc #1')"><img src="assets/images/blog.png" alt="Blog manga"><h3>Top manga đáng đọc #1</h3><p>Gợi ý các bộ manga đang được độc giả yêu thích tại MOT Manga Store.</p><span>27/05/2026</span></article><article class="blog-card" onclick="alert('Bài viết demo: Top manga đáng đọc #2')"><img src="assets/images/blog.png" alt="Blog manga"><h3>Top manga đáng đọc #2</h3><p>Gợi ý các bộ manga đang được độc giả yêu thích tại MOT Manga Store.</p><span>27/05/2026</span></article><article class="blog-card" onclick="alert('Bài viết demo: Top manga đáng đọc #3')"><img src="assets/images/blog.png" alt="Blog manga"><h3>Top manga đáng đọc #3</h3><p>Gợi ý các bộ manga đang được độc giả yêu thích tại MOT Manga Store.</p><span>27/05/2026</span></article><article class="blog-card" onclick="alert('Bài viết demo: Top manga đáng đọc #4')"><img src="assets/images/blog.png" alt="Blog manga"><h3>Top manga đáng đọc #4</h3><p>Gợi ý các bộ manga đang được độc giả yêu thích tại MOT Manga Store.</p><span>27/05/2026</span></article><article class="blog-card" onclick="alert('Bài viết demo: Top manga đáng đọc #5')"><img src="assets/images/blog.png" alt="Blog manga"><h3>Top manga đáng đọc #5</h3><p>Gợi ý các bộ manga đang được độc giả yêu thích tại MOT Manga Store.</p><span>27/05/2026</span></article><article class="blog-card" onclick="alert('Bài viết demo: Top manga đáng đọc #6')"><img src="assets/images/blog.png" alt="Blog manga"><h3>Top manga đáng đọc #6</h3><p>Gợi ý các bộ manga đang được độc giả yêu thích tại MOT Manga Store.</p><span>27/05/2026</span></article><article class="blog-card" onclick="alert('Bài viết demo: Top manga đáng đọc #7')"><img src="assets/images/blog.png" alt="Blog manga"><h3>Top manga đáng đọc #7</h3><p>Gợi ý các bộ manga đang được độc giả yêu thích tại MOT Manga Store.</p><span>27/05/2026</span></article><article class="blog-card" onclick="alert('Bài viết demo: Top manga đáng đọc #8')"><img src="assets/images/blog.png" alt="Blog manga"><h3>Top manga đáng đọc #8</h3><p>Gợi ý các bộ manga đang được độc giả yêu thích tại MOT Manga Store.</p><span>27/05/2026</span></article><article class="blog-card" onclick="alert('Bài viết demo: Top manga đáng đọc #9')"><img src="assets/images/blog.png" alt="Blog manga"><h3>Top manga đáng đọc #9</h3><p>Gợi ý các bộ manga đang được độc giả yêu thích tại MOT Manga Store.</p><span>27/05/2026</span></article></div><aside class="blog-sidebar"><h3>Tìm kiếm tin tức</h3><div class="search-box sidebar-search"><input placeholder="Nhập từ khóa"><button class="search-btn" type="button"><i class="fa-solid fa-magnifying-glass"></i></button></div><h3>Bài viết xem nhiều</h3><a href="blog.html">Manga hot trong tuần</a><a href="blog.html">Cách chọn manga theo thể loại</a><a href="blog.html">Top manga cho người mới đọc</a></aside></section></main>
+<section class="newsletter">
+  <i class="fa-solid fa-envelope"></i>
+  <strong>Đăng kí nhận bản tin</strong>
+  <input type="email" placeholder="Nhập địa chỉ email">
+  <button type="button" onclick="alert('Đăng ký nhận tin thành công!')">Đăng ký</button>
+</section>
+<footer class="footer" id="contact">
+  <div class="footer-content">
+    <div class="footer-col footer-brand">
+      <img src="assets/images/logo.png" alt="MOT.vn">
+      <p>Phòng B706, Tầng 7, Tòa A, Trường Đại học Thăng Long, Hà Nội.</p>
+      <p>MOT Manga Store nhận đặt hàng trực tuyến và giao hàng tận nơi.</p>
+    </div>
+    <div class="footer-col"><h3>DỊCH VỤ</h3><a href="products.html">Sản phẩm</a><a href="cart.html">Giỏ hàng</a><a href="blog.html">Blog</a></div>
+    <div class="footer-col"><h3>HỖ TRỢ</h3><a href="contact.html">Liên hệ</a><a href="contact.html">Chính sách vận chuyển</a><a href="contact.html">Đổi trả</a></div>
+    <div class="footer-col"><h3>TÀI KHOẢN</h3><a href="javascript:void(0)" onclick="openAuth();return false;">Đăng nhập</a><a href="accounts.html">Hồ sơ cá nhân</a><a href="accounts.html">Quản lý đơn hàng</a></div>
+  </div>
+  <div class="footer-bottom">© 2026 MOT Manga Store. Demo bài tập lớn Công nghệ Web.</div>
+</footer>
+<script src="data.js"></script>
+<script src="auth-carousel.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Quản lý voucher</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-vouchers-page">
+  <div class="admin-container">
+    <aside class="admin-sidebar">
+      <div class="sidebar-header"><h2>MOT Admin</h2><p>Quản trị manga</p></div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Về trang chủ</a>
+        <a href="products-manager.html" class="nav-item "><i class="fa-solid fa-book-open"></i> Quản lý sách & danh mục</a>
+        <a href="accounts-manager.html" class="nav-item "><i class="fa-solid fa-users"></i> Quản lý tài khoản</a>
+        <a href="orders-manager.html" class="nav-item "><i class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
+        <a href="vouchers-manager.html" class="nav-item active"><i class="fa-solid fa-ticket"></i> Quản lý voucher</a>
+        <a href="orders-manager.html#feedbackAdminSection" class="nav-item "><i class="fa-solid fa-envelope-open-text"></i> Thư phản hồi</a>
+      </nav>
+
+    </aside>
+    <main class="admin-main">
+      <div class="admin-header">
+        <div><h1>Quản lý voucher</h1><p>Hiển thị, thêm mới, cập nhật và xóa mã khuyến mãi cho người dùng.</p></div>
+        <div class="admin-actions"><button class="btn-add" onclick="openAddVoucher()"><i class="fa-solid fa-ticket"></i> Thêm voucher</button><button class="btn-add light" onclick="reloadAdminData()"><i class="fa-solid fa-rotate"></i> Tải lại</button></div>
+      </div>
+      <section class="admin-section">
+        <table class="admin-table">
+          <thead><tr><th>Mã</th><th>Giảm</th><th>Đơn tối thiểu</th><th>Trạng thái</th><th>Hạn dùng</th><th>Hành động</th></tr></thead>
+          <tbody id="vouchersList"></tbody>
+        </table>
+      </section>
+      <footer class="admin-footer-minimal">© 2026 MOT Manga Store Admin</footer>
+    </main>
+  </div>
+
+  <div id="voucherModal" class="modal" style="display:none">
+    <div class="modal-content wide-modal">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="voucherModalTitle">Thêm voucher</h2>
+      <form onsubmit="handleSaveVoucher(event)">
+        <input type="hidden" id="voucherId">
+        <div class="form-grid">
+          <div class="form-group"><label>Mã voucher</label><input id="voucherCode" required placeholder="VD: MOT10K"></div>
+          <div class="form-group"><label>Tên voucher</label><input id="voucherTitle" required></div>
+          <div class="form-group"><label>Loại giảm</label><select id="voucherType"><option value="amount">Giảm tiền</option><option value="percent">Giảm %</option></select></div>
+          <div class="form-group"><label>Giá trị</label><input id="voucherValue" type="number" min="1" required></div>
+          <div class="form-group"><label>Đơn tối thiểu</label><input id="voucherMinOrder" type="number" min="0" value="0"></div>
+          <div class="form-group"><label>Trạng thái</label><select id="voucherActive"><option value="1">Đang bật</option><option value="0">Tắt</option></select></div>
+          <div class="form-group"><label>Hạn dùng</label><input id="voucherExpiresAt" type="date"></div>
+          <div class="form-group full"><label>Mô tả</label><textarea id="voucherDescription" rows="3"></textarea></div>
+        </div>
+        <button type="submit" class="btn-save">Lưu voucher</button>
+      </form>
+    </div>
+  </div>
+  <script src="data.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

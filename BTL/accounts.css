@@ -1,0 +1,867 @@
+/* ==========================================================================
+   ACCOUNTS - CONSOLIDATED CSS (All styles merged)
+   ========================================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f5f5f5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ==========================================================================
+   1. LAYOUT CHUNG
+   ========================================================================== */
+.user-profile-dashboard {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+    box-sizing: border-box;
+    background-color: #f0f0f0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.user-profile-dashboard .profile-dashboard-container {
+    display: flex;
+    width: 1250px;
+    gap: 24px;
+    box-sizing: border-box;
+    align-items: flex-start;
+}
+
+/* ==========================================================================
+   2. SIDEBAR TRÁI - VIỀN ĐỎ CHUẨN
+   ========================================================================== */
+.user-profile-dashboard .profile-sidebar {
+    width: 300px;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 30px 0;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    position: relative;
+}
+
+.user-profile-dashboard .profile-sidebar::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #c92127;
+    border-radius: 8px 0 0 8px;
+}
+
+.user-profile-dashboard .avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #ebebeb;
+    margin-bottom: 12px;
+}
+
+.user-profile-dashboard .avatar-placeholder {
+    width: 100px;
+    height: 100px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.user-profile-dashboard .user-badge {
+    background-color: #f5f5f5;
+    color: #555555;
+    font-size: 13px;
+    padding: 5px 16px;
+    border-radius: 15px;
+    font-weight: 500;
+}
+
+/* MENU ITEMS */
+.user-profile-dashboard .menu-item, 
+.user-profile-dashboard .menu-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    color: #333333;
+    text-decoration: none;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.user-profile-dashboard .menu-item:hover,
+.user-profile-dashboard .menu-item-header:hover {
+    background-color: #f9f9f9;
+}
+
+.user-profile-dashboard .menu-label {
+    display: flex;
+    align-items: center;
+}
+
+.user-profile-dashboard .menu-label i {
+    width: 25px;
+    font-size: 18px;
+    color: #777777;
+    margin-right: 12px;
+    text-align: center;
+}
+
+/* ACTIVE STATE */
+.user-profile-dashboard .menu-item-group.active .menu-item-header,
+.user-profile-dashboard .menu-item.active {
+    color: #c92127;
+    font-weight: 600;
+}
+
+.user-profile-dashboard .menu-item-group.active .menu-item-header i,
+.user-profile-dashboard .menu-item.active i {
+    color: #c92127;
+}
+
+/* ARROW ICON */
+.user-profile-dashboard .arrow-icon {
+    font-size: 12px;
+    color: #c92127;
+    transition: transform 0.3s ease;
+    transform: rotate(0deg);
+}
+
+.user-profile-dashboard .menu-item-group:not(.active) .arrow-icon {
+    transform: rotate(-90deg);
+}
+
+/* SUBMENU */
+.user-profile-dashboard .submenu {
+    display: none;
+    flex-direction: column;
+    padding-left: 61px;
+    padding-bottom: 8px;
+}
+
+.user-profile-dashboard .menu-item-group.active .submenu {
+    display: flex;
+}
+
+.user-profile-dashboard .submenu-item {
+    padding: 10px 0;
+    color: #555555;
+    text-decoration: none;
+    font-size: 14.5px;
+    transition: color 0.2s;
+    display: block;
+}
+
+.user-profile-dashboard .submenu-item:hover {
+    color: #c92127;
+}
+
+.user-profile-dashboard .submenu-item.active {
+    color: #c92127;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   3. MAIN CONTENT PHẢI
+   ========================================================================== */
+.user-profile-dashboard .profile-main-content {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 35px 45px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    box-sizing: border-box;
+}
+
+/* TAB CONTENT SWITCHING */
+.user-profile-dashboard .tab-content {
+    display: none !important;
+}
+
+.user-profile-dashboard .tab-content.active {
+    display: block !important;
+}
+
+.user-profile-dashboard .content-title {
+    font-size: 22px;
+    color: #333333;
+    margin-top: 0;
+    margin-bottom: 35px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* ==========================================================================
+   4. FORM STYLES
+   ========================================================================== */
+.user-profile-dashboard .profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 750px;
+}
+
+.user-profile-dashboard .form-group {
+    display: flex;
+    align-items: center;
+}
+
+.user-profile-dashboard .form-label {
+    width: 160px;
+    font-size: 15px;
+    color: #333333;
+    flex-shrink: 0;
+}
+
+.user-profile-dashboard .required {
+    color: #c92127;
+    margin-left: 3px;
+}
+
+.user-profile-dashboard .input-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.user-profile-dashboard .input-wrapper input,
+.user-profile-dashboard .input-wrapper select {
+    width: 100%;
+    height: 42px;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    padding: 0 15px;
+    font-size: 15px;
+    outline: none;
+    color: #333333;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.user-profile-dashboard .input-wrapper input:focus,
+.user-profile-dashboard .input-wrapper select:focus {
+    border-color: #c92127;
+}
+
+.user-profile-dashboard .custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23777' viewBox='0 0 16 16'><path d='M7.247 11.14 L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 15px) center;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+/* INPUT WITH ACTION */
+.user-profile-dashboard .input-with-action input {
+    padding-right: 85px;
+}
+
+.user-profile-dashboard .action-link {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+/* PASSWORD CONTAINER */
+.user-profile-dashboard .password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.user-profile-dashboard .password-container input {
+    padding-right: 45px;
+}
+
+.user-profile-dashboard .toggle-password {
+    position: absolute;
+    right: 15px;
+    color: #777777;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+.user-profile-dashboard .toggle-password:hover {
+    color: #c92127;
+}
+
+/* RADIO BUTTONS */
+.user-profile-dashboard .radio-group {
+    display: flex;
+    gap: 30px;
+}
+
+.user-profile-dashboard .radio-label {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.user-profile-dashboard .radio-label input {
+    display: none;
+}
+
+.user-profile-dashboard .custom-radio {
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    margin-right: 10px;
+    position: relative;
+    background: #fff;
+}
+
+.user-profile-dashboard .radio-label input:checked ~ .custom-radio {
+    border-color: #c92127;
+}
+
+.user-profile-dashboard .radio-label input:checked ~ .custom-radio::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: #c92127;
+    border-radius: 50%;
+}
+
+/* FORM ACTIONS */
+.user-profile-dashboard .form-actions {
+    padding-left: 160px;
+    margin-top: 15px;
+}
+
+.user-profile-dashboard .btn-submit-profile {
+    width: 200px;
+    height: 45px;
+    background-color: #c92127;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.3s;
+}
+
+.user-profile-dashboard .btn-submit-profile:hover {
+    background-color: #a51a1f;
+}
+
+/* ==========================================================================
+   5. ORDERS SECTION
+   ========================================================================== */
+.user-profile-dashboard .order-tabs {
+    display: flex;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 0 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    margin-bottom: 16px;
+}
+
+.user-profile-dashboard .order-tabs .tab-item {
+    flex: 1;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 15px;
+    color: #333333;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.user-profile-dashboard .order-tabs .tab-item:hover {
+    color: #c92127;
+}
+
+.user-profile-dashboard .order-tabs .tab-item.active {
+    color: #c92127;
+    font-weight: 600;
+    border-bottom: 2px solid #c92127;
+}
+
+.user-profile-dashboard .order-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.user-profile-dashboard .order-item {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.user-profile-dashboard .order-item:first-child {
+    padding-top: 10px;
+}
+
+.user-profile-dashboard .product-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    max-width: 65%;
+}
+
+.user-profile-dashboard .product-image {
+    width: 80px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #eaeaea;
+}
+
+.user-profile-dashboard .product-name {
+    font-size: 15px;
+    color: #333333;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.user-profile-dashboard .product-price-qty {
+    display: flex;
+    align-items: center;
+    gap: 45px;
+    text-align: right;
+}
+
+.user-profile-dashboard .price-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-profile-dashboard .current-price {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333333;
+}
+
+.user-profile-dashboard .old-price {
+    font-size: 13px;
+    color: #999999;
+    text-decoration: line-through;
+    margin-top: 2px;
+}
+
+.user-profile-dashboard .quantity {
+    font-size: 15px;
+    color: #333333;
+    width: 30px;
+    text-align: center;
+}
+
+.user-profile-dashboard .total-item-price {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333333;
+    width: 90px;
+}
+
+.user-profile-dashboard .total-item-price.highlight {
+    color: #e67e22;
+}
+
+.user-profile-dashboard .item-status {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    color: #c92127;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.user-profile-dashboard .delivery-notice-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+    gap: 8px;
+}
+
+.user-profile-dashboard .notice-badge {
+    background-color: #e8fcf9;
+    color: #1abc9c;
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.user-profile-dashboard .notice-subtext {
+    font-size: 13px;
+    color: #666666;
+}
+
+.user-profile-dashboard .order-footer-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    padding-bottom: 5px;
+}
+
+.user-profile-dashboard .btn-order-action {
+    background: #ffffff;
+    color: #666666;
+    border: 1px solid #cccccc;
+    padding: 10px 30px;
+    font-size: 14.5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.user-profile-dashboard .btn-order-action:hover {
+    background: #f9f9f9;
+    border-color: #999999;
+    color: #333333;
+}
+
+/* ==========================================================================
+   6. NOTIFICATIONS SECTION
+   ========================================================================== */
+.user-profile-dashboard .notification-tabs {
+    display: flex;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 0 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    margin-bottom: 16px;
+}
+
+.user-profile-dashboard .notification-tabs .tab-item {
+    flex: 1;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 15px;
+    color: #333333;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.user-profile-dashboard .notification-tabs .tab-item:hover {
+    color: #c92127;
+}
+
+.user-profile-dashboard .notification-tabs .tab-item.active {
+    color: #c92127;
+    font-weight: 600;
+    border-bottom: 2px solid #c92127;
+}
+
+.user-profile-dashboard .notification-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 10px 24px 24px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.user-profile-dashboard .notification-item {
+    display: flex;
+    flex-direction: column;
+    padding: 24px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.user-profile-dashboard .notification-item:last-child {
+    border-bottom: none;
+}
+
+.user-profile-dashboard .notice-title {
+    font-size: 15px;
+    color: #333333;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.user-profile-dashboard .notice-body {
+    font-size: 14px;
+    color: #555555;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+/* ==========================================================================
+   7. VOUCHERS SECTION
+   ========================================================================== */
+.user-profile-dashboard .voucher-tabs {
+    display: flex;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 0 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    margin-bottom: 16px;
+}
+
+.user-profile-dashboard .voucher-tabs .tab-item {
+    flex: 1;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 15px;
+    color: #333333;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.user-profile-dashboard .voucher-tabs .tab-item:hover {
+    color: #c92127;
+}
+
+.user-profile-dashboard .voucher-tabs .tab-item.active {
+    color: #c92127;
+    font-weight: 600;
+    border-bottom: 2px solid #c92127;
+}
+
+.user-profile-dashboard .voucher-grid {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 25px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+@media (max-width: 992px) {
+    .user-profile-dashboard .voucher-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.user-profile-dashboard .voucher-card {
+    display: flex;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+    height: 130px;
+    background-color: #fff;
+}
+
+.user-profile-dashboard .voucher-left {
+    width: 80px;
+    background-color: #24bd24;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.user-profile-dashboard .voucher-left::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    background-image: radial-gradient(circle, transparent 4px, #24bd24 5px);
+    background-size: 10px 14px;
+}
+
+.user-profile-dashboard .voucher-left i {
+    width: 36px;
+    height: 36px;
+    font-size: 36px;
+    color: #ffffff;
+}
+
+.user-profile-dashboard .voucher-right {
+    flex: 1;
+    padding: 12px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.user-profile-dashboard .voucher-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #000000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-profile-dashboard .voucher-desc {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.user-profile-dashboard .voucher-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.user-profile-dashboard .code-box {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.user-profile-dashboard .code-text {
+    background-color: #f1f3f4;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    width: max-content;
+}
+
+.user-profile-dashboard .expiry {
+    font-size: 11px;
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.user-profile-dashboard .btn-copy {
+    background-color: #1a73e8;
+    color: #ffffff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.user-profile-dashboard .btn-copy:hover {
+    background-color: #1557b0;
+}
+
+.user-profile-dashboard .btn-copy.copied {
+    background-color: #24bd24;
+}
+
+
+/* ===== V5 ACCOUNT FIXES ===== */
+.account-mini-footer {
+  max-width: 1250px;
+  margin: 0 auto 24px;
+  padding: 16px 24px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px rgba(0,0,0,.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #666;
+  font-size: 14px;
+}
+.account-mini-footer a { color:#c92127; text-decoration:none; margin-left:16px; font-weight:600; }
+.user-orders-list { display:flex; flex-direction:column; gap:18px; }
+.user-profile-dashboard .dynamic-order-card { padding: 22px 26px; }
+.user-profile-dashboard .order-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #eee; }
+.user-profile-dashboard .order-card-header strong { color:#222; font-size:17px; display:block; }
+.user-profile-dashboard .order-card-header span { color:#777; font-size:13px; }
+.user-profile-dashboard .order-status-tag { background:#fff3f3; color:#c92127 !important; padding:7px 14px; border-radius:999px; font-weight:700; }
+.user-profile-dashboard .dynamic-order-item { display:flex; justify-content:space-between; align-items:center; gap:20px; padding: 18px 0; border-bottom:1px solid #f0f0f0; }
+.user-profile-dashboard .dynamic-order-item:last-child { border-bottom:0; }
+.user-profile-dashboard .dynamic-order-item .product-image { width:76px; height:104px; object-fit:cover; border-radius:8px; background:#f4f4f4; box-shadow:0 6px 14px rgba(0,0,0,.08); }
+.user-profile-dashboard .dynamic-order-item .product-info { display:flex; align-items:center; gap:18px; flex:1; }
+.user-profile-dashboard .dynamic-order-item .product-name { font-size:16px; color:#222; margin-bottom:6px; line-height:1.35; }
+.user-profile-dashboard .dynamic-order-item .product-details p { color:#666; font-size:14px; }
+.user-profile-dashboard .dynamic-order-item .product-price-qty { display:grid; grid-template-columns: 120px 70px 120px; align-items:center; text-align:right; gap:16px; }
+.user-profile-dashboard .dynamic-order-item .current-price { font-weight:700; color:#111; display:block; }
+.user-profile-dashboard .dynamic-order-item .old-price { color:#999; text-decoration:line-through; font-size:13px; }
+.user-profile-dashboard .dynamic-order-item .total-item-price { color:#c92127; font-weight:800; }
+.user-profile-dashboard .empty-user-order { padding: 30px; text-align:center; }
+.user-profile-dashboard .empty-user-order a { color:#fff; background:#c92127; border-radius:999px; padding:10px 18px; display:inline-block; margin-top:12px; text-decoration:none; font-weight:700; }
+.user-profile-dashboard .btn-order-action.muted { color:#777; border-color:#ddd; background:#fff; }
+@media (max-width: 900px) {
+  .account-mini-footer, .user-profile-dashboard .dynamic-order-item, .user-profile-dashboard .order-card-header { flex-direction:column; align-items:flex-start; }
+  .user-profile-dashboard .dynamic-order-item .product-price-qty { width:100%; grid-template-columns:1fr 1fr 1fr; text-align:left; }
+}
+
+/* ===== V6 account footer + order detail modal ===== */
+.clean-account-footer { justify-content: space-between; }
+.clean-account-footer .mini-footer-links { display: none !important; }
+.user-order-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 9999;
+}
+.user-order-modal.show { display: flex; }
+.user-order-modal-card {
+  width: min(820px, 100%);
+  max-height: 88vh;
+  overflow: auto;
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.22);
+  position: relative;
+}
+.user-order-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  border: 0;
+  background: transparent;
+  font-size: 28px;
+  cursor: pointer;
+}
+.user-order-modal-card h2 { margin: 0 0 16px; color: #c92127; }
+.user-order-meta { background: #f8fafc; border-radius: 14px; padding: 14px; margin-bottom: 16px; }
+.user-order-meta p { margin: 6px 0; }
+.user-order-modal-items { display: flex; flex-direction: column; gap: 12px; }
+.user-order-modal-item { display: grid; grid-template-columns: 60px 1fr auto; gap: 14px; align-items: center; border: 1px solid #eee; border-radius: 14px; padding: 12px; }
+.user-order-modal-item img { width: 60px; height: 82px; object-fit: cover; border-radius: 8px; }
+.user-order-modal-item h4 { margin: 0 0 4px; }
+.user-order-modal-item p { margin: 0; color: #666; }
+.user-order-modal-actions { margin-top: 18px; text-align: right; }
+.user-order-modal-actions .btn-order-action { background: #c92127; color: #fff; border-color: #c92127; text-decoration: none; }

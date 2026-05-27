@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liên hệ</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="auth-carousel.css">
+</head>
+<body class="contact-page">
+<div class="top-header-banner"><img src="assets/images/banner.jpg" alt="Banner Sale"></div>
+<header class="header">
+  <div class="container nav">
+    <div class="logo"><a href="index.html"><img src="assets/images/logo.png" alt="MOT Manga Store"></a></div>
+    <nav class="menu">
+      <a href="index.html">TRANG CHỦ</a>
+      <div class="dropdown-wrapper">
+        <button class="dropdown-btn" type="button">SẢN PHẨM</button>
+        <ul class="dropdown-menu"><p class="dropdown-title">DANH MỤC MANGA</p></ul>
+      </div>
+      <a href="blog.html">BLOG</a>
+      <a href="contact.html">LIÊN HỆ</a>
+    </nav>
+    <div class="header-right">
+      <div class="search-box">
+        <input type="text" placeholder="Tìm kiếm manga...">
+        <button class="search-btn" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+      <div class="icons">
+        <i class="fa-solid fa-bell icon" title="Thông báo"></i>
+        <div class="cart-box" title="Giỏ hàng"><i class="fa-solid fa-cart-shopping icon"></i><span class="badge">0</span></div>
+        <div class="user-circle" title="Tài khoản"><i class="fa-solid fa-user"></i></div>
+      </div>
+      <button class="btn-login" type="button" onclick="openAuth()">Login</button>
+    </div>
+  </div>
+</header>
+<main class="contact-page-main">
+  <section class="page-hero"><h1>Liên hệ MOT Manga Store</h1><p>Gửi phản hồi, góp ý hoặc câu hỏi để admin xử lý trong trang quản trị.</p></section>
+  <section class="contact-layout">
+    <div class="contact-card"><h2>Thông tin liên hệ</h2><p><i class="fa-solid fa-location-dot"></i> Đại học Thăng Long, Hà Nội</p><p><i class="fa-solid fa-envelope"></i> mot@gmail.com.vn</p><p><i class="fa-solid fa-phone"></i> 0337448886</p></div>
+    <form class="contact-card" id="feedbackForm"><h2>Gửi tin nhắn</h2><input name="fullName" required placeholder="Họ tên"><input name="email" type="email" placeholder="Email"><input name="phone" placeholder="Số điện thoại"><input name="subject" placeholder="Tiêu đề phản hồi"><textarea name="message" required placeholder="Nội dung"></textarea><button class="btn-login" type="submit">Gửi liên hệ</button></form>
+  </section>
+</main>
+<section class="newsletter">
+  <i class="fa-solid fa-envelope"></i>
+  <strong>Đăng kí nhận bản tin</strong>
+  <input type="email" placeholder="Nhập địa chỉ email">
+  <button type="button" onclick="alert('Đăng ký nhận tin thành công!')">Đăng ký</button>
+</section>
+<footer class="footer" id="contact">
+  <div class="footer-content">
+    <div class="footer-col footer-brand">
+      <img src="assets/images/logo.png" alt="MOT.vn">
+      <p>Phòng B706, Tầng 7, Tòa A, Trường Đại học Thăng Long, Hà Nội.</p>
+      <p>MOT Manga Store nhận đặt hàng trực tuyến và giao hàng tận nơi.</p>
+    </div>
+    <div class="footer-col"><h3>DỊCH VỤ</h3><a href="products.html">Sản phẩm</a><a href="cart.html">Giỏ hàng</a><a href="blog.html">Blog</a></div>
+    <div class="footer-col"><h3>HỖ TRỢ</h3><a href="contact.html">Liên hệ</a><a href="contact.html">Chính sách vận chuyển</a><a href="contact.html">Đổi trả</a></div>
+    <div class="footer-col"><h3>TÀI KHOẢN</h3><a href="javascript:void(0)" onclick="openAuth();return false;">Đăng nhập</a><a href="accounts.html">Hồ sơ cá nhân</a><a href="accounts.html">Quản lý đơn hàng</a></div>
+  </div>
+  <div class="footer-bottom">© 2026 MOT Manga Store. Demo bài tập lớn Công nghệ Web.</div>
+</footer>
+<script src="data.js"></script>
+<script src="auth-carousel.js"></script>
+<script src="script.js"></script>
+<script>
+document.getElementById('feedbackForm')?.addEventListener('submit', async function(e){
+  e.preventDefault();
+  const payload = Object.fromEntries(new FormData(this).entries());
+  try {
+    const response = await fetch('/api/feedbacks', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+    const data = await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(data.message || 'Không gửi được phản hồi');
+    alert('Đã gửi phản hồi thành công. Admin sẽ xem trong trang quản trị.');
+    this.reset();
+  } catch(error) {
+    alert(error.message || 'Không gửi được phản hồi.');
+  }
+});
+</script>
+</body>
+</html>
