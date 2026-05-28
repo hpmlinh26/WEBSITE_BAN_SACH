@@ -1,5 +1,5 @@
 {
-  "seedVersion": "v6-admin-crud-voucher-invoice",
+  "seedVersion": "v8-search-stock-dashboard-blog",
   "categories": [
     {
       "id": 1,
@@ -177,7 +177,7 @@
       "category": "manga-thieu-nhi",
       "categoryName": "Manga thiếu nhi",
       "slug": "doraemon-va-ao-giau-vang",
-      "stock": 100,
+      "stock": 12,
       "description": "Qua tập truyện dài hấp dẫn Doraemon và Đảo giấu vàng, Fujiko F. Fujio đã thể hiện một trực giác phiêu lưu kỳ thú và tinh thần đồng đội tuyệt vời: thế giới không chỉ là những chuyến hải trình trên đại dương bao la, mà là một hành trình tìm kiếm giá trị thực sự của tình cảm gia đình và sự thấu hiểu giữa các thế hệ. Ông không chỉ kể về cuộc truy tìm kho báu; thay vào đó, ông đặt Nobita và các bạn vào những thử thách cam go trên con tàu viễn dương đan xen với những phát minh tương lai, gợi mở những suy tư về trách nhiệm bảo vệ môi trường biển. Đây là một hành trình đi sâu vào bản chất của lòng dũng cảm, nơi mỗi cánh buồm căng gió hay những bí mật",
       "genre": "Manga / Phiêu lưu / Thiếu nhi"
     },
@@ -241,7 +241,7 @@
       "category": "van-hoc-viet-nam",
       "categoryName": "Văn học Việt Nam",
       "slug": "truyen-kieu",
-      "stock": 100,
+      "stock": 5,
       "description": "Với kiệt tác Truyện Kiều, đại thi hào Nguyễn Du đã cho thấy một trực giác văn chương trác tuyệt và một tâm hồn nhân đạo bao la: thế giới không chỉ là những vần thơ lục bát uyển chuyển, mà là một bản cáo trạng đanh thép về xã hội phong kiến chà đạp lên quyền sống của con người. Ông không chỉ kể về cuộc đời lưu lạc mười lăm năm của Thúy Kiều; thay vào đó, ông đặt nhân vật vào những bi kịch của chữ \"tài\" và chữ \"mệnh\", đan xen với những suy tư về lòng hiếu thảo, sự thủy chung và khát vọng công lý. Đây là một hành trình đi sâu vào bản chất của nỗi đau và sự cứu rỗi, nơi những câu thơ tả cảnh ngụ tình hay những lời than thân trách phận dường như c",
       "genre": "Truyện thơ Nôm / Thơ lục bát"
     },
@@ -289,7 +289,7 @@
       "category": "van-hoc-viet-nam",
       "categoryName": "Văn học Việt Nam",
       "slug": "mat-biec",
-      "stock": 100,
+      "stock": 12,
       "description": "Với tiểu thuyết Mắt Biếc, Nguyễn Nhật Ánh đã thể hiện một trực giác văn chương đầy hoài niệm và một tâm hồn nhạy cảm về tình yêu: thế giới không chỉ là những kỷ niệm êm đềm của tuổi thơ tại làng Đo Đo, mà còn là nỗi buồn da diết về một tình yêu đơn phương bền bỉ và vô vọng. Ông không chỉ kể về câu chuyện tình giữa Ngạn và Hà Lan; thay vào đó, ông đặt nhân vật vào những lựa chọn đầy tiếc nuối giữa sự gắn bó với nguồn cội và sức hút của chốn thị thành lưu lạc, gợi mở những suy tư về lòng chung thủy và sự tha thứ. Đây là một hành trình đi sâu vào bản chất của tâm hồn, nơi đôi mắt biếc của Hà Lan hay những bản tình ca Ngạn viết dường như cũng có ",
       "genre": "Truyện dài / Văn học hiện đại / Lãng mạn"
     },
@@ -337,7 +337,7 @@
       "category": "van-hoc-viet-nam",
       "categoryName": "Văn học Việt Nam",
       "slug": "hai-ua-tre",
-      "stock": 100,
+      "stock": 0,
       "description": "Qua truyện ngắn tinh tế Hai đứa trẻ, Thạch Lam đã thể hiện một trực giác văn chương nhạy cảm và một tâm hồn giàu lòng trắc ẩn: thế giới không chỉ là cái bóng tối bao trùm phố huyện nghèo, mà là khát vọng mãnh liệt về một cuộc sống rực rỡ và tốt đẹp hơn. Ông không chỉ miêu tả sự tàn tạ của cảnh vật và con người; thay vào đó, ông đặt chị em Liên và An vào những giây phút chờ đợi chuyến tàu đêm từ Hà Nội về đan xen với những suy tư về sự bế tắc của những kiếp người nhỏ bé. Đây là một hành trình đi sâu vào bản chất của hy vọng, nơi mỗi ngọn đèn dầu lay lắt hay tiếng còi tàu xa xăm dường như cũng có điều muốn lên tiếng về tình yêu thương và niềm t",
       "genre": "Truyện ngắn / Văn học hiện thực lãng mạn"
     },
@@ -401,7 +401,7 @@
       "category": "manga-hai-huoc",
       "categoryName": "Manga hài hước",
       "slug": "shin-cau-be-but-chi",
-      "stock": 100,
+      "stock": 12,
       "description": "Qua bộ truyện tranh hài hước nổi tiếng này, Yoshito Usui đã thể hiện một trực giác hóm hỉnh và cái nhìn độc đáo về thế giới trẻ thơ: cuộc sống không chỉ là những bài học giáo khoa cứng nhắc, mà còn là lăng kính đầy tiếng cười và sự tinh quái của một cậu bé 5 tuổi. Ông không chỉ xây dựng những tình huống dở khóc dở cười; thay vào đó, ông đặt nhân vật Shinnosuke vào những bối cảnh gia đình và học đường bình dị đan xen với những phát ngôn \"người lớn\" đầy bất ngờ, gợi mở những suy tư về sự chân thành và cách thấu hiểu con trẻ. Đây là một hành trình đi sâu vào bản chất của sự hồn nhiên, nơi mỗi rắc rối mà Shin gây ra cho bố Hiroshi hay mẹ Misae dư",
       "genre": "Manga / Hài hước / Đời thường"
     },
@@ -417,7 +417,7 @@
       "category": "thieu-nhi",
       "categoryName": "Sách thiếu nhi",
       "slug": "truyen-ngu-ngon-aesop",
-      "stock": 100,
+      "stock": 5,
       "description": "Qua tuyển tập Truyện Ngụ Ngôn Aesop, tác giả đã thể hiện một trực giác nhân sinh sắc sảo và những bài học luân lý sâu sắc: thế giới không chỉ là cuộc chiến sinh tồn giữa các loài vật, mà là một tấm gương phản chiếu những thói hư tật xấu và đức tính của con người. Tác phẩm không chỉ kể những câu chuyện ngắn gọn; thay vào đó, nó đặt các nhân vật như Rùa, Thỏ, hay Con Cáo vào những tình huống thử thách trí tuệ đan xen với những lời răn dạy về lòng khiêm tốn, sự kiên trì và trí thông minh. Đây là một hành trình đi sâu vào bản chất của sự khôn ngoan, nơi mỗi hành động của muông thú dường như cũng có điều muốn lên tiếng về những chân lý giản đơn nh",
       "genre": "Truyện ngụ ngôn / Văn học cổ điển / Giáo dục"
     },
@@ -513,7 +513,7 @@
       "category": "kien-thuc-khoa-hoc",
       "categoryName": "Kiến thức - khoa học",
       "slug": "uong-cach-menh",
-      "stock": 100,
+      "stock": 12,
       "description": "Qua tác phẩm lý luận quan trọng này, Nguyễn Ái Quốc đã thể hiện một trực giác cách mạng thiên tài và tầm nhìn chiến lược về con đường giải phóng dân tộc: thế giới không chỉ là những lý thuyết xa rời thực tiễn, mà là những bài học xương máu về tổ chức và vận động quần chúng nhân dân. Tác giả không chỉ truyền bá chủ nghĩa Mác - Lênin; thay vào đó, Người đặt những nguyên lý cơ bản vào bối cảnh cụ thể của Việt Nam đan xen với những lời răn dạy về tư cách người cách mệnh. Đây là một hành trình đi sâu vào bản chất của cuộc đấu tranh tự giải phóng, nơi mỗi luận điểm về đoàn kết quốc tế và sự lãnh đạo của Đảng dường như cũng có điều muốn lên tiếng về",
       "genre": "Lý luận chính trị / Tư tưởng Hồ Chí Minh"
     },
@@ -593,7 +593,7 @@
       "category": "thieu-nhi",
       "categoryName": "Sách thiếu nhi",
       "slug": "truyen-co-grimm-toan-tap",
-      "stock": 100,
+      "stock": 5,
       "description": "Qua kho tàng truyện kể dân gian đồ sộ này, hai anh em nhà Grimm đã thể hiện một trực giác văn hóa sâu sắc và khả năng lưu giữ những giá trị nhân văn vượt thời gian: thế giới không chỉ là những lâu đài tráng lệ và phép màu kỳ diệu, mà còn là tấm gương phản chiếu những bài học đạo đức và bản chất thiện ác của con người. Các tác giả không chỉ sưu tầm những câu chuyện truyền miệng; thay vào đó, họ đặt những nhân vật như Cô bé Lọ Lem hay Bạch Tuyết vào những thử thách khắc nghiệt đan xen với những cái kết có hậu dành cho người lương thiện. Đây là một hành trình đi sâu vào thế giới tâm hồn trẻ thơ, nơi mỗi khu rừng già hay lời nguyền của mụ phù thủ",
       "genre": "Truyện dân gian / Văn học thiếu nhi"
     },
@@ -609,7 +609,7 @@
       "category": "thieu-nhi",
       "categoryName": "Sách thiếu nhi",
       "slug": "truyen-co-grimm-toan-tap-34",
-      "stock": 100,
+      "stock": 0,
       "description": "Qua kho tàng truyện kể dân gian đồ sộ này, hai anh em nhà Grimm đã thể hiện một trực giác văn hóa sâu sắc và khả năng lưu giữ những giá trị nhân văn vượt thời gian: thế giới không chỉ là những lâu đài tráng lệ và phép màu kỳ diệu, mà còn là tấm gương phản chiếu những bài học đạo đức và bản chất thiện ác của con người. Các tác giả không chỉ sưu tầm những câu chuyện truyền miệng; thay vào đó, họ đặt những nhân vật như Cô bé Lọ Lem hay Bạch Tuyết vào những thử thách khắc nghiệt đan xen với những cái kết có hậu dành cho người lương thiện. Đây là một hành trình đi sâu vào thế giới tâm hồn trẻ thơ, nơi mỗi khu rừng già hay lời nguyền của mụ phù thủ",
       "genre": "Truyện dân gian / Văn học thiếu nhi"
     },
@@ -625,7 +625,7 @@
       "category": "thieu-nhi",
       "categoryName": "Sách thiếu nhi",
       "slug": "truyen-co-grimm-toan-tap-35",
-      "stock": 100,
+      "stock": 12,
       "description": "Qua kho tàng truyện kể dân gian đồ sộ này, hai anh em nhà Grimm đã thể hiện một trực giác văn hóa sâu sắc và khả năng lưu giữ những giá trị nhân văn vượt thời gian: thế giới không chỉ là những lâu đài tráng lệ và phép màu kỳ diệu, mà còn là tấm gương phản chiếu những bài học đạo đức và bản chất thiện ác của con người. Các tác giả không chỉ sưu tầm những câu chuyện truyền miệng; thay vào đó, họ đặt những nhân vật như Cô bé Lọ Lem hay Bạch Tuyết vào những thử thách khắc nghiệt đan xen với những cái kết có hậu dành cho người lương thiện. Đây là một hành trình đi sâu vào thế giới tâm hồn trẻ thơ, nơi mỗi khu rừng già hay lời nguyền của mụ phù thủ",
       "genre": "Truyện dân gian / Văn học thiếu nhi"
     },
@@ -737,7 +737,7 @@
       "category": "van-hoc-viet-nam",
       "categoryName": "Văn học Việt Nam",
       "slug": "buoc-uong-cung",
-      "stock": 100,
+      "stock": 12,
       "description": "Qua cuốn tiểu thuyết hiện thực xuất sắc Bước đường cùng, nhà văn Nguyễn Công Hoan đã thể hiện một trực giác văn chương sắc sảo và khả năng bóc trần những mâu thuẫn giai cấp gay gắt ở nông thôn Việt Nam trước Cách mạng: thế giới không chỉ là lũy tre làng yên bình, mà là hiện trường của những âm mưu chiếm đoạt ruộng đất và sự bóc lột tàn nhẫn của tầng lớp địa chủ. Ông không chỉ kể về cuộc đời bi thảm của anh pha; thay vào đó, ông đặt nhân vật này vào vòng xoáy của sưu cao, thuế nặng và những thủ đoạn cho vay nặng lãi đan xen với quá trình thức tỉnh ý thức phản kháng khi con người bị dồn vào đường cùng. Đây là một hành trình đi sâu vào bản chất ",
       "genre": "Tiểu thuyết / Văn học hiện thực phê phán"
     },
@@ -769,7 +769,7 @@
       "category": "van-hoc-viet-nam",
       "categoryName": "Văn học Việt Nam",
       "slug": "lam-i",
-      "stock": 100,
+      "stock": 5,
       "description": "Qua cuốn tiểu thuyết mang tính chất phóng sự đầy táo bạo này, nhà văn Vũ Trọng Phụng đã thể hiện một trực giác xã hội sắc lạnh và cái nhìn trực diện vào những mảng tối của đời sống đô thị: thế giới không chỉ là những bài học đạo đức sáo rỗng, mà còn là thực trạng nhức nhối về sự suy đồi luân lý và những bi kịch do thiếu hiểu biết về giáo dục giới tính. Ông không chỉ kể về cuộc đời sa ngã của nhân vật Huyền; thay vào đó, ông đặt nhân vật vào một bối cảnh xã hội giao thời đầy rẫy những cám dỗ và sự đạo đức giả của tầng lớp thượng lưu đan xen với những lời cảnh báo đanh thép về sự tan vỡ của giá trị gia đình. Đây là một hành trình đi sâu vào bản",
       "genre": "Tiểu thuyết / Văn học hiện thực phê phán"
     },
@@ -849,7 +849,7 @@
       "category": "manga-shounen",
       "categoryName": "Manga Shounen",
       "slug": "dragon-ball-49",
-      "stock": 100,
+      "stock": 12,
       "description": "Qua bộ truyện tranh huyền thoại về võ thuật và những cuộc phiêu lưu, Akira Toriyama đã thể hiện một trực giác sáng tạo vô tiền khoáng hậu và khả năng xây dựng hệ thống chiến đấu đặc sắc: thế giới không chỉ là những trận đấu đối kháng kịch tính, mà còn là biểu tượng của tinh thần vượt khó và lòng tốt không biên giới. Ông không chỉ kể về cuộc hành trình tầm ngọc của cậu bé đuôi khỉ Son Goku; thay vào đó, ông đặt các nhân vật vào những cuộc chiến bảo vệ Trái Đất và vũ trụ đan xen với những thông điệp về sự bao dung khi kẻ thù của hôm nay có thể trở thành đồng đội của ngày mai. Đây là một hành trình đi sâu vào bản chất của sức mạnh, nơi mỗi lần v",
       "genre": "Manga / Shonen / Hành động"
     },
@@ -881,7 +881,7 @@
       "category": "kien-thuc-khoa-hoc",
       "categoryName": "Kiến thức - khoa học",
       "slug": "horrible-histories-lich-su-rung-ron",
-      "stock": 100,
+      "stock": 0,
       "description": "Qua bộ sách giáo dục mang tính đột phá này, Terry Deary đã thể hiện một trực giác sư phạm độc đáo và khả năng kể chuyện đầy lôi cuốn: thế giới không chỉ là những mốc thời gian khô khan hay những con số lịch sử vô hồn, mà là một bức tranh sống động về những sự thật \"rùng rợn\", hài hước và đôi khi là kỳ quặc nhất của nhân loại. Ông không chỉ liệt kê các sự kiện vĩ đại; thay vào đó, ông đặt người đọc vào vị trí của những con người bình thường trong quá khứ đan xen với những hình minh họa dí dỏm và cách tiếp cận lịch sử từ góc nhìn \"người thật, việc thật\". Đây là một hành trình đi sâu vào bản chất của lịch sử, nơi những câu chuyện về sự tàn bạo, ",
       "genre": "Sách kiến thức / Lịch sử / Thiếu nhi"
     },
@@ -945,7 +945,7 @@
       "category": "van-hoc-viet-nam",
       "categoryName": "Văn học Việt Nam",
       "slug": "co-gai-en-tu-hom-qua",
-      "stock": 100,
+      "stock": 5,
       "description": "Qua cuốn tiểu thuyết lãng mạn đầy hoài niệm này, nhà văn Nguyễn Nhật Ánh đã thể hiện một trực giác tâm lý tinh tế và khả năng khơi gợi những ký ức tuổi thơ trong trẻo: thế giới không chỉ là những lo toan của tuổi trưởng thành, mà còn là những rung động đầu đời ngây ngô dưới mái trường và những kỷ niệm xa xăm của tuổi lên mười. Ông không chỉ kể về nỗ lực chinh phục cô bạn cùng lớp Việt An của nhân vật Thư; thay vào đó, ông đặt nhân vật vào sự đối chiếu thú vị giữa hiện tại và quá khứ đan xen với những suy ngẫm về sự đổi thay của thời gian và lòng người. Đây là một hành trình đi sâu vào bản chất của tình yêu và tình bạn, nơi mỗi trang sách dườn",
       "genre": "Tiểu thuyết / Văn học thanh xuân / Việt Nam"
     },
@@ -961,7 +961,7 @@
       "category": "thieu-nhi",
       "categoryName": "Sách thiếu nhi",
       "slug": "co-hai-con-meo-ngoi-ben-cua-so",
-      "stock": 100,
+      "stock": 12,
       "description": "Qua cuốn truyện dài đầy chất thơ này, nhà văn Nguyễn Nhật Ánh đã thể hiện một trực giác nghệ thuật bay bổng và khả năng nhân hóa bậc thầy: thế giới không chỉ là những góc sân hay khoảng trời chật hẹp, mà là một không gian của tình quân tử, sự sẻ chia và những tâm hồn đồng điệu vượt qua mọi khác biệt về giống loài. Ông không chỉ kể về tình bạn giữa chú mèo Gấu và chú chuột Tí Hon; thay vào đó, ông đặt các nhân vật vào một mối quan hệ đầy nhân văn đan xen với những vần thơ tình lãng mạn và những bài học nhẹ nhàng về lòng tin và sự tử tế. Đây là một hành trình đi sâu vào bản chất của tình yêu thương, nơi mỗi cái chạm đuôi hay mỗi câu thơ bên cửa",
       "genre": "Truyện dài / Văn học thiếu nhi & tuổi mới lớn"
     },
@@ -1073,7 +1073,7 @@
       "category": "van-hoc-viet-nam",
       "categoryName": "Văn học Việt Nam",
       "slug": "chua-an",
-      "stock": 100,
+      "stock": 12,
       "description": "Qua tác phẩm mang đậm màu sắc liêu trai và duy mỹ này, danh họa ngôn từ Nguyễn Tuân đã thể hiện một trực giác nghệ thuật ma mị và khả năng phục dựng những nét văn hóa cổ truyền đầy tinh tế: thế giới không chỉ là hiện thực trần trụi, mà là một cõi thực - hư đan xen giữa tiếng đàn đáy u uẩn và những kiếp người chìm đắm trong nghệ thuật đến mức cực đoan. Ông không chỉ kể về cuộc đời biến động của Lãnh Út hay tiếng đàn \"sát nhân\" của Bá Nhỡ; thay vào đó, ông đặt người đọc vào một không gian đậm chất ca trù cổ điển đan xen với những ám ảnh về nghiệp chướng và sự cứu rỗi tâm linh. Đây là một hành trình đi sâu vào bản chất của cái Đẹp và sự hủy diệt",
       "genre": "Tiểu thuyết / Văn học Việt Nam hiện đại / Kỳ ảo"
     },
@@ -1121,7 +1121,7 @@
       "category": "manga-shounen",
       "categoryName": "Manga Shounen",
       "slug": "naruto-66",
-      "stock": 100,
+      "stock": 5,
       "description": "Hành trình của Naruto, một thiếu niên mang trong mình phong ấn Cửu Vĩ, vượt qua sự kỳ thị của dân làng để khẳng định bản thân. Với ước mơ trở thành Hokage, cậu cùng những người bạn trong Đội 7 trải qua những bài học khắc nghiệt về tình bạn, sự hy sinh và nhẫn đạo bất khuất.",
       "genre": "Manga / Shonen / Hành động"
     },
@@ -1153,7 +1153,7 @@
       "category": "thieu-nhi",
       "categoryName": "Sách thiếu nhi",
       "slug": "que-noi",
-      "stock": 100,
+      "stock": 0,
       "description": "Qua những trang viết thấm đẫm tình yêu quê hương, nhà văn Võ Quảng đã thể hiện một trực giác hồn nhiên và khả năng tái hiện không khí lịch sử đầy sống động: thế giới không chỉ là ngôi làng Hòa Phước yên bình bên dòng sông Thu Bồn, mà là hơi thở của một thời đại mới đang bừng tỉnh sau Cách mạng tháng Tám. Ông không chỉ kể về những trò nghịch ngợm của hai cậu bé Cục và Cù Lao; thay vào đó, ông đặt nhân vật vào một hành trình trưởng thành đan xen với những thay đổi của vận mệnh dân tộc. Đây là một hành trình đi sâu vào bản chất của lòng yêu nước ngây thơ mà quyết liệt, nơi mỗi rặng tre, bãi mía dường như cũng có điều muốn lên tiếng về sức sống m",
       "genre": "Truyện dài / Văn học thiếu nhi / Việt Nam"
     },
@@ -1185,7 +1185,7 @@
       "category": "van-hoc-viet-nam",
       "categoryName": "Văn học Việt Nam",
       "slug": "vang-bong-mot-thoi",
-      "stock": 100,
+      "stock": 12,
       "description": "Qua tập truyện ngắn điêu luyện này, bậc thầy ngôn từ Nguyễn Tuân đã thể hiện một trực giác thẩm mỹ tuyệt vời và khả năng lưu giữ những tinh hoa văn hóa cổ truyền: thế giới không chỉ là hiện thực đang dần Âu hóa, mà là một cõi xưa thanh cao nơi những \"nhân vật tài hoa\" sống trọn với thú thưởng trà, chơi lan hay viết chữ. Ông không chỉ kể về cái sở nguyện của cụ Kép hay sự dũng liệt của Huấn Cao; thay vào đó, ông đặt người đọc vào một không gian đậm chất hoài cổ đan xen với nỗi đau xót trước sự tàn tạ của một thời đại huy hoàng. Đây là một hành trình đi sâu vào bản chất của cái Đẹp và thiên lương, nơi mỗi nét chữ Phượng múa Rồng bay dường như c",
       "genre": "Tập truyện ngắn / Văn học Việt Nam hiện đại / Tùy bút"
     },
@@ -1297,7 +1297,7 @@
       "category": "manga-thieu-nhi",
       "categoryName": "Manga thiếu nhi",
       "slug": "doraemon-77",
-      "stock": 100,
+      "stock": 5,
       "description": "Những cuộc phiêu lưu kỳ thú của chú mèo máy thông minh đến từ tương lai Doraemon và cậu bé hậu đậu Nobita. Với chiếc túi thần kỳ chứa đựng hàng loạt bảo bối oai hùng, bộ truyện mở ra thế giới của trí tưởng tượng vô hạn, đồng thời gửi gắm những bài học ý nghĩa về tình bạn, lòng dũng cảm và sự nỗ lực trong cuộc sống.",
       "genre": "Manga / Thiếu nhi / Khoa học viễn tưởng / Hài hước"
     },
@@ -1409,7 +1409,7 @@
       "category": "kien-thuc-khoa-hoc",
       "categoryName": "Kiến thức - khoa học",
       "slug": "sung-vi-trung-va-thep",
-      "stock": 100,
+      "stock": 12,
       "description": "Qua cái nhìn xuyên suốt lịch sử nhân loại đầy tiến hóa, nhà khoa học Jared Diamond đã thể hiện một trực giác bác học và khả năng tổng hợp tri thức đa ngành đầy sống động: thế giới không chỉ là những cuộc viễn chinh hay sự khác biệt về trí tuệ con người, mà là hệ quả của các yếu tố môi trường và địa lý khách quan. Ông không chỉ kể về sự trỗi dậy của các nền văn minh phương Tây; thay vào đó, ông đặt người đọc vào một hành trình truy vấn đan xen giữa khảo cổ học, ngôn ngữ học và dịch tễ học để giải mã sự bất bình đẳng giữa các xã hội. Đây là một hành trình đi sâu vào bản chất của định mệnh nhân loại, nơi mỗi hạt mầm cây lương thực hay sự thuần h",
       "genre": "Khoa học xã hội / Lịch sử nhân loại / Địa lý học"
     },
@@ -1425,7 +1425,7 @@
       "category": "ky-nang-tam-ly",
       "categoryName": "Kỹ năng - tâm lý",
       "slug": "i-tim-le-song-man-s-search-for-meaning",
-      "stock": 100,
+      "stock": 0,
       "description": "Qua những trải nghiệm kinh hoàng tại các trại tập trung của phát xít Đức, bác sĩ tâm thần Viktor Frankl đã thể hiện một trực giác nhân sinh sâu sắc và khả năng thấu thị tâm hồn con người: thế giới không chỉ là nỗi đau khổ cùng cực hay cái chết cận kề, mà là nơi thử thách bản lĩnh để tìm thấy ý nghĩa trong mọi hoàn cảnh. Ông không chỉ kể về cuộc sinh tồn giữa địa ngục trần gian; thay vào đó, ông đặt người đọc vào một hành trình tâm lý học đan xen giữa sự chịu đựng và khát vọng sống mãnh liệt. Đây là một hành trình đi sâu vào bản chất của tự do nội tại, nơi mỗi lựa chọn giữ vững phẩm giá dường như cũng có điều muốn lên tiếng về sức mạnh của \"li",
       "genre": "Tâm lý học / Hồi ký / Triết học / Phát triển bản thân"
     },
@@ -1473,7 +1473,7 @@
       "category": "van-hoc-viet-nam",
       "categoryName": "Văn học Việt Nam",
       "slug": "chua-te-nhung-chiec-nhan-oan-ho-nhan",
-      "stock": 100,
+      "stock": 5,
       "description": "Qua thế giới Trung Địa đầy kỳ vĩ và tráng lệ, đại văn hào J.R.R. Tolkien đã thể hiện một trí tưởng tượng vô song và khả năng xây dựng sử thi bậc thầy: thế giới không chỉ là những cuộc chiến giữa tộc Tiên, Người lùn hay những thế lực hắc ám, mà là cuộc hành trình gian khổ của những con người bé nhỏ chống lại sức mạnh cám dỗ của quyền lực tuyệt đối. Ông không chỉ kể về sứ mệnh tiêu hủy chiếc Nhẫn Chủ của Frodo Baggins và những người bạn; thay vào đó, ông đặt người đọc vào một vũ trụ được xây dựng tỉ mỉ từ ngôn ngữ, lịch sử đến nền văn minh riêng biệt. Đây là một hành trình đi sâu vào bản chất của lòng dũng cảm, sự hy sinh và tình bạn cao cả, nơ",
       "genre": "Tiểu thuyết giả tưởng / Sử thi / Phiêu lưu"
     },
@@ -1521,7 +1521,7 @@
       "category": "trinh-tham-kinh-di",
       "categoryName": "Trinh thám - kinh dị",
       "slug": "an-mang-tren-chuyen-tau-toc-hanh-phuong-ong",
-      "stock": 100,
+      "stock": 12,
       "description": "Qua vụ án kinh điển đầy sương mù và những bí ẩn đằng sau cánh cửa toa tàu, \"Nữ hoàng trinh thám\" Agatha Christie đã thể hiện một trực giác trinh thám bậc thầy và khả năng thấu thị những tầng sâu kín nhất của tâm lý con người: thế giới không chỉ là những dấu vết hiện trường hay những bằng chứng ngoại phạm hoàn hảo, mà là nơi diễn ra một cuộc đấu trí nghẹt thở giữa công lý và lòng thù hận. Bà không chỉ kể về một vụ giết người trong đêm tuyết rơi trên chuyến tàu tốc hành Phương Đông; thay vào đó, bà đặt người đọc vào một không gian ngột ngạt đan xen với những lời khai đầy mâu thuẫn, nơi mỗi nhân vật đều có một bí mật riêng. Đây là một hành trình",
       "genre": "Tiểu thuyết trinh thám / Cổ điển / Hình sự"
     },
@@ -1633,7 +1633,7 @@
       "category": "thieu-nhi",
       "categoryName": "Sách thiếu nhi",
       "slug": "totto-chan-ben-cua-so-madogiwa-no-totto-chan",
-      "stock": 100,
+      "stock": 12,
       "description": "Qua những ký ức tuổi thơ trong sáng và đầy xúc động tại ngôi trường Tomoe, nữ văn sĩ Kuroyanagi Tetsuko đã thể hiện một trực giác giáo dục nhân văn và khả năng thấu thị tâm hồn trẻ thơ: thế giới không chỉ là những kỷ luật gò bó hay định kiến về một đứa trẻ \"biệt biệt\", mà là nơi tình yêu thương và sự tôn trọng có thể giúp mỗi cá tính được nở rộ một cách tự nhiên nhất. Bà không chỉ kể về những lớp học trên toa xe điện hay lòng tốt của thầy hiệu trưởng Kobayashi; thay vào đó, bà đặt người đọc vào một hành trình đánh thức thiên chức làm cha mẹ và thầy cô đan xen với những bài học về lòng nhân ái. Đây là một hành trình đi sâu vào bản chất của giá",
       "genre": "Hồi ký / Văn học thiếu nhi / Giáo dục nhân văn"
     },
@@ -1649,7 +1649,7 @@
       "category": "van-hoc-nuoc-ngoai",
       "categoryName": "Văn học nước ngoài",
       "slug": "rung-na-uy-norwegian-wood",
-      "stock": 100,
+      "stock": 5,
       "description": "Qua những giai điệu u sầu của bản nhạc cổ điển và nỗi cô độc bủa vây tuổi trẻ, nhà văn bậc thầy Haruki Murakami đã thể hiện một trực giác tâm lý tinh tế và khả năng thấu thị những góc khuất trong tâm hồn con người: thế giới không chỉ là những cuộc gặp gỡ thường nhật hay những mối quan hệ hữu hình, mà là nơi ta phải đối mặt với sự mất mát, những khao khát tính dục và sự chênh vênh giữa sự sống và cái chết. Ông không chỉ kể về mối tình tay ba đầy ám ảnh giữa Toru Watanabe, Naoko và Midori; thay vào đó, ông đặt người đọc vào một không gian đậm chất hoài niệm đan xen với những suy tư triết học về sự trưởng thành. Đây là một hành trình đi sâu vào ",
       "genre": "Tiểu thuyết tâm lý / Văn học Nhật Bản hiện đại / Lãng mạn"
     },

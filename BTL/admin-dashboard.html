@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="enhancements.css">
+</head>
+<body class="admin-dashboard-page">
+  <div class="admin-container">
+
+    <aside class="admin-sidebar">
+      <div class="sidebar-header"><h2>MOT Admin</h2><p>Quản trị bán hàng</p></div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="nav-item">Về trang chủ</a>
+        <a href="admin-dashboard.html" class="nav-item active">Dashboard</a>
+        <a href="products-manager.html" class="nav-item">Quản lý sách & danh mục</a>
+        <a href="accounts-manager.html" class="nav-item">Quản lý tài khoản</a>
+        <a href="orders-manager.html" class="nav-item">Quản lý đơn hàng</a>
+        <a href="vouchers-manager.html" class="nav-item">Quản lý voucher</a>
+        <a href="orders-manager.html#feedbackAdminSection" class="nav-item">Thư phản hồi</a>
+      </nav>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <div><h1>Dashboard quản trị</h1><p>Tổng quan nhanh về sản phẩm, tài khoản, đơn hàng, doanh thu, voucher và phản hồi.</p></div>
+        <div class="admin-actions"><button class="btn-add light" onclick="reloadAdminData()">Tải lại</button></div>
+      </div>
+      <section class="admin-dashboard-grid">
+        <article class="admin-dashboard-card"><span>Sản phẩm</span><strong id="dashboardProducts">0</strong><small>Đang hiển thị trên web</small></article>
+        <article class="admin-dashboard-card"><span>Danh mục</span><strong id="dashboardCategories">0</strong><small>Nhóm phân loại sản phẩm</small></article>
+        <article class="admin-dashboard-card"><span>Tài khoản</span><strong id="dashboardUsers">0</strong><small>Người dùng và admin</small></article>
+        <article class="admin-dashboard-card"><span>Đơn hàng</span><strong id="dashboardOrders">0</strong><small>Tổng số đơn trong hệ thống</small></article>
+        <article class="admin-dashboard-card"><span>Doanh thu đã giao</span><strong id="dashboardRevenue">0đ</strong><small>Tính theo đơn đã giao</small></article>
+        <article class="admin-dashboard-card"><span>Đơn chờ xử lý</span><strong id="dashboardPending">0</strong><small>Chờ lấy hàng/đang chuẩn bị</small></article>
+        <article class="admin-dashboard-card"><span>Voucher</span><strong id="dashboardVouchers">0</strong><small>Mã ưu đãi đang quản lý</small></article>
+        <article class="admin-dashboard-card"><span>Phản hồi mới</span><strong id="dashboardFeedbacks">0</strong><small>Cần đọc hoặc phản hồi</small></article>
+        <article class="admin-dashboard-card warning-card"><span>Sắp hết hàng</span><strong id="dashboardLowStock">0</strong><small>Sản phẩm còn từ 10 trở xuống</small></article>
+      </section>
+      <section class="admin-chart-grid">
+        <div class="admin-section chart-card">
+          <div class="section-title-row"><h2>Trạng thái đơn hàng</h2><p>Tỷ lệ theo từng trạng thái</p></div>
+          <div id="dashboardStatusChart" class="dashboard-chart-bars"></div>
+        </div>
+        <div class="admin-section chart-card">
+          <div class="section-title-row"><h2>Sản phẩm theo danh mục</h2><p>Top nhóm nhiều sản phẩm</p></div>
+          <div id="dashboardCategoryChart" class="dashboard-chart-bars"></div>
+        </div>
+        <div class="admin-section chart-card low-stock-card">
+          <div class="section-title-row"><h2>Cảnh báo tồn kho</h2><p>Cần nhập thêm</p></div>
+          <ul id="dashboardLowStockList" class="low-stock-list"></ul>
+        </div>
+      </section>
+      <section class="admin-mini-grid">
+        <div class="admin-section">
+          <div class="section-title-row"><h2>Đơn hàng gần đây</h2><p>5 đơn mới nhất</p></div>
+          <table class="admin-table"><thead><tr><th>ID</th><th>Khách hàng</th><th>Tổng tiền</th><th>Trạng thái</th></tr></thead><tbody id="dashboardRecentOrders"></tbody></table>
+        </div>
+        <div class="admin-section">
+          <div class="section-title-row"><h2>Phản hồi gần đây</h2><p>Từ trang liên hệ</p></div>
+          <div id="dashboardRecentFeedbacks" class="feedback-admin-list"></div>
+        </div>
+      </section>
+      <footer class="admin-footer-minimal">© 2026 MOT Store Admin</footer>
+    </main>
+  </div>
+  <script src="enhancements.js"></script>
+  <script src="data.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

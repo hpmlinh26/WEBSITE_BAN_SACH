@@ -158,3 +158,287 @@ body, .admin-container, .admin-table, .modal-content { font-family: Arial, Helve
   .admin-table { display:block; overflow-x:auto; white-space:nowrap; }
   .admin-table td, .admin-table th { padding: 12px; }
 }
+
+
+/* ================= V7 ADMIN ENHANCEMENTS ================= */
+html, body, button, input, select, textarea{ font-family:"Be Vietnam Pro", "Inter", "Segoe UI", Arial, sans-serif !important; }
+body{ cursor:url("assets/images/cursor-pen.png") 4 28, auto; }
+a, button, .nav-item, .btn-add, .btn-edit, .btn-delete, .btn-save{ cursor:url("assets/images/cursor-pen-pointer.png") 4 28, pointer !important; }
+.sidebar-header p{ text-transform:none; }
+.admin-dashboard-grid{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; }
+.admin-dashboard-card{ background:#fff; border-radius:22px; padding:22px; box-shadow:0 10px 28px rgba(16,24,40,.06); border:1px solid #eef0f4; }
+.admin-dashboard-card span{ color:#667085; font-weight:700; font-size:14px; }
+.admin-dashboard-card strong{ display:block; margin-top:8px; color:#c92127; font-size:30px; }
+.admin-dashboard-card small{ color:#98a2b3; }
+.admin-mini-grid{ display:grid; grid-template-columns:1.2fr .8fr; gap:22px; }
+.mot-toast-container{ position:fixed; top:18px; right:18px; z-index:20000; display:flex; flex-direction:column; gap:10px; pointer-events:none; }
+.mot-toast-item{ min-width:260px; max-width:360px; background:#fff; color:#1f2937; border-left:5px solid #c92127; border-radius:14px; padding:12px 14px; box-shadow:0 18px 45px rgba(15,23,42,.18); display:flex; gap:10px; align-items:flex-start; transform:translateX(110%); opacity:0; transition:.25s ease; pointer-events:auto; }
+.mot-toast-item.show{ transform:translateX(0); opacity:1; }
+.mot-toast-item.success{ border-left-color:#16a34a; }
+.mot-toast-item.error{ border-left-color:#dc2626; }
+.mot-toast-item.info{ border-left-color:#2563eb; }
+.mot-toast-item.warning{ border-left-color:#f59e0b; }
+.mot-toast-item i{ margin-top:2px; color:#c92127; }
+.mot-toast-item.success i{ color:#16a34a; }
+.mot-toast-item.error i{ color:#dc2626; }
+.mot-toast-item.info i{ color:#2563eb; }
+.mot-toast-item.warning i{ color:#f59e0b; }
+@media(max-width:1100px){ .admin-dashboard-grid{grid-template-columns:repeat(2,1fr);} .admin-mini-grid{grid-template-columns:1fr;} }
+@media(max-width:700px){ .admin-dashboard-grid{grid-template-columns:1fr;} }
+
+
+/* ================= V8 BUSINESS + ADMIN POLISH ================= */
+html, body, button, input, select, textarea,
+.admin-container, .admin-table, .admin-section, .modal-content{
+  font-family: "Be Vietnam Pro", "Inter", "Segoe UI", Arial, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.admin-main{ padding:34px 40px; }
+.admin-section{ margin-bottom:34px; }
+.admin-mini-grid, .admin-chart-grid{ gap:30px; align-items:start; }
+.admin-chart-grid{ display:grid; grid-template-columns:1fr 1fr .85fr; margin-bottom:30px; }
+.chart-card{ min-height:310px; }
+.dashboard-chart-bars{ display:flex; flex-direction:column; gap:13px; }
+.chart-bar-row{ display:grid; grid-template-columns:150px 1fr 42px; gap:12px; align-items:center; font-size:13px; color:#475467; }
+.chart-bar-row span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.chart-track{ height:12px; background:#f1f5f9; border-radius:999px; overflow:hidden; }
+.chart-track i{ display:block; height:100%; min-width:6px; background:linear-gradient(90deg,#c92127,#f97316); border-radius:999px; }
+.chart-bar-row.status-completed .chart-track i{ background:linear-gradient(90deg,#16a34a,#86efac); }
+.chart-bar-row.status-cancelled .chart-track i,
+.chart-bar-row.status-return .chart-track i{ background:linear-gradient(90deg,#be123c,#fb7185); }
+.chart-bar-row.status-shipping .chart-track i{ background:linear-gradient(90deg,#2563eb,#60a5fa); }
+.low-stock-list{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; }
+.low-stock-list li{ display:grid; grid-template-columns:42px 1fr auto; gap:10px; align-items:center; padding:10px; background:#fff7ed; border:1px solid #fed7aa; border-radius:14px; }
+.low-stock-list img{ width:42px; height:56px; object-fit:cover; border-radius:8px; }
+.low-stock-list span{ font-weight:700; font-size:13px; line-height:1.35; }
+.low-stock-list b{ color:#ea580c; }
+.warning-card strong{ color:#ea580c !important; }
+.stock-pill{ display:inline-flex; align-items:center; justify-content:center; min-width:48px; border-radius:999px; padding:7px 10px; background:#ecfdf3; color:#039855; font-weight:800; }
+.stock-pill.low{ background:#fff7ed; color:#ea580c; }
+.product-toolbar-v8{ display:grid !important; grid-template-columns:1.4fr .8fr .55fr .55fr .8fr; gap:12px; }
+.product-toolbar-v8 input, .product-toolbar-v8 select{ width:100%; min-width:0; }
+.stock-line{ margin:4px 0 0; font-size:12px; color:#039855; font-weight:700; }
+.stock-line.out, .detail-stock.out{ color:#be123c; }
+.detail-stock{ display:inline-flex; align-items:center; gap:8px; background:#ecfdf3; color:#039855; font-weight:800; padding:10px 14px; border-radius:999px; margin:8px 0 16px; }
+button:disabled{ opacity:.55; cursor:not-allowed !important; }
+.cart-stock{ display:block; color:#667085; margin-top:4px; }
+.blog-hero .eyebrow{ color:#c92127; text-transform:uppercase; font-weight:800; letter-spacing:.08em; margin:0 0 8px; }
+.blog-layout-v8 .blog-card h2{ font-size:18px; line-height:1.35; margin:12px 0 8px; }
+.blog-layout-v8 .blog-card p{ color:#475467; line-height:1.55; }
+.blog-tag{ display:inline-flex; margin-top:12px; background:#fff1f2; color:#c92127; border-radius:999px; padding:6px 10px; font-size:12px; font-weight:800; }
+.social-row{ display:flex; gap:16px; font-size:26px; color:#c92127; }
+.sidebar-search{ padding:12px; border:1px solid #ddd; border-radius:10px; }
+@media(max-width:1200px){ .admin-chart-grid{ grid-template-columns:1fr; } .product-toolbar-v8{ grid-template-columns:1fr 1fr; } }
+@media(max-width:700px){ .product-toolbar-v8{ grid-template-columns:1fr; } }
+
+/* ================= V9 FIX: admin font + dashboard spacing ================= */
+html, body, button, input, select, textarea,
+.admin-container, .admin-container *,
+.admin-main, .admin-main *,
+.modal-content, .modal-content * {
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif !important;
+}
+.admin-main {
+  padding: 40px 44px !important;
+}
+.admin-dashboard-grid {
+  gap: 24px !important;
+  margin-bottom: 52px !important;
+}
+.admin-dashboard-card {
+  min-height: 132px;
+}
+.admin-chart-grid {
+  margin-top: 8px !important;
+  margin-bottom: 44px !important;
+  gap: 34px !important;
+}
+.admin-chart-grid .admin-section {
+  margin-bottom: 0 !important;
+}
+.admin-mini-grid {
+  margin-top: 10px !important;
+  gap: 34px !important;
+}
+.section-title-row {
+  margin-bottom: 22px !important;
+}
+.chart-card {
+  min-height: 340px;
+}
+.low-stock-card {
+  min-height: 340px;
+}
+
+
+/* ================= V10 ADMIN SPACING + REMOVE BROKEN ICONS ================= */
+/* Ẩn icon sidebar để không còn hiện ô vuông khi FontAwesome/CDN bị lỗi */
+.admin-sidebar .nav-item i{
+  display:none !important;
+}
+.admin-sidebar .nav-item{
+  gap:0 !important;
+  padding-left:22px !important;
+}
+
+/* Tăng khoảng cách giữa cụm thẻ thống kê và cụm biểu đồ */
+.admin-dashboard-page .admin-dashboard-grid{
+  row-gap:34px !important;
+  column-gap:24px !important;
+  margin-bottom:72px !important;
+}
+.admin-dashboard-page .admin-chart-grid{
+  margin-top:26px !important;
+  gap:38px !important;
+}
+.admin-dashboard-page .admin-mini-grid{
+  margin-top:48px !important;
+}
+.admin-dashboard-page .admin-dashboard-card{
+  min-height:142px !important;
+}
+
+/* Sửa font admin về bộ an toàn hỗ trợ tiếng Việt tốt */
+html, body, button, input, select, textarea,
+.admin-container, .admin-container *,
+.admin-main, .admin-main *,
+.modal-content, .modal-content *{
+  font-family: Arial, "Segoe UI", Tahoma, sans-serif !important;
+}
+
+
+/* ================= V11 FINAL ADMIN FIXES ================= */
+.admin-container i,
+.admin-main i,
+.admin-sidebar i,
+.admin-actions i,
+.btn-add i,
+.btn-save i,
+.btn-edit i,
+.btn-delete i{
+  display:none !important;
+}
+.admin-actions .btn-add,
+.admin-actions .btn-save,
+.admin-actions .btn-edit,
+.admin-actions .btn-delete,
+.btn-add, .btn-save, .btn-edit, .btn-delete{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:0 !important;
+  min-width:auto !important;
+}
+.admin-header{ margin-bottom:34px !important; }
+.admin-section{ margin-bottom:42px !important; }
+.admin-dashboard-page .admin-dashboard-grid{
+  grid-template-columns:repeat(4,minmax(180px,1fr)) !important;
+  gap:26px !important;
+  margin-bottom:78px !important;
+}
+.admin-dashboard-page .admin-dashboard-card{ min-height:142px !important; }
+.admin-dashboard-page .admin-chart-grid{
+  margin-top:54px !important;
+  gap:40px !important;
+  clear:both;
+}
+.admin-dashboard-page .admin-mini-grid{
+  margin-top:54px !important;
+  gap:40px !important;
+}
+.category-admin-grid{
+  grid-template-columns:repeat(auto-fill,minmax(250px,1fr)) !important;
+  gap:22px !important;
+}
+.category-admin-card{
+  min-height:150px;
+  padding:18px !important;
+  align-items:start !important;
+}
+.category-admin-card h3{ line-height:1.25; }
+.card-actions{ margin-left:0 !important; justify-content:flex-start; }
+.admin-footer-minimal{ margin-top:26px !important; }
+@media(max-width:1280px){
+  .admin-dashboard-page .admin-dashboard-grid{ grid-template-columns:repeat(2,minmax(180px,1fr)) !important; }
+}
+@media(max-width:760px){
+  .admin-dashboard-page .admin-dashboard-grid{ grid-template-columns:1fr !important; }
+}
+
+
+/* ================= V15 DASHBOARD STATUS CARD REFINEMENT ================= */
+.admin-dashboard-page .admin-chart-grid{
+  margin-top:42px !important;
+  gap:42px !important;
+  align-items:stretch !important;
+}
+.admin-dashboard-page .chart-card{
+  min-height:360px !important;
+  padding:28px !important;
+}
+#dashboardStatusChart.dashboard-chart-bars{
+  gap:12px !important;
+}
+.status-overview-row{
+  display:grid;
+  grid-template-columns:150px 1fr 34px;
+  gap:12px;
+  align-items:center;
+  padding:10px 12px;
+  border-radius:14px;
+  background:#fbfbfd;
+  border:1px solid #eef0f4;
+}
+.status-overview-left{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-width:0;
+}
+.status-overview-left b{
+  font-size:13px;
+  line-height:1.25;
+  color:#344054;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.status-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#ea580c;
+  flex:0 0 10px;
+}
+.status-overview-track{
+  height:10px;
+  background:#f1f5f9;
+  border-radius:999px;
+  overflow:hidden;
+}
+.status-overview-track i{
+  display:block;
+  min-width:7px;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#c92127,#f97316);
+}
+.status-overview-row strong{
+  text-align:right;
+  font-size:15px;
+  color:#344054;
+}
+.status-overview-row.status-completed .status-dot,
+.status-overview-row.status-completed .status-overview-track i{ background:linear-gradient(90deg,#16a34a,#86efac); }
+.status-overview-row.status-shipping .status-dot,
+.status-overview-row.status-shipping .status-overview-track i{ background:linear-gradient(90deg,#2563eb,#60a5fa); }
+.status-overview-row.status-return .status-dot,
+.status-overview-row.status-cancelled .status-dot,
+.status-overview-row.status-return .status-overview-track i,
+.status-overview-row.status-cancelled .status-overview-track i{ background:linear-gradient(90deg,#be123c,#fb7185); }
+.status-overview-row.status-packing .status-dot,
+.status-overview-row.status-packing .status-overview-track i{ background:linear-gradient(90deg,#f59e0b,#facc15); }
+@media(max-width:1200px){
+  .status-overview-row{ grid-template-columns:140px 1fr 30px; }
+}

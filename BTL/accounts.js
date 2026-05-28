@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const wrap = document.getElementById("userOrdersList");
         if(!wrap) return;
         if(!orders.length){
-            wrap.innerHTML = `<div class="order-card empty-user-order"><p>Bạn chưa có đơn hàng nào.</p><a href="products.html">Mua manga ngay</a></div>`;
+            wrap.innerHTML = `<div class="order-card empty-user-order"><p>Bạn chưa có đơn hàng nào.</p><a href="products.html">Mua ngay</a></div>`;
             return;
         }
         wrap.innerHTML = orders.map(order => {
@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     ${items.map(item => `<div class="order-item dynamic-order-item">
                         <div class="product-info">
                             <img src="${img(item.image)}" alt="${item.productName || item.name}" class="product-image" onerror="this.src='assets/images/placeholder-cover.svg'">
-                            <div class="product-details"><h4 class="product-name">${item.productName || item.name}</h4><p>${item.author || 'MOT Manga'}</p></div>
+                            <div class="product-details"><h4 class="product-name">${item.productName || item.name}</h4><p>${item.author || 'MOT Store'}</p></div>
                         </div>
                         <div class="product-price-qty">
                             <div class="price-box"><span class="current-price">${money(item.price)}</span><span class="old-price">${money(item.originalPrice || item.price)}</span></div>
@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <h2>Chi tiết đơn hàng #${order.id}</h2>
             <div class="user-order-meta"><p><b>Trạng thái:</b> ${statusText[order.status] || order.status}</p><p><b>Tổng tiền:</b> ${money(order.total)}</p><p><b>Địa chỉ:</b> ${order.shippingAddress || 'Chưa có địa chỉ'}</p></div>
             <div class="user-order-modal-items">
-                ${items.map(item => `<div class="user-order-modal-item"><img src="${img(item.image)}" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${item.productName || item.name}"><div><h4>${item.productName || item.name}</h4><p>${item.author || 'MOT Manga'} • SL: ${item.quantity}</p></div><strong>${money(item.subtotal || item.price * item.quantity)}</strong></div>`).join('') || '<p>Đơn hàng chưa có sản phẩm.</p>'}
+                ${items.map(item => `<div class="user-order-modal-item"><img src="${img(item.image)}" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${item.productName || item.name}"><div><h4>${item.productName || item.name}</h4><p>${item.author || 'MOT Store'} • SL: ${item.quantity}</p></div><strong>${money(item.subtotal || item.price * item.quantity)}</strong></div>`).join('') || '<p>Đơn hàng chưa có sản phẩm.</p>'}
             </div>
             <div class="user-order-modal-actions"><a href="invoice.html?orderId=${order.id}" class="btn-order-action">Xuất hóa đơn điện tử</a></div>
         </div>`;
@@ -365,6 +365,44 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
+    async function loadWishlist(){
+        const grid = document.getElementById("wishlistGrid");
+        if(!grid) return;
+        try{
+            const ids = JSON.parse(localStorage.getItem("motWishlist") || "[]").map(Number);
+            if(!ids.length){
+                grid.innerHTML = '<div class="empty-wishlist">Bạn chưa có sản phẩm yêu thích nào. Hãy bấm biểu tượng trái tim ở trang sản phẩm để lưu lại.</div>';
+                return;
+            }
+            const products = await api("/products");
+            const selected = products.filter(p => ids.includes(Number(p.id)));
+            if(!selected.length){
+                grid.innerHTML = '<div class="empty-wishlist">Danh sách yêu thích đang trống.</div>';
+                return;
+            }
+            grid.innerHTML = selected.map(p => `<div class="wishlist-card" data-wish-card="${p.id}">
+                <img src="${img(p.image)}" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${p.name}">
+                <h3>${p.name}</h3>
+                <p>${money(p.price)}</p>
+                <div class="wishlist-actions">
+                    <a href="product-detail.html?id=${p.id}">Xem chi tiết</a>
+                    <button type="button" data-remove-wish="${p.id}">Bỏ thích</button>
+                </div>
+            </div>`).join('');
+            grid.querySelectorAll('[data-remove-wish]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = Number(btn.dataset.removeWish);
+                    const next = JSON.parse(localStorage.getItem("motWishlist") || "[]").map(Number).filter(x => x !== id);
+                    localStorage.setItem("motWishlist", JSON.stringify(next));
+                    loadWishlist();
+                });
+            });
+        }catch(error){
+            grid.innerHTML = '<div class="empty-wishlist">Chưa tải được danh sách yêu thích.</div>';
+        }
+    }
+
+
     async function loadVouchers(){
         const grid = document.getElementById("userVoucherGrid");
         if(!grid) return;
@@ -373,15 +411,39 @@ document.addEventListener('DOMContentLoaded', function() {
             const active = vouchers.filter(v => v.active !== false);
             if(!active.length) return;
             grid.innerHTML = active.map(v => `<div class="voucher-card">
-                <div class="voucher-left"><i class="fa-solid fa-ticket"></i></div>
+                <div class="voucher-left"><span class="voucher-ticket-text">%</span></div>
                 <div class="voucher-right">
                     <h3 class="voucher-title">${v.title}</h3>
-                    <p class="voucher-desc">${v.description || 'Mã ưu đãi từ MOT Manga Store'}</p>
+                    <p class="voucher-desc">${v.description || 'Mã ưu đãi từ MOT Store'}</p>
                     <div class="voucher-footer"><div class="code-box"><span class="code-text">${v.code}</span><span class="expiry">HSD: ${v.expiresAt || 'Không giới hạn'}</span></div><button class="btn-copy" data-code="${v.code}" onclick="navigator.clipboard?.writeText('${v.code}'); this.innerText='Đã copy';">Copy mã</button></div>
                 </div>
             </div>`).join('');
         }catch(error){}
     }
 
-    document.addEventListener('DOMContentLoaded', () => { loadOrders(); loadVouchers(); });
+    document.addEventListener('DOMContentLoaded', () => { loadOrders(); loadVouchers(); loadWishlist(); });
+})();
+
+
+// V15: mở đúng tab tài khoản từ link header, ví dụ accounts.html?tab=form-thong-bao
+(function openAccountTabFromQuery(){
+  function activateTargetTab(targetId){
+    if(!targetId) return;
+    const target = document.getElementById(targetId);
+    if(!target) return;
+    document.querySelectorAll('.user-profile-dashboard .submenu-item, .user-profile-dashboard .sidebar-menu > .menu-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.user-profile-dashboard .tab-content').forEach(tab => tab.classList.remove('active'));
+    target.classList.add('active');
+    const trigger = document.querySelector(`.user-profile-dashboard [data-target="${targetId}"]`);
+    if(trigger){
+      trigger.classList.add('active');
+      const group = trigger.closest('.menu-item-group');
+      if(group) group.classList.add('active');
+    }
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if(tab) setTimeout(() => activateTargetTab(tab), 60);
+  });
 })();

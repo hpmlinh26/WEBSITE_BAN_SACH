@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="auth-carousel.css">
     <link rel="stylesheet" href="styles-cart.css">
     <link rel="stylesheet" href="accounts.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="enhancements.css">
 </head>
 <body>
     <!-- TOP HEADER BANNER -->
@@ -51,21 +55,14 @@
             <div class="header-right">
                 <!-- SEARCH -->
                 <div class="search-box">
-                    <input type="text" placeholder="Search">
-                    <button class="search-btn">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
+                    <input type="text" placeholder="Tìm kiếm sản phẩm...">
+                    <button class="search-btn" type="button" aria-label="Tìm kiếm"><svg class="search-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.8 18.1a7.3 7.3 0 1 1 5.2-2.1l4 4a1.4 1.4 0 0 1-2 2l-4-4a7.2 7.2 0 0 1-3.2.1Zm0-2.8a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Z" fill="currentColor"/></svg></button>
                 </div>
 
                 <div class="icons">
-                    <i class="fa-solid fa-bell icon"></i>
-                    <div class="cart-box">
-                        <i class="fa-solid fa-cart-shopping icon"></i>
-                        <span class="badge">0</span>
-                    </div>
-                    <div class="user-circle">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
+                    <a href="accounts.html?tab=form-thong-bao" class="header-icon-link notification-link" title="Thông báo"><img class="header-icon-img notification-icon" src="assets/images/icon-notification-header.png" alt="Thông báo"></a>
+                    <div class="cart-box"><img class="header-icon-img cart-icon-img" src="assets/images/icon-cart-header.png" alt="Giỏ hàng"><span class="badge">0</span></div>
+                    <div class="user-circle"><img class="header-icon-img user-icon-img" src="assets/images/icon-user-header.png" alt="Tài khoản"></div>
                 </div>
 
                 <button class="btn-login" onclick="openAuth()">Login</button>
@@ -81,7 +78,7 @@
             <aside class="profile-sidebar">
                 <div class="avatar-section">
                     <div class="avatar-placeholder">
-                        <i class="fa-solid fa-user"></i>
+                        <img src="assets/images/user-sidebar-avatar.png" alt="Ảnh đại diện" class="profile-avatar-img">
                     </div>
                     <span class="user-badge">Thành viên</span>
                 </div>
@@ -91,9 +88,9 @@
                     <div class="menu-item-group" id="accountGroup">
                         <div class="menu-item-header" id="accountGroupHeader">
                             <span class="menu-label">
-                                <i class="fa-regular fa-user"></i>Thông tin tài khoản
+                                <img src="assets/images/user-sidebar-account.png" alt="" class="account-menu-icon">Thông tin tài khoản
                             </span>
-                            <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                            <span class="arrow-icon" aria-hidden="true"></span>
                         </div>
                         <div class="submenu" id="accountSubmenu">
                             <a href="#" class="submenu-item" data-target="form-ho-so">Hồ sơ cá nhân</a>
@@ -105,21 +102,28 @@
                     <!-- Menu Đơn hàng -->
                     <a href="#" class="menu-item" data-target="form-don-hang">
                         <span class="menu-label">
-                            <i class="fa-solid fa-list-check"></i>Đơn hàng của tôi
+                            <img src="assets/images/user-sidebar-orders.png" alt="" class="account-menu-icon">Đơn hàng của tôi
                         </span>
                     </a>
 
                     <!-- Menu Thông báo -->
                     <a href="#" class="menu-item" data-target="form-thong-bao">
                         <span class="menu-label">
-                            <i class="fa-regular fa-bell"></i>Thông báo
+                            <img src="assets/images/user-sidebar-notification.png" alt="" class="account-menu-icon">Thông báo
+                        </span>
+                    </a>
+
+                    <!-- Menu Yêu thích -->
+                    <a href="#" class="menu-item" data-target="form-yeu-thich">
+                        <span class="menu-label">
+                            <img src="assets/images/user-sidebar-wishlist.png" alt="" class="account-menu-icon">Yêu thích
                         </span>
                     </a>
 
                     <!-- Menu Voucher -->
                     <a href="#" class="menu-item" data-target="form-voucher">
                         <span class="menu-label">
-                            <i class="fa-solid fa-ticket"></i>Voucher
+                            <img src="assets/images/user-sidebar-voucher.png" alt="" class="account-menu-icon">Voucher
                         </span>
                     </a>
                 </nav>
@@ -342,6 +346,14 @@
                 </div>
 
                 <!-- TAB 6: VOUCHER -->
+
+                <!-- TAB: DANH SÁCH YÊU THÍCH -->
+                <div id="form-yeu-thich" class="tab-content">
+                    <h2 class="content-title">Danh sách yêu thích</h2>
+                    <p class="content-subtitle">Các sản phẩm bạn đã bấm yêu thích sẽ hiển thị tại đây.</p>
+                    <div id="wishlistGrid" class="wishlist-grid"></div>
+                </div>
+
                 <div id="form-voucher" class="tab-content">
                     <div class="voucher-tabs">
                         <div class="tab-item active" data-filter="my-vouchers">Voucher của tôi</div>
@@ -351,7 +363,7 @@
                     <div class="voucher-grid" id="userVoucherGrid">
                         <div class="voucher-card">
                             <div class="voucher-left">
-                                <i class="fa-solid fa-ticket"></i>
+                                <span class="voucher-ticket-text">%</span>
                             </div>
                             <div class="voucher-right">
                                 <h3 class="voucher-title">FREESHIP 25K THÀNH VIÊN MỚI</h3>
@@ -368,7 +380,7 @@
 
                         <div class="voucher-card">
                             <div class="voucher-left">
-                                <i class="fa-solid fa-ticket"></i>
+                                <span class="voucher-ticket-text">%</span>
                             </div>
                             <div class="voucher-right">
                                 <h3 class="voucher-title">MÃ GIẢM 10K 20K TOÀN SÀN</h3>
@@ -385,7 +397,7 @@
 
                         <div class="voucher-card">
                             <div class="voucher-left">
-                                <i class="fa-solid fa-ticket"></i>
+                                <span class="voucher-ticket-text">%</span>
                             </div>
                             <div class="voucher-right">
                                 <h3 class="voucher-title">FREESHIP 35K THÀNH VIÊN MỚI</h3>
@@ -402,7 +414,7 @@
 
                         <div class="voucher-card">
                             <div class="voucher-left">
-                                <i class="fa-solid fa-ticket"></i>
+                                <span class="voucher-ticket-text">%</span>
                             </div>
                             <div class="voucher-right">
                                 <h3 class="voucher-title">ƯU ĐÃI ĐỘC QUYỀN MỌT</h3>
@@ -424,13 +436,14 @@
     </div>
 
     <footer class="account-mini-footer clean-account-footer">
-        <div>© 2026 MOT Manga Store</div>
+        <div>© 2026 MOT Store</div>
         <div>Hỗ trợ khách hàng: mot@gmail.com.vn</div>
     </footer>
 
-    <script src="accounts.js"></script>
+    <script src="enhancements.js"></script>
     <script src="data.js"></script>
     <script src="auth-carousel.js"></script>
     <script src="script.js"></script>
+    <script src="accounts.js"></script>
 </body>
 </html>

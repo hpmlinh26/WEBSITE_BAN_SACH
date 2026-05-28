@@ -116,7 +116,7 @@ function toOrderItemResponse(row) {
     originalPrice: row.original_price || row.price,
     quantity: row.quantity,
     subtotal: row.subtotal,
-    author: row.author || 'MOT Manga',
+    author: row.author || 'MOT Store',
     image: row.image || row.product_image || 'assets/images/placeholder-cover.svg',
     categoryName: row.category_name || 'Manga'
   };
@@ -383,8 +383,9 @@ app.post('/api/orders', asyncHandler(async (req, res) => {
   for (const item of payload.items) {
     const productId = Number(item.productId || item.product_id);
     const quantity = Math.max(1, Number(item.quantity || 1));
-    const product = await get('SELECT id, name, author, price, original_price, image FROM products WHERE id = ?', [productId]);
+    const product = await get('SELECT id, name, author, price, original_price, image, stock FROM products WHERE id = ?', [productId]);
     if (!product) return res.status(400).json({ message: `Không tìm thấy sản phẩm ID ${productId}.` });
+    if (Number(product.stock || 0) < quantity) return res.status(400).json({ message: `Sản phẩm ${product.name} chỉ còn ${product.stock} trong kho.` });
     const subtotal = product.price * quantity;
     total += subtotal;
     preparedItems.push({ product, quantity, subtotal });
@@ -401,6 +402,7 @@ app.post('/api/orders', asyncHandler(async (req, res) => {
   const result = await run(`INSERT INTO orders (customer_name, customer_phone, customer_email, shipping_address, payment_method, status, total) VALUES (?, ?, ?, ?, ?, ?, ?)`, [payload.customerName, payload.customerPhone, payload.customerEmail, payload.shippingAddress, payload.paymentMethod, payload.status, total]);
   for (const item of preparedItems) {
     await run(`INSERT INTO order_items(order_id, product_id, product_name, price, original_price, author, product_image, quantity, subtotal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [result.id, item.product.id, item.product.name, item.product.price, item.product.original_price || item.product.price, item.product.author, item.product.image, item.quantity, item.subtotal]);
+    await run('UPDATE products SET stock = MAX(stock - ?, 0), updated_at = CURRENT_TIMESTAMP WHERE id = ?', [item.quantity, item.product.id]);
   }
   res.status(201).json({ id: result.id, customerName: payload.customerName, total, status: payload.status });
 }));

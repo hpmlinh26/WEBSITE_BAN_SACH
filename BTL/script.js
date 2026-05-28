@@ -1,9 +1,14 @@
-// script.js - xử lý chung cho frontend MOT Manga Store.
+// script.js - xử lý chung cho frontend MOT Store.
 (function () {
   const API_BASE = window.location.port === "3000" ? "/api" : "http://localhost:3000/api";
   const money = (value) => Number(value || 0).toLocaleString("vi-VN") + "đ";
   const qs = (selector, root = document) => root.querySelector(selector);
   const qsa = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const normalizeText = (value) => String(value || "")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/đ/g, "d").replace(/Đ/g, "D")
+    .toLowerCase();
 
   let appProducts = [];
   let appCategories = [];
@@ -40,7 +45,8 @@
       originalPrice: p.originalPrice || p.original_price || p.price,
       category: p.category || p.category_slug,
       categoryName: p.categoryName || p.category_name || "Manga",
-      image: p.image || "assets/images/Mangan.png"
+      image: p.image || "assets/images/Mangan.png",
+      stock: Number(p.stock ?? 100)
     };
   }
 
@@ -61,7 +67,8 @@
     return Object.values(getCart()).reduce((sum, qty) => sum + Number(qty || 0), 0);
   }
 
-  function toast(message) {
+  function toast(message, type = "success") {
+    if (window.showToast) return window.showToast(message, type);
     let box = qs(".mot-toast");
     if (!box) {
       box = document.createElement("div");
@@ -74,17 +81,76 @@
     box.timer = setTimeout(() => box.classList.remove("show"), 1800);
   }
 
+  function getWishlist() {
+    return JSON.parse(localStorage.getItem("motWishlist") || "[]");
+  }
+
+  function setWishlist(list) {
+    localStorage.setItem("motWishlist", JSON.stringify([...new Set(list.map(Number))]));
+  }
+
+  function isWishlisted(id) {
+    return getWishlist().includes(Number(id));
+  }
+
+  function toggleWishlist(productId, button) {
+    const id = Number(productId);
+    let list = getWishlist();
+    const product = appProducts.find(p => Number(p.id) === id);
+    if (list.includes(id)) {
+      list = list.filter(x => x !== id);
+      button?.classList.remove("active");
+      toast("Đã bỏ khỏi danh sách yêu thích", "info");
+    } else {
+      list.push(id);
+      button?.classList.add("active");
+      toast(`Đã thêm ${product ? product.name : "sản phẩm"} vào yêu thích`, "success");
+    }
+    setWishlist(list);
+    qsa(`[data-wishlist="${id}"]`).forEach(btn => btn.classList.toggle("active", isWishlisted(id)));
+  }
+
+  function flyToCart(sourceEl, product) {
+    const cartIcon = qs(".cart-box");
+    if (!sourceEl || !cartIcon || !product?.image) return;
+    const startImg = sourceEl.closest(".product-item, .product-detail-card, .order-item")?.querySelector("img") || sourceEl.querySelector?.("img");
+    if (!startImg) return;
+    const start = startImg.getBoundingClientRect();
+    const end = cartIcon.getBoundingClientRect();
+    const ghost = document.createElement("img");
+    ghost.className = "fly-cart-img";
+    ghost.src = startImg.src || product.image;
+    ghost.style.left = `${start.left}px`;
+    ghost.style.top = `${start.top}px`;
+    document.body.appendChild(ghost);
+    const dx = end.left + end.width / 2 - (start.left + 32);
+    const dy = end.top + end.height / 2 - (start.top + 42);
+    requestAnimationFrame(() => {
+      ghost.style.transform = `translate(${dx}px, ${dy}px) scale(.18) rotate(12deg)`;
+      ghost.style.opacity = "0.1";
+      cartIcon.classList.add("cart-pulse");
+    });
+    setTimeout(() => { ghost.remove(); cartIcon.classList.remove("cart-pulse"); }, 820);
+  }
+
   function updateCartBadge() {
     qsa(".cart-box .badge").forEach(badge => {
       badge.textContent = cartCount();
     });
   }
 
-  async function addToCart(productId, quantity = 1) {
+  async function addToCart(productId, quantity = 1, sourceElement = null) {
     const cart = getCart();
     const key = String(productId);
-    cart[key] = Number(cart[key] || 0) + Number(quantity || 1);
+    const product = appProducts.find(p => Number(p.id) === Number(productId));
+    const currentQty = Number(cart[key] || 0);
+    const nextQty = currentQty + Number(quantity || 1);
+    if (!product) return toast("Không tìm thấy sản phẩm.", "error");
+    if (Number(product.stock || 0) <= 0) return toast("Sản phẩm này hiện đã hết hàng.", "warning");
+    if (nextQty > Number(product.stock || 0)) return toast(`Chỉ còn ${product.stock} sản phẩm trong kho.`, "warning");
+    cart[key] = nextQty;
     setCart(cart);
+    flyToCart(sourceElement, product);
 
     const user = getCurrentUser();
     if (user?.id) {
@@ -101,20 +167,22 @@
     return `
       <article class="product-item functional-card" data-product-id="${product.id}" tabindex="0">
         <div class="product-image">
+          <button class="wishlist-btn ${isWishlisted(product.id) ? 'active' : ''}" data-wishlist="${product.id}" aria-label="Yêu thích ${escapeHtml(product.name)}"><i class="fa-solid fa-heart"></i></button>
           <img src="${product.image}" alt="${escapeHtml(product.name)}" onerror="this.src='assets/images/Mangan.png'">
           <span class="discount-badge">-${product.discount || 20}%</span>
         </div>
         <div class="product-info">
           <div class="product-rating">★★★★★</div>
           <h3 class="product-title">${escapeHtml(product.name)}</h3>
-          <p class="product-author">${escapeHtml(product.author || "MOT Manga")}</p>
+          <p class="product-author">${escapeHtml(product.author || "MOT Store")}</p>
+          <p class="stock-line ${Number(product.stock || 0) <= 0 ? 'out' : ''}">${Number(product.stock || 0) > 0 ? `Còn ${product.stock} sản phẩm` : "Hết hàng"}</p>
           <div class="product-price">
             <span class="price">${money(product.price)}</span>
             <span class="original-price">${money(product.originalPrice)}</span>
           </div>
           <div class="product-actions">
             ${action}
-            <button class="btn-cart-icon" data-add-cart="${product.id}" aria-label="Thêm ${escapeHtml(product.name)} vào giỏ"><i class="fa-solid fa-cart-shopping"></i></button>
+            <button class="btn-cart-icon" data-add-cart="${product.id}" ${Number(product.stock || 0) <= 0 ? "disabled" : ""} aria-label="Thêm ${escapeHtml(product.name)} vào giỏ"><i class="fa-solid fa-cart-shopping"></i></button>
           </div>
         </div>
       </article>`;
@@ -131,6 +199,33 @@
 
   function goProduct(id) {
     window.location.href = `product-detail.html?id=${id}`;
+  }
+
+  function setupSearchSuggest(box, input, submit) {
+    if (!box || !input) return;
+    let panel = qs(".search-suggest", box);
+    if (!panel) {
+      panel = document.createElement("div");
+      panel.className = "search-suggest";
+      box.appendChild(panel);
+    }
+    const render = () => {
+      const keyword = normalizeText(input.value.trim());
+      if (!keyword) { panel.classList.remove("show"); return; }
+      const list = appProducts.filter(p => normalizeText([p.name, p.author, p.categoryName].join(" ")).includes(keyword)).slice(0, 6);
+      panel.innerHTML = list.length ? list.map(p => `
+        <a class="search-suggest-item" href="product-detail.html?id=${p.id}">
+          <img src="${p.image}" alt="${escapeHtml(p.name)}" onerror="this.src='assets/images/placeholder-cover.svg'">
+          <div><strong>${escapeHtml(p.name)}</strong><span>${money(p.price)} • ${escapeHtml(p.author || "MOT Store")}</span></div>
+        </a>`).join("") : `<div class="search-suggest-empty">Không tìm thấy sản phẩm phù hợp.</div>`;
+      panel.classList.add("show");
+    };
+    input.addEventListener("input", render);
+    input.addEventListener("focus", render);
+    input.addEventListener("keydown", e => {
+      if (e.key === "Escape") panel.classList.remove("show");
+    });
+    document.addEventListener("click", e => { if (!box.contains(e.target)) panel.classList.remove("show"); });
   }
 
   function initHeader() {
@@ -161,6 +256,7 @@
       };
       button?.addEventListener("click", submit);
       input?.addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
+      setupSearchSuggest(box, input, submit);
     });
 
     qsa(".cart-box").forEach(cart => {
@@ -239,7 +335,17 @@
       btn.addEventListener("click", e => {
         e.preventDefault();
         e.stopPropagation();
-        addToCart(Number(btn.dataset.addCart));
+        addToCart(Number(btn.dataset.addCart), 1, btn);
+      });
+    });
+    qsa("[data-wishlist]", root).forEach(btn => {
+      if (btn.dataset.boundWishlist === "1") return;
+      btn.dataset.boundWishlist = "1";
+      btn.classList.toggle("active", isWishlisted(btn.dataset.wishlist));
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleWishlist(btn.dataset.wishlist, btn);
       });
     });
     qsa("[data-buy]", root).forEach(btn => {
@@ -248,7 +354,7 @@
       btn.addEventListener("click", e => {
         e.preventDefault();
         e.stopPropagation();
-        addToCart(Number(btn.dataset.buy));
+        addToCart(Number(btn.dataset.buy), 1, btn);
         window.location.href = "cart.html";
       });
     });
@@ -288,6 +394,9 @@
     const selectedCategory = params.get("category") || "";
     const searchInput = qs("#searchInput");
     const categorySelect = qs("#categoryFilter");
+    const minPriceInput = qs("#minPriceFilter");
+    const maxPriceInput = qs("#maxPriceFilter");
+    const sortSelect = qs("#sortFilter");
     const title = qs(".products-page-title");
     if (searchInput) searchInput.value = search;
     if (categorySelect) {
@@ -296,19 +405,31 @@
     }
 
     function render() {
-      const keyword = (searchInput?.value || "").trim().toLowerCase();
+      const keyword = normalizeText((searchInput?.value || "").trim());
       const cat = categorySelect?.value || "";
-      const list = appProducts.filter(p => {
-        const matchText = !keyword || [p.name, p.author, p.categoryName].join(" ").toLowerCase().includes(keyword);
+      const minPrice = Number(minPriceInput?.value || 0);
+      const maxPrice = Number(maxPriceInput?.value || 0);
+      let list = appProducts.filter(p => {
+        const matchText = !keyword || normalizeText([p.name, p.author, p.categoryName].join(" ")).includes(keyword);
         const matchCat = !cat || p.category === cat;
-        return matchText && matchCat;
+        const matchMin = !minPrice || Number(p.price || 0) >= minPrice;
+        const matchMax = !maxPrice || Number(p.price || 0) <= maxPrice;
+        return matchText && matchCat && matchMin && matchMax;
       });
+      const sort = sortSelect?.value || "default";
+      if (sort === "priceAsc") list.sort((a, b) => Number(a.price) - Number(b.price));
+      if (sort === "priceDesc") list.sort((a, b) => Number(b.price) - Number(a.price));
+      if (sort === "stockAsc") list.sort((a, b) => Number(a.stock || 0) - Number(b.stock || 0));
+      if (sort === "stockDesc") list.sort((a, b) => Number(b.stock || 0) - Number(a.stock || 0));
       if (title) title.textContent = cat ? (appCategories.find(c => c.slug === cat)?.name || "Sản phẩm") : "Tất cả sản phẩm";
       container.innerHTML = list.length ? list.map(p => productCard(p)).join("") : `<p class="empty-state">Không tìm thấy sản phẩm phù hợp.</p>`;
       bindProductClicks(container);
     }
     searchInput?.addEventListener("input", render);
     categorySelect?.addEventListener("change", render);
+    minPriceInput?.addEventListener("input", render);
+    maxPriceInput?.addEventListener("input", render);
+    sortSelect?.addEventListener("change", render);
     render();
   }
 
@@ -324,13 +445,15 @@
         <div class="detail-info">
           <p class="breadcrumb"><a href="index.html">Trang chủ</a> / <a href="products.html">Sản phẩm</a> / ${escapeHtml(product.name)}</p>
           <h1>${escapeHtml(product.name)}</h1>
-          <p class="detail-author">Tác giả: ${escapeHtml(product.author || "MOT Manga")}</p>
+          <p class="detail-author">Tác giả: ${escapeHtml(product.author || "MOT Store")}</p>
           <p class="detail-category">Danh mục: ${escapeHtml(product.categoryName || appCategories.find(c => c.slug === product.category)?.name || "Manga")}</p>
           <div class="detail-price"><span>${money(product.price)}</span><del>${money(product.originalPrice)}</del><b>-${product.discount || 20}%</b></div>
-          <p class="detail-desc">${escapeHtml(product.description || "Sản phẩm manga đang được bán tại MOT.vn.")}</p>
+          <p class="detail-desc">${escapeHtml(product.description || "Sản phẩm đang được bán tại MOT.vn.")}</p>
+          <p class="detail-stock ${Number(product.stock || 0) <= 0 ? 'out' : ''}"><i class="fa-solid fa-box"></i> ${Number(product.stock || 0) > 0 ? `Còn ${product.stock} sản phẩm trong kho` : "Sản phẩm tạm hết hàng"}</p>
           <div class="detail-actions">
-            <button class="btn-add-cart" data-add-cart="${product.id}"><i class="fa-solid fa-cart-shopping"></i> Thêm giỏ</button>
-            <button class="btn-buy-now detail-buy" data-buy="${product.id}">Mua ngay</button>
+            <button class="btn-add-cart" data-add-cart="${product.id}" ${Number(product.stock || 0) <= 0 ? "disabled" : ""}><i class="fa-solid fa-cart-shopping"></i> Thêm giỏ</button>
+            <button class="btn-buy-now detail-buy" data-buy="${product.id}" ${Number(product.stock || 0) <= 0 ? "disabled" : ""}>Mua ngay</button>
+            <button class="btn-wishlist-detail ${isWishlisted(product.id) ? 'active' : ''}" data-wishlist="${product.id}"><i class="fa-solid fa-heart"></i> Yêu thích</button>
           </div>
         </div>
       </div>`;
@@ -361,17 +484,18 @@
                 <img src="${item.product.image}" alt="${escapeHtml(item.product.name)}" onerror="this.src='assets/images/Mangan.png'">
                 <div class="cart-row-info">
                   <h3>${escapeHtml(item.product.name)}</h3>
-                  <p>${escapeHtml(item.product.author || "MOT Manga")}</p>
+                  <p>${escapeHtml(item.product.author || "MOT Store")}</p>
+                  <small class="cart-stock">Tồn kho: ${item.product.stock}</small>
                   <strong>${money(item.product.price)}</strong> <del>${money(item.product.originalPrice)}</del>
                 </div>
                 <div class="qty-control">
                   <button data-cart-minus="${item.product.id}">-</button>
-                  <input value="${item.qty}" data-cart-qty="${item.product.id}" inputmode="numeric">
+                  <input value="${item.qty}" max="${item.product.stock}" data-cart-qty="${item.product.id}" inputmode="numeric">
                   <button data-cart-plus="${item.product.id}">+</button>
                 </div>
                 <strong class="cart-subtotal">${money(item.product.price * item.qty)}</strong>
                 <button class="item-remove" data-cart-remove="${item.product.id}"><i class="fa-solid fa-trash"></i></button>
-              </div>`).join("") : `<div class="empty-cart"><p>Giỏ hàng đang trống.</p><a href="products.html">Mua manga ngay</a></div>`}
+              </div>`).join("") : `<div class="empty-cart"><p>Giỏ hàng đang trống.</p><a href="products.html">Mua ngay</a></div>`}
           </section>
           <aside class="cart-summary-card">
             <h2>Thanh toán</h2>
@@ -395,13 +519,23 @@
 
     function changeQty(id, delta) {
       const cart = getCart();
-      cart[id] = Math.max(1, Number(cart[id] || 1) + delta);
+      const product = appProducts.find(p => Number(p.id) === Number(id));
+      const next = Math.max(1, Number(cart[id] || 1) + delta);
+      if (product && next > Number(product.stock || 0)) return toast(`Chỉ còn ${product.stock} sản phẩm trong kho.`, "warning");
+      cart[id] = next;
       setCart(cart);
       render();
     }
     function setQty(id, qty) {
       const cart = getCart();
-      cart[id] = Math.max(1, qty || 1);
+      const product = appProducts.find(p => Number(p.id) === Number(id));
+      const cleanQty = Math.max(1, qty || 1);
+      if (product && cleanQty > Number(product.stock || 0)) {
+        cart[id] = Number(product.stock || 1);
+        toast(`Số lượng đã được điều chỉnh theo tồn kho (${product.stock}).`, "warning");
+      } else {
+        cart[id] = cleanQty;
+      }
       setCart(cart);
       render();
     }
@@ -545,13 +679,15 @@
       } catch (error) {
         appliedVoucher = null;
         renderOrder();
-        alert(error.message);
+        toast(error.message, "error");
       }
     }
 
     async function submitOrder() {
       const items = cartItems();
       if (!items.length) return toast("Giỏ hàng đang trống.");
+      const overStock = items.find(item => item.qty > Number(item.product.stock || 0));
+      if (overStock) return toast(`Sản phẩm ${overStock.product.name} chỉ còn ${overStock.product.stock} trong kho.`, "warning");
       const customer = validateCustomerForm();
       if (!customer) return;
       const paymentMethod = paymentForm?.querySelector("input[name='payment']:checked")?.value || "cod";
@@ -579,12 +715,12 @@
         }
         setCart({});
         localStorage.setItem("lastOrderId", String(order.id));
-        alert(`Đặt hàng thành công! Mã đơn: #${order.id}. Bạn có thể in hóa đơn điện tử ở trang tiếp theo.`);
+        toast(`Đặt hàng thành công! Mã đơn: #${order.id}`);
         window.location.href = `invoice.html?orderId=${order.id}`;
       } catch (error) {
         confirmBtn.disabled = false;
         confirmBtn.textContent = "XÁC NHẬN THANH TOÁN";
-        alert(error.message || "Không thể tạo đơn hàng.");
+        toast(error.message || "Không thể tạo đơn hàng.", "error");
       }
     }
 

@@ -1,0 +1,22 @@
+
+html, body, button, input, select, textarea{
+  font-family: "Be Vietnam Pro", "Inter", "Segoe UI", Arial, sans-serif !important;
+}
+body{
+  cursor: url("assets/images/cursor-pen.png") 4 28, auto;
+}
+a, button, .product-item, .category-item, .cart-box, .user-circle, .nav-item, .wishlist-btn, .btn-buy-now, .btn-add-cart{
+  cursor: url("assets/images/cursor-pen-pointer.png") 4 28, pointer !important;
+}
+.mot-toast-container{ position:fixed; top:18px; right:18px; z-index:20000; display:flex; flex-direction:column; gap:10px; pointer-events:none; }
+.mot-toast-item{ min-width:260px; max-width:360px; background:#fff; color:#1f2937; border-left:5px solid #c92127; border-radius:14px; padding:12px 14px; box-shadow:0 18px 45px rgba(15,23,42,.18); display:flex; gap:10px; align-items:flex-start; transform:translateX(110%); opacity:0; transition:.25s ease; pointer-events:auto; }
+.mot-toast-item.show{ transform:translateX(0); opacity:1; }
+.mot-toast-item.success{ border-left-color:#16a34a; }
+.mot-toast-item.error{ border-left-color:#dc2626; }
+.mot-toast-item.info{ border-left-color:#2563eb; }
+.mot-toast-item.warning{ border-left-color:#f59e0b; }
+.mot-toast-item i{ margin-top:2px; color:#c92127; }
+.mot-toast-item.success i{ color:#16a34a; }
+.mot-toast-item.error i{ color:#dc2626; }
+.mot-toast-item.info i{ color:#2563eb; }
+.mot-toast-item.warning i{ color:#f59e0b; }

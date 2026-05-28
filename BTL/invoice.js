@@ -21,7 +21,7 @@
       const discount = Math.max(0, itemSubtotal - Number(order.total || 0));
       root.innerHTML = `
         <div class="invoice-head">
-          <div class="brand"><img src="assets/images/logo.png" alt="MOT"><div><h1>MOT Manga Store</h1><p>Phòng B706, Tầng 7, Tòa A, Trường Đại học Thăng Long, Hà Nội</p></div></div>
+          <div class="brand"><img src="assets/images/logo.png" alt="MOT"><div><h1>MOT Store</h1><p>Phòng B706, Tầng 7, Tòa A, Trường Đại học Thăng Long, Hà Nội</p></div></div>
           <div class="invoice-code"><h2>HÓA ĐƠN ĐIỆN TỬ</h2><p>Mã đơn: <b>#${order.id}</b></p><p>Ngày lập: ${order.date || String(order.createdAt||"").slice(0,10)}</p></div>
         </div>
         <div class="invoice-grid">
@@ -32,7 +32,7 @@
           ${items.map(item=>`<tr><td><div class="product-cell"><img src="${img(item.image)}" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${escapeHtml(item.productName||item.name)}"><span>${escapeHtml(item.productName||item.name)}</span></div></td><td>${money(item.price)}</td><td>${item.quantity}</td><td>${money(item.subtotal || item.price*item.quantity)}</td></tr>`).join("")}
         </tbody></table>
         <div class="invoice-total"><div><span>Tạm tính</span><b>${money(itemSubtotal)}</b></div>${discount ? `<div><span>Ưu đãi</span><b>-${money(discount)}</b></div>` : ""}<div><span>Phí vận chuyển</span><b>0đ</b></div><div class="grand"><span>Tổng cộng</span><b>${money(order.total)}</b></div></div>
-        <p class="invoice-note">Cảm ơn bạn đã mua hàng tại MOT Manga Store. Hóa đơn này dùng cho demo bài tập lớn Công nghệ Web.</p>`;
+        <p class="invoice-note">Cảm ơn bạn đã mua hàng tại MOT Store. Hóa đơn này dùng cho demo bài tập lớn Công nghệ Web.</p>`;
     }catch(error){ root.innerHTML = `<p>${escapeHtml(error.message)}</p>`; }
   }
   render();

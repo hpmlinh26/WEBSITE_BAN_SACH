@@ -12,6 +12,10 @@
   };
   const feedbackStatus = { new: "Mới", read: "Đã đọc", replied: "Đã phản hồi" };
   const roleText = { admin: "Quản trị viên", customer: "Khách hàng" };
+  function percent(value, total) { return total ? Math.round(Number(value || 0) * 100 / total) : 0; }
+  function dashboardBar(label, value, total, className = "") {
+    return `<div class="chart-bar-row ${className}"><span>${escapeHtml(label)}</span><div class="chart-track"><i style="width:${percent(value, total)}%"></i></div><b>${value}</b></div>`;
+  }
   let backendReady = false;
 
   const state = {
@@ -115,6 +119,70 @@
     if (metricRevenue) metricRevenue.textContent = money(state.orders.filter(o => o.status === "completed").reduce((s, o) => s + Number(o.total || 0), 0));
   }
 
+
+  function renderDashboard() {
+    const set = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+    const completedOrders = state.orders.filter(o => o.status === "completed");
+    const revenue = completedOrders.reduce((s, o) => s + Number(o.total || 0), 0);
+    const pendingCount = state.orders.filter(o => ["pending", "packing", "shipping"].includes(o.status)).length;
+    const lowStock = state.products.filter(p => Number(p.stock || 0) <= 10).sort((a,b)=>Number(a.stock||0)-Number(b.stock||0));
+
+    set("dashboardProducts", state.products.length);
+    set("dashboardCategories", state.categories.length);
+    set("dashboardUsers", state.users.length);
+    set("dashboardOrders", state.orders.length);
+    set("dashboardRevenue", money(revenue));
+    set("dashboardPending", pendingCount);
+    set("dashboardVouchers", state.vouchers.length);
+    set("dashboardFeedbacks", state.feedbacks.filter(f => ["new", "read"].includes(f.status)).length);
+    set("dashboardLowStock", lowStock.length);
+
+    const recentOrders = document.getElementById("dashboardRecentOrders");
+    if (recentOrders) {
+      recentOrders.innerHTML = state.orders.slice(0, 5).map(o => `
+        <tr><td>#${o.id}</td><td><strong>${escapeHtml(o.customer || o.customerName || "Khách hàng")}</strong><small>${escapeHtml(o.phone || "")}</small></td><td>${money(o.total)}</td><td><span class="status-pill status-${o.status}">${statusText[o.status] || escapeHtml(o.status)}</span></td></tr>
+      `).join("") || `<tr><td colspan="4">Chưa có đơn hàng.</td></tr>`;
+    }
+    const recentFeedbacks = document.getElementById("dashboardRecentFeedbacks");
+    if (recentFeedbacks) {
+      recentFeedbacks.innerHTML = state.feedbacks.slice(0, 4).map(f => `
+        <article class="feedback-card status-${f.status}"><div class="feedback-head"><div><h3>${escapeHtml(f.subject || "Phản hồi")}</h3><p>${escapeHtml(f.fullName || f.full_name || "Khách hàng")}</p></div><span>${feedbackStatus[f.status] || escapeHtml(f.status)}</span></div><p class="feedback-message">${escapeHtml(f.message || "")}</p></article>
+      `).join("") || `<div class="empty-admin">Chưa có phản hồi nào.</div>`;
+    }
+
+    const statusChart = document.getElementById("dashboardStatusChart");
+    if (statusChart) {
+      const totalOrders = Math.max(1, state.orders.length);
+      const counts = Object.keys(statusText).map(key => ({
+        key,
+        label: statusText[key],
+        value: state.orders.filter(o => o.status === key).length,
+        pct: percent(state.orders.filter(o => o.status === key).length, totalOrders)
+      }));
+      statusChart.innerHTML = counts.map(x => `
+        <div class="status-overview-row status-${x.key}">
+          <div class="status-overview-left">
+            <span class="status-dot"></span>
+            <b>${escapeHtml(x.label)}</b>
+          </div>
+          <div class="status-overview-track"><i style="width:${x.pct}%"></i></div>
+          <strong>${x.value}</strong>
+        </div>`).join("");
+    }
+
+    const categoryChart = document.getElementById("dashboardCategoryChart");
+    if (categoryChart) {
+      const rows = state.categories.map(c => ({ label: c.name, value: state.products.filter(p => (p.category || p.category_slug) === c.slug).length })).sort((a,b)=>b.value-a.value).slice(0,6);
+      const maxValue = Math.max(1, ...rows.map(r=>r.value));
+      categoryChart.innerHTML = rows.map(x => dashboardBar(x.label, x.value, maxValue)).join("") || `<div class="empty-admin">Chưa có dữ liệu danh mục.</div>`;
+    }
+
+    const lowStockList = document.getElementById("dashboardLowStockList");
+    if (lowStockList) {
+      lowStockList.innerHTML = lowStock.slice(0, 6).map(p => `<li><img src="${normalizeImage(p.image)}" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${escapeHtml(p.name || p.title)}"><span>${escapeHtml(p.name || p.title)}</span><b>${Number(p.stock || 0)}</b></li>`).join("") || `<li class="empty-admin">Chưa có sản phẩm sắp hết hàng.</li>`;
+    }
+  }
+
   function renderCategories() {
     const wrap = document.getElementById("categoriesList");
     if (!wrap) return;
@@ -140,10 +208,11 @@
         <td><strong>${escapeHtml(p.name || p.title)}</strong><small>${escapeHtml(p.slug || "")}</small></td>
         <td>${escapeHtml(p.author || "Không rõ")}</td>
         <td>${money(p.price)}</td>
+        <td><span class="stock-pill ${Number(p.stock || 0) <= 10 ? 'low' : ''}">${Number(p.stock ?? 0)}</span></td>
         <td>${escapeHtml(p.categoryName || categoryName(category))}</td>
         <td class="cell-actions"><button class="btn-edit" onclick="editProduct(${p.id})">Sửa</button><button class="btn-delete" onclick="deleteProduct(${p.id})">Xóa</button></td>
       </tr>`;
-    }).join("") || `<tr><td colspan="7">Chưa có sản phẩm.</td></tr>`;
+    }).join("") || `<tr><td colspan="8">Chưa có sản phẩm.</td></tr>`;
     fillCategorySelect();
   }
 
@@ -213,6 +282,7 @@
     renderFeedbacks();
     renderUsers();
     renderVouchers();
+    renderDashboard();
     showBackendStatus();
   }
 
@@ -263,6 +333,7 @@
     document.getElementById("productId").value = "";
     document.getElementById("productImage").value = "assets/products/sach-38.jpg";
     document.getElementById("productDiscount").value = "20";
+    document.getElementById("productStock").value = "100";
     document.getElementById("modalTitle").textContent = "Thêm sản phẩm";
     fillCategorySelect();
     modal("productModal");
@@ -276,6 +347,7 @@
     document.getElementById("productPrice").value = p.price || 0;
     document.getElementById("productOriginalPrice").value = p.originalPrice || p.original_price || p.price || 0;
     document.getElementById("productDiscount").value = p.discount || 20;
+    document.getElementById("productStock").value = p.stock ?? 100;
     document.getElementById("productImage").value = p.image || "assets/images/placeholder-cover.svg";
     document.getElementById("productDescription").value = p.description || "";
     fillCategorySelect();
@@ -295,7 +367,7 @@
       category: document.getElementById("productCategory").value,
       image: normalizeImage(document.getElementById("productImage").value),
       description: document.getElementById("productDescription").value.trim(),
-      stock: 100
+      stock: Math.max(0, Number(document.getElementById("productStock").value || 0))
     };
     try { await api(id ? `/products/${id}` : "/products", { method: id ? "PUT" : "POST", body: JSON.stringify(payload) }); closeModal(); await reloadAll(); alert("Đã lưu sản phẩm."); }
     catch (error) { alert(error.message); }
@@ -350,7 +422,7 @@
         <div class="order-detail-items">
           ${items.map(item => `<div class="order-detail-item">
             <img src="${normalizeImage(item.image)}" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${escapeHtml(item.productName || item.name)}">
-            <div><h4>${escapeHtml(item.productName || item.name)}</h4><p>${escapeHtml(item.author || "MOT Manga")} • SL: ${item.quantity}</p></div>
+            <div><h4>${escapeHtml(item.productName || item.name)}</h4><p>${escapeHtml(item.author || "MOT Store")} • SL: ${item.quantity}</p></div>
             <strong>${money(item.subtotal || item.price * item.quantity)}</strong>
           </div>`).join("") || "<p>Đơn hàng chưa có sản phẩm chi tiết.</p>"}
         </div>

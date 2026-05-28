@@ -6,7 +6,7 @@ const sqlite3 = require('sqlite3').verbose();
 const DATA_DIR = path.join(__dirname, 'data');
 const DB_PATH = path.join(DATA_DIR, 'database.sqlite');
 const SEED_PATH = path.join(__dirname, 'seed-data.json');
-const CURRENT_SEED_VERSION = 'v6-admin-crud-voucher-invoice';
+const CURRENT_SEED_VERSION = 'v8-search-stock-dashboard-blog';
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
@@ -179,7 +179,7 @@ async function resetCatalogIfNeeded(seed) {
   await run("DELETE FROM sqlite_sequence WHERE name IN ('products','categories','orders','order_items','feedbacks','vouchers')");
 
   await run(`INSERT INTO app_meta(key, value) VALUES (?, ?)
-    ON CONFLICT(key) DO UPDATE SET value = excluded.value`, ['seed_version', seed.seedVersion || CURRENT_SEED_VERSION]);
+    ON CONFLICT(key) DO UPDATE SET value = excluded.value`, ['seed_version', CURRENT_SEED_VERSION]);
 }
 
 async function seedDatabase() {

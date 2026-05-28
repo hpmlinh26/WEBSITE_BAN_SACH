@@ -865,3 +865,184 @@ body {
 .user-order-modal-item p { margin: 0; color: #666; }
 .user-order-modal-actions { margin-top: 18px; text-align: right; }
 .user-order-modal-actions .btn-order-action { background: #c92127; color: #fff; border-color: #c92127; text-decoration: none; }
+
+
+/* ================= V10 VOUCHER CARD FIX ================= */
+.user-profile-dashboard .voucher-card{
+  min-height:148px !important;
+  height:auto !important;
+}
+.user-profile-dashboard .voucher-right{
+  padding:18px 18px 16px !important;
+  gap:12px !important;
+}
+.user-profile-dashboard .voucher-title{
+  line-height:1.35 !important;
+  white-space:normal !important;
+}
+.user-profile-dashboard .voucher-desc{
+  line-height:1.55 !important;
+  margin:4px 0 8px !important;
+}
+.user-profile-dashboard .voucher-footer{
+  align-items:center !important;
+  gap:12px !important;
+}
+.user-profile-dashboard .code-box{
+  gap:5px !important;
+}
+
+
+/* ================= V11 VOUCHER CARD FIXES ================= */
+.voucher-card{ min-height:160px !important; align-items:stretch !important; }
+.voucher-left{ min-height:150px !important; display:flex !important; align-items:center !important; justify-content:center !important; }
+.voucher-ticket-text{ font-size:34px; font-weight:900; color:#fff; }
+.voucher-right{ padding:18px 16px !important; display:flex; flex-direction:column; justify-content:space-between; gap:10px; }
+.voucher-footer{ margin-top:10px !important; align-items:center !important; gap:12px !important; }
+.voucher-footer small{ display:block; line-height:1.45; margin-top:6px; }
+
+
+/* ================= V12: account sidebar icons + wishlist tab ================= */
+.user-profile-dashboard .profile-sidebar i{ display:none !important; }
+.user-profile-dashboard .menu-label{ display:flex !important; align-items:center !important; gap:14px !important; }
+.user-profile-dashboard .menu-label::before{
+  width:26px; height:26px; flex:0 0 26px; border-radius:8px;
+  display:inline-flex; align-items:center; justify-content:center;
+  color:#c92127; font-weight:900; font-size:18px;
+}
+.user-profile-dashboard .menu-item-group .menu-item-header .menu-label::before{ content:'👤'; font-family:'Segoe UI Emoji','Apple Color Emoji',Arial,sans-serif; }
+.user-profile-dashboard .menu-item[data-target="form-don-hang"] .menu-label::before{ content:'☷'; font-family:Arial,sans-serif; }
+.user-profile-dashboard .menu-item[data-target="form-thong-bao"] .menu-label::before{ content:'🔔'; font-family:'Segoe UI Emoji','Apple Color Emoji',Arial,sans-serif; }
+.user-profile-dashboard .menu-item[data-target="form-yeu-thich"] .menu-label::before{ content:'♥'; font-family:Arial,sans-serif; }
+.user-profile-dashboard .menu-item[data-target="form-voucher"] .menu-label::before{ content:'▣'; font-family:Arial,sans-serif; }
+.user-profile-dashboard .profile-sidebar .voucher-ticket-text{ display:none !important; }
+.wishlist-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:18px;
+  margin-top:18px;
+}
+.wishlist-card{
+  background:#fff;
+  border:1px solid #eee;
+  border-radius:18px;
+  padding:14px;
+  box-shadow:0 10px 24px rgba(16,24,40,.06);
+}
+.wishlist-card img{
+  width:100%; height:230px; object-fit:cover; border-radius:14px; background:#f5f5f5;
+}
+.wishlist-card h3{ font-size:16px; line-height:1.35; margin:12px 0 6px; }
+.wishlist-card p{ color:#c92127; font-weight:800; margin:0 0 12px; }
+.wishlist-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+.wishlist-actions a,
+.wishlist-actions button{
+  border:0; border-radius:999px; padding:9px 12px; font-weight:800; cursor:pointer; text-decoration:none;
+}
+.wishlist-actions a{ background:#c92127; color:#fff; }
+.wishlist-actions button{ background:#fff0f1; color:#c92127; }
+.empty-wishlist{ background:#fff; border-radius:16px; padding:24px; color:#667085; }
+
+
+/* ================= V15 USER SIDEBAR FIGMA-LIKE POLISH ================= */
+.user-profile-dashboard{
+  background:#f3f3f3 !important;
+  padding:42px 0 !important;
+}
+.user-profile-dashboard .profile-dashboard-container{
+  width:min(1220px, calc(100% - 80px)) !important;
+  gap:28px !important;
+}
+.user-profile-dashboard .profile-sidebar{
+  width:310px !important;
+  border-radius:8px !important;
+  padding:34px 0 28px !important;
+  overflow:hidden !important;
+  border-left:4px solid #c92127 !important;
+  box-shadow:0 2px 14px rgba(16,24,40,.08) !important;
+}
+.user-profile-dashboard .profile-sidebar::before{ display:none !important; }
+.user-profile-dashboard .avatar-section{
+  padding-bottom:28px !important;
+  margin:0 24px 18px !important;
+  border-bottom:1px solid #dedede !important;
+}
+.user-profile-dashboard .avatar-placeholder{
+  width:122px !important;
+  height:122px !important;
+  background:transparent !important;
+  margin-bottom:12px !important;
+}
+.user-profile-dashboard .profile-avatar-img{
+  width:122px !important;
+  height:122px !important;
+  object-fit:contain !important;
+  display:block !important;
+}
+.user-profile-dashboard .user-badge{
+  background:#f2f2f2 !important;
+  color:#666 !important;
+  padding:6px 20px !important;
+  font-size:14px !important;
+}
+.user-profile-dashboard .sidebar-menu{ padding:0 18px !important; }
+.user-profile-dashboard .menu-item,
+.user-profile-dashboard .menu-item-header{
+  padding:13px 18px !important;
+  border-radius:10px !important;
+  font-size:15px !important;
+  color:#555 !important;
+  gap:14px !important;
+}
+.user-profile-dashboard .menu-item:hover,
+.user-profile-dashboard .menu-item-header:hover{ background:#fff7f7 !important; color:#c92127 !important; }
+.user-profile-dashboard .menu-label{
+  display:flex !important;
+  align-items:center !important;
+  gap:16px !important;
+  min-width:0 !important;
+}
+.user-profile-dashboard .menu-label i{ display:none !important; }
+.user-profile-dashboard .account-menu-icon{
+  width:19px !important;
+  height:19px !important;
+  object-fit:contain !important;
+  flex:0 0 19px !important;
+  opacity:.78 !important;
+}
+.user-profile-dashboard .menu-item.active,
+.user-profile-dashboard .menu-item-group.active .menu-item-header{
+  color:#c92127 !important;
+  background:#fff !important;
+  font-weight:700 !important;
+}
+.user-profile-dashboard .menu-item.active .account-menu-icon,
+.user-profile-dashboard .menu-item-group.active .account-menu-icon{ opacity:1 !important; filter: sepia(1) saturate(10) hue-rotate(315deg) brightness(.82); }
+.user-profile-dashboard .arrow-icon{
+  width:0 !important;
+  height:0 !important;
+  border-left:5px solid transparent !important;
+  border-right:5px solid transparent !important;
+  border-top:6px solid #c92127 !important;
+  display:inline-block !important;
+  transform:rotate(0deg) !important;
+}
+.user-profile-dashboard .menu-item-group:not(.active) .arrow-icon{ transform:rotate(-90deg) !important; }
+.user-profile-dashboard .submenu{
+  padding-left:53px !important;
+  padding-bottom:10px !important;
+}
+.user-profile-dashboard .submenu-item{
+  font-size:14px !important;
+  padding:9px 0 !important;
+  color:#666 !important;
+}
+.user-profile-dashboard .submenu-item.active{ color:#c92127 !important; }
+.user-profile-dashboard .profile-main-content{
+  border-radius:10px !important;
+  box-shadow:0 2px 14px rgba(16,24,40,.07) !important;
+}
+@media(max-width:900px){
+  .user-profile-dashboard .profile-dashboard-container{ width:calc(100% - 28px) !important; flex-direction:column !important; }
+  .user-profile-dashboard .profile-sidebar{ width:100% !important; }
+}
