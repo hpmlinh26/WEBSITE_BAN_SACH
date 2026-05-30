@@ -960,3 +960,8 @@ html, body, input, select, button, textarea, a, p, span, strong, small, h1, h2, 
   .mot-ai-button{ right:16px; bottom:18px; width:58px; height:58px; }
   .mot-ai-panel{ right:12px; bottom:88px; height:520px; }
 }
+
+/* Fix: dong bo font nut "SAN PHAM" (button.dropdown-btn) voi cac link nav khac.
+   Mac dinh button bi rule "html,body,button{font-family:Be Vietnam Pro}" ghi de
+   nen chu trong to/rong hon cac the <a> (dang Segoe UI). Specificity cao de thang. */
+.header .menu .dropdown-btn { font-family: "Segoe UI", Arial, sans-serif !important; }
