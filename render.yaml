@@ -1,0 +1,33 @@
+# Render Blueprint - deploy ca khoi MOT Store trong 1 web service Node.
+# Frontend (Vite) build ra dist/, backend Express phuc vu dist/ + /api tren cung 1 cong.
+#
+# Cach deploy:
+#   1. Push repo len GitHub.
+#   2. Render Dashboard -> New + -> Blueprint -> chon repo nay -> Apply.
+#   3. Mo URL Render cap (vd https://mot-store.onrender.com).
+#
+# LUU Y veo du lieu:
+#   - Plan "free" KHONG co o dia ben (persistent disk). SQLite nam o storage tam:
+#     danh muc/san pham van co (tu seed lai), nhung don hang/tai khoan moi se
+#     reset khi service ngu day hoac redeploy. Tot cho demo.
+#   - Muon giu du lieu vinh vien: doi `plan` thanh `starter` (tra phi) va bo comment
+#     khoi `disk:` + envVar DATA_DIR ben duoi.
+
+services:
+  - type: web
+    name: mot-store
+    runtime: node
+    rootDir: BTL
+    plan: free
+    buildCommand: npm install --include=dev && npm run build && npm install --prefix backend
+    startCommand: node backend/server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # - key: DATA_DIR
+      #   value: /var/data
+    # disk:
+    #   name: mot-data
+    #   mountPath: /var/data
+    #   sizeGB: 1

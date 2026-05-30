@@ -3,8 +3,9 @@ const path = require('path');
 const crypto = require('crypto');
 const sqlite3 = require('sqlite3').verbose();
 
-const DATA_DIR = path.join(__dirname, 'data');
-const DB_PATH = path.join(DATA_DIR, 'database.sqlite');
+// DATA_DIR co the tro toi persistent disk khi deploy (vd Render: /var/data).
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
+const DB_PATH = process.env.DATABASE_PATH || path.join(DATA_DIR, 'database.sqlite');
 const SEED_PATH = path.join(__dirname, 'seed-data.json');
 const CURRENT_SEED_VERSION = 'v16-pagination-extra-books-polish';
 

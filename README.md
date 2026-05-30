@@ -164,3 +164,23 @@ cd backend && npm start            # Express phục vụ cả dist/ lẫn /api
 Mở **http://localhost:3000**.
 
 Tài khoản demo — Admin: `admin@mot.vn / 123456` · User: `user@mot.vn / 123456`.
+
+## 6. Deploy (Render)
+
+App là **1 server Node chạy liên tục** (Express serve `dist/` + `/api`, DB SQLite ghi ra
+file), nên hợp với host long-running như **Render/Railway**, **không** hợp serverless (Vercel)
+vì SQLite cần filesystem ghi được lâu dài.
+
+Repo có sẵn `render.yaml` (Blueprint):
+
+1. Push repo lên GitHub.
+2. Render Dashboard → **New + → Blueprint** → chọn repo → **Apply**.
+3. Mở URL Render cấp (vd `https://mot-store.onrender.com`).
+
+Render tự chạy: `npm install --include=dev && npm run build && npm install --prefix backend`
+rồi `node backend/server.js`. Health check: `/api/health`.
+
+**Dữ liệu:** plan `free` dùng ổ đĩa tạm — danh mục/sản phẩm luôn có (seed lại), nhưng
+đơn hàng/tài khoản mới sẽ reset khi service ngủ dậy hoặc redeploy (đủ cho demo). Muốn giữ
+vĩnh viễn: trong `render.yaml` đổi `plan: starter` (trả phí), bỏ comment khối `disk:` và
+envVar `DATA_DIR: /var/data` — SQLite sẽ nằm trên persistent disk.
