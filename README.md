@@ -99,38 +99,68 @@ Dự án được xây dựng theo mô hình **Frontend + Backend + Database**, 
 
 ## 4. Cấu trúc thư mục
 
+> Frontend đã được hiện đại hóa bằng **Vite + ES modules** (xem mục 5 để biết cách chạy).
+
 ```text
 BTL/
 │
-├── backend/
-│   ├── data/
-│   │   └── database.sqlite
+├── backend/                 # API Express + SQLite (không đổi)
+│   ├── data/database.sqlite
+│   ├── seed-data.json       # nguồn dữ liệu DUY NHẤT (backend seed + frontend fallback)
 │   ├── db.js
 │   ├── package.json
-│   └── server.js
+│   └── server.js            # phục vụ API + frontend đã build (dist/)
 │
-├── assets/
-│   ├── images/
-│   └── products/
+├── public/
+│   └── assets/              # ảnh, cursor... phục vụ tĩnh tại /assets/
+│       ├── images/
+│       └── products/
 │
-├── index.html
-├── products.html
-├── product-detail.html
-├── cart.html
-├── pay.html
-├── invoice.html
-├── blog.html
-├── contact.html
-├── accounts.html
+├── src/
+│   ├── css/                 # toàn bộ stylesheet (style, admin, accounts, pay, ...)
+│   └── js/
+│       ├── core/            # api.js, format.js, seed-fallback.js (dùng chung)
+│       ├── ui/              # toast.js, chatbox.js, auth-modal.js
+│       ├── pages/           # storefront.js, accounts.js, admin.js, invoice.js
+│       └── entries/         # 1 entry/đặc trưng trang: storefront, pay, accounts, invoice, admin, api-test
 │
-├── products-manager.html
-├── accounts-manager.html
-├── orders-manager.html
-├── vouchers-manager.html
+├── *.html                   # 16 trang (mỗi trang nạp đúng 1 module entry)
 │
-├── style.css
-├── admin.css
-├── script.js
-├── data.js
-├── accounts.js
-└── README.md
+├── vite.config.js           # cấu hình multi-page + proxy /api -> :3000
+├── package.json             # tooling frontend (Vite)
+└── dist/                    # output sau khi build (được .gitignore)
+```
+
+## 5. Cách chạy
+
+Cần **Node.js 20+**. Backend và frontend là hai package riêng.
+
+### Lần đầu: cài dependencies
+
+```bash
+cd BTL/backend && npm install      # express, sqlite3, cors
+cd ..             && npm install    # vite (frontend tooling)
+```
+
+### Chế độ phát triển (2 terminal)
+
+```bash
+# Terminal 1 - backend API (cổng 3000)
+cd BTL/backend && npm start
+
+# Terminal 2 - Vite dev server (cổng 5173, tự proxy /api sang :3000)
+cd BTL && npm run dev
+```
+
+Mở **http://localhost:5173** — sửa code là tự reload.
+
+### Chế độ triển khai (1 cổng)
+
+```bash
+cd BTL && npm run build            # tạo BTL/dist
+cd backend && npm start            # Express phục vụ cả dist/ lẫn /api
+```
+
+Mở **http://localhost:3000**.
+
+Tài khoản demo — Admin: `admin@mot.vn / 123456` · User: `user@mot.vn / 123456`.

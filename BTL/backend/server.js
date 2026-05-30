@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
@@ -5,7 +6,8 @@ const { initDatabase, run, get, all, hashPassword, DB_PATH } = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const FRONTEND_DIR = path.join(__dirname, '..');
+// Frontend production build (Vite): BTL/dist. Khi dev dung `npm run dev` (Vite o cong 5173).
+const DIST_DIR = path.join(__dirname, '..', 'dist');
 
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
@@ -482,8 +484,20 @@ app.use((req, res, next) => {
   if (req.path.startsWith('/backend')) return res.status(403).send('Forbidden');
   next();
 });
-app.use(express.static(FRONTEND_DIR));
-app.get('/', (req, res) => res.sendFile(path.join(FRONTEND_DIR, 'index.html')));
+// Phuc vu frontend da build (no-op neu thu muc dist chua ton tai).
+app.use(express.static(DIST_DIR));
+app.get('/', (req, res) => {
+  const indexFile = path.join(DIST_DIR, 'index.html');
+  if (fs.existsSync(indexFile)) return res.sendFile(indexFile);
+  res
+    .status(200)
+    .send(
+      '<h1>MOT backend đang chạy</h1>' +
+        '<p>Frontend chưa được build. Khi phát triển: chạy <code>npm run dev</code> trong thư mục BTL ' +
+        '(Vite tại <a href="http://localhost:5173">http://localhost:5173</a>). ' +
+        'Khi triển khai: chạy <code>npm run build</code> rồi mở <a href="/">http://localhost:3000</a>.</p>'
+    );
+});
 
 app.use((err, req, res, next) => {
   console.error(err);

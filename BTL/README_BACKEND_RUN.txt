@@ -1,26 +1,40 @@
-Cách chạy dự án MOT.vn v4
+Cách chạy dự án MOT.vn (Vite + Express)
 
-1. Giải nén ZIP.
-2. Mở VS Code vào thư mục BTL.
-3. Mở Terminal:
+Yêu cầu: Node.js 20+
 
+== Lần đầu: cài dependencies ==
 cd backend
-npm.cmd install
-npm.cmd start
+npm install
+cd ..
+npm install
 
-Nếu đang dùng PowerShell và bị lỗi npm.ps1, luôn dùng npm.cmd.
+== Chế độ phát triển (2 terminal) ==
+Terminal 1 (backend API, cổng 3000):
+  cd backend
+  npm start
+
+Terminal 2 (Vite dev server, cổng 5173, tự proxy /api -> :3000):
+  npm run dev
+
+Mở: http://localhost:5173   (sửa code tự reload)
+
+== Chế độ triển khai (1 cổng) ==
+  npm run build      (tạo thư mục dist/)
+  cd backend
+  npm start
+Mở: http://localhost:3000
+
+(PowerShell bị chặn npm.ps1 thì dùng npm.cmd thay cho npm.)
 
 Link test:
-http://localhost:3000
-http://localhost:3000/api/health
-http://localhost:3000/api/products
-http://localhost:3000/products-manager.html
-http://localhost:3000/orders-manager.html
+  http://localhost:3000/api/health
+  http://localhost:3000/api/products
+  http://localhost:3000/products-manager.html
 
 Tài khoản demo:
-Admin: admin@mot.vn / 123456
-User:  user@mot.vn / 123456
+  Admin: admin@mot.vn / 123456
+  User:  user@mot.vn / 123456
 
 Lưu ý:
-- Bản v4 tự reset catalog về bộ 100 sản phẩm từ 100_TP khi seed_version đổi.
-- Không cần xóa database.sqlite thủ công như bản v3.
+- Catalog tự reset về bộ dữ liệu trong backend/seed-data.json khi seed_version đổi.
+- Frontend (data fallback) và backend (seed DB) dùng CHUNG file backend/seed-data.json.
