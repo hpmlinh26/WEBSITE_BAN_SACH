@@ -11,32 +11,7 @@
 </head>
 <body class="home-page">
 <div class="top-header-banner"><img src="/assets/images/banner.jpg" alt="Banner Sale"></div>
-<header class="header">
-  <div class="container nav">
-    <div class="logo"><a href="index.html"><img src="/assets/images/logo.png" alt="MOT Store"></a></div>
-    <nav class="menu">
-      <a href="index.html">TRANG CHỦ</a>
-      <div class="dropdown-wrapper">
-        <button class="dropdown-btn" type="button">SẢN PHẨM</button>
-        <ul class="dropdown-menu"><p class="dropdown-title">DANH MỤC SẢN PHẨM</p></ul>
-      </div>
-      <a href="blog.html">BLOG</a>
-      <a href="contact.html">LIÊN HỆ</a>
-    </nav>
-    <div class="header-right">
-      <div class="search-box">
-        <input type="text" placeholder="Tìm kiếm sản phẩm...">
-        <button class="search-btn" type="button" aria-label="Tìm kiếm"><svg class="search-icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.8 18.1a7.3 7.3 0 1 1 5.2-2.1l4 4a1.4 1.4 0 0 1-2 2l-4-4a7.2 7.2 0 0 1-3.2.1Zm0-2.8a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Z" fill="currentColor"/></svg></button>
-      </div>
-      <div class="icons">
-        <a href="accounts.html?tab=form-thong-bao" class="header-icon-link notification-link" title="Thông báo"><img class="header-icon-img notification-icon" src="/assets/images/icon-notification-header.png" alt="Thông báo"></a>
-        <div class="cart-box" title="Giỏ hàng"><img class="header-icon-img cart-icon-img" src="/assets/images/icon-cart-header.png" alt="Giỏ hàng"><span class="badge">0</span></div>
-        <div class="user-circle" title="Tài khoản"><img class="header-icon-img user-icon-img" src="/assets/images/icon-user-header.png" alt="Tài khoản"></div>
-      </div>
-      <button class="btn-login" type="button" onclick="openAuth()">Login</button>
-    </div>
-  </div>
-</header>
+<!-- @partial:header -->
 <main>
   <section class="slideshow">
     <div class="slider">
@@ -63,25 +38,8 @@
     <div class="view-more-container"><a href="products.html" class="btn-view-more">Xem thêm</a></div>
   </section>
 </main>
-<section class="newsletter">
-  <i class="fa-solid fa-envelope"></i>
-  <strong>Đăng kí nhận bản tin</strong>
-  <input type="email" placeholder="Nhập địa chỉ email">
-  <button type="button" onclick="alert('Đăng ký nhận tin thành công!')">Đăng ký</button>
-</section>
-<footer class="footer" id="contact">
-  <div class="footer-content">
-    <div class="footer-col footer-brand">
-      <img src="/assets/images/logo.png" alt="MOT.vn">
-      <p>Phòng B706, Tầng 7, Tòa A, Trường Đại học Thăng Long, Hà Nội.</p>
-      <p>MOT Store nhận đặt hàng trực tuyến và giao hàng tận nơi.</p>
-    </div>
-    <div class="footer-col"><h3>DỊCH VỤ</h3><a href="products.html">Sản phẩm</a><a href="cart.html">Giỏ hàng</a><a href="blog.html">Blog</a></div>
-    <div class="footer-col"><h3>HỖ TRỢ</h3><a href="contact.html">Liên hệ</a><a href="contact.html">Chính sách vận chuyển</a><a href="contact.html">Đổi trả</a></div>
-    <div class="footer-col"><h3>TÀI KHOẢN</h3><a href="javascript:void(0)" onclick="openAuth();return false;">Đăng nhập</a><a href="accounts.html">Hồ sơ cá nhân</a><a href="accounts.html">Quản lý đơn hàng</a></div>
-  </div>
-  <div class="footer-bottom">© 2026 MOT Store. Demo bài tập lớn Công nghệ Web.</div>
-</footer>
+<!-- @partial:newsletter -->
+<!-- @partial:footer -->
   <script type="module" src="/src/js/entries/storefront.js"></script>
 </body>
 </html>
