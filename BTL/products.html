@@ -43,8 +43,8 @@
 <main class="products-page-main">
   <section class="page-hero"><h1 class="products-page-title">Tất cả sản phẩm</h1><p>Chọn danh mục, tìm kiếm và bấm trực tiếp vào sản phẩm để xem chi tiết.</p></section>
   <section class="product-toolbar product-toolbar-v8">
-    <input id="searchInput" type="text" placeholder="Tìm theo tên sản phẩm, tác giả...">
-    <select id="categoryFilter"><option value="">Tất cả danh mục</option></select>
+    <div class="product-search-wrap"><input id="searchInput" type="text" placeholder="Tìm theo tên sản phẩm, tác giả..."><div id="productSearchSuggest" class="product-search-suggest"></div></div>
+    <select id="categoryFilter"><option value="">Tất cả sản phẩm</option></select>
     <input id="minPriceFilter" type="number" min="0" placeholder="Giá từ">
     <input id="maxPriceFilter" type="number" min="0" placeholder="Giá đến">
     <select id="sortFilter">

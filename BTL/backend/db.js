@@ -6,7 +6,7 @@ const sqlite3 = require('sqlite3').verbose();
 const DATA_DIR = path.join(__dirname, 'data');
 const DB_PATH = path.join(DATA_DIR, 'database.sqlite');
 const SEED_PATH = path.join(__dirname, 'seed-data.json');
-const CURRENT_SEED_VERSION = 'v8-search-stock-dashboard-blog';
+const CURRENT_SEED_VERSION = 'v16-pagination-extra-books-polish';
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 

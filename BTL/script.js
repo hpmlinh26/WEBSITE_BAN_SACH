@@ -274,7 +274,7 @@
 
   function renderHeaderCategories() {
     qsa(".dropdown-menu").forEach(menu => {
-      menu.innerHTML = `<p class="dropdown-title">DANH MỤC SẢN PHẨM</p>` + appCategories.map(c =>
+      menu.innerHTML = `<p class="dropdown-title">DANH MỤC SẢN PHẨM</p><li><a href="products.html">Tất cả sản phẩm</a></li>` + appCategories.map(c =>
         `<li><a href="products.html?category=${encodeURIComponent(c.slug)}">${escapeHtml(c.name)}</a></li>`
       ).join("");
     });
@@ -369,7 +369,11 @@
 
     const categoryGrid = qs(".category-grid");
     if (categoryGrid) {
-      categoryGrid.innerHTML = appCategories.map(c => `
+      categoryGrid.innerHTML = `
+        <a class="category-item all-category" href="products.html">
+          <div class="category-image all-category-image"><span>Tất cả</span></div>
+          <p class="category-name">Tất cả sản phẩm</p>
+        </a>` + appCategories.map(c => `
         <a class="category-item" href="products.html?category=${encodeURIComponent(c.slug)}">
           <div class="category-image"><img src="${c.image || 'assets/images/Mangan.png'}" alt="${escapeHtml(c.name)}" onerror="this.src='assets/images/Mangan.png'"></div>
           <p class="category-name">${escapeHtml(c.name)}</p>
@@ -398,38 +402,109 @@
     const maxPriceInput = qs("#maxPriceFilter");
     const sortSelect = qs("#sortFilter");
     const title = qs(".products-page-title");
+    const suggestBox = qs("#productSearchSuggest");
+    const PAGE_SIZE = 30;
+    let currentPage = Number(params.get("page") || 1) || 1;
+    let lastFiltered = [];
+
     if (searchInput) searchInput.value = search;
     if (categorySelect) {
-      categorySelect.innerHTML = `<option value="">Tất cả danh mục</option>` + appCategories.map(c => `<option value="${c.slug}">${escapeHtml(c.name)}</option>`).join("");
+      categorySelect.innerHTML = `<option value="">Tất cả sản phẩm</option>` + appCategories.map(c => `<option value="${c.slug}">${escapeHtml(c.name)}</option>`).join("");
       categorySelect.value = selectedCategory;
     }
 
-    function render() {
+    let pagination = qs("#productsPagination");
+    if (!pagination) {
+      pagination = document.createElement("div");
+      pagination.id = "productsPagination";
+      pagination.className = "products-pagination";
+      container.after(pagination);
+    }
+
+    function getFilteredProducts() {
       const keyword = normalizeText((searchInput?.value || "").trim());
       const cat = categorySelect?.value || "";
       const minPrice = Number(minPriceInput?.value || 0);
       const maxPrice = Number(maxPriceInput?.value || 0);
-      let list = appProducts.filter(p => {
-        const matchText = !keyword || normalizeText([p.name, p.author, p.categoryName].join(" ")).includes(keyword);
-        const matchCat = !cat || p.category === cat;
+      const buildList = (ignoreCategory = false) => appProducts.filter(p => {
+        const searchableText = normalizeText([p.name, p.author, p.categoryName, p.description].join(" "));
+        const matchText = !keyword || searchableText.includes(keyword);
+        // Khi người dùng đã gõ từ khóa, ưu tiên tìm kiếm toàn bộ sản phẩm để tránh bị kẹt bởi danh mục đang chọn.
+        const matchCat = keyword ? true : (ignoreCategory || !cat || p.category === cat);
         const matchMin = !minPrice || Number(p.price || 0) >= minPrice;
         const matchMax = !maxPrice || Number(p.price || 0) <= maxPrice;
         return matchText && matchCat && matchMin && matchMax;
       });
+      let list = buildList(false);
+      // Khi người dùng đã gõ từ khóa, ưu tiên tìm được sản phẩm trước.
+      // Nếu danh mục đang chọn làm kết quả rỗng, tự mở rộng tìm trong tất cả danh mục.
+      if (keyword && cat && list.length === 0) list = buildList(true);
       const sort = sortSelect?.value || "default";
       if (sort === "priceAsc") list.sort((a, b) => Number(a.price) - Number(b.price));
       if (sort === "priceDesc") list.sort((a, b) => Number(b.price) - Number(a.price));
       if (sort === "stockAsc") list.sort((a, b) => Number(a.stock || 0) - Number(b.stock || 0));
       if (sort === "stockDesc") list.sort((a, b) => Number(b.stock || 0) - Number(a.stock || 0));
-      if (title) title.textContent = cat ? (appCategories.find(c => c.slug === cat)?.name || "Sản phẩm") : "Tất cả sản phẩm";
-      container.innerHTML = list.length ? list.map(p => productCard(p)).join("") : `<p class="empty-state">Không tìm thấy sản phẩm phù hợp.</p>`;
-      bindProductClicks(container);
+      return list;
     }
-    searchInput?.addEventListener("input", render);
-    categorySelect?.addEventListener("change", render);
-    minPriceInput?.addEventListener("input", render);
-    maxPriceInput?.addEventListener("input", render);
-    sortSelect?.addEventListener("change", render);
+
+    function renderPagination(totalPages) {
+      if (!pagination) return;
+      if (totalPages <= 1) { pagination.innerHTML = ""; return; }
+      const pages = [];
+      for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 2) pages.push(i);
+        else if (pages[pages.length - 1] !== "...") pages.push("...");
+      }
+      pagination.innerHTML = `
+        <button type="button" class="page-btn" data-page="${Math.max(1, currentPage - 1)}" ${currentPage === 1 ? "disabled" : ""}>‹</button>
+        ${pages.map(p => p === "..." ? `<span class="page-dots">...</span>` : `<button type="button" class="page-btn ${p === currentPage ? "active" : ""}" data-page="${p}">${p}</button>`).join("")}
+        <button type="button" class="page-btn" data-page="${Math.min(totalPages, currentPage + 1)}" ${currentPage === totalPages ? "disabled" : ""}>›</button>`;
+      qsa(".page-btn", pagination).forEach(btn => btn.addEventListener("click", () => {
+        const next = Number(btn.dataset.page);
+        if (!next || next === currentPage) return;
+        currentPage = next;
+        render();
+        window.scrollTo({ top: container.offsetTop - 120, behavior: "smooth" });
+      }));
+    }
+
+    function renderSuggestions() {
+      if (!suggestBox || !searchInput) return;
+      const keyword = normalizeText(searchInput.value.trim());
+      if (!keyword) { suggestBox.classList.remove("show"); suggestBox.innerHTML = ""; return; }
+      const list = appProducts.filter(p => normalizeText([p.name, p.author, p.categoryName].join(" ")).includes(keyword)).slice(0, 5);
+      suggestBox.innerHTML = list.length ? list.map(p => `<button type="button" data-suggest-text="${escapeHtml(p.name)}"><img src="${p.image}" alt=""><span>${escapeHtml(p.name)}</span><b>${money(p.price)}</b></button>`).join("") : `<p>Không có gợi ý phù hợp.</p>`;
+      suggestBox.classList.add("show");
+      qsa("button", suggestBox).forEach(btn => btn.addEventListener("click", () => {
+        searchInput.value = btn.dataset.suggestText || "";
+        if (categorySelect) categorySelect.value = "";
+        suggestBox.classList.remove("show");
+        currentPage = 1;
+        render();
+      }));
+    }
+
+    function render(resetPage = false) {
+      if (resetPage) currentPage = 1;
+      lastFiltered = getFilteredProducts();
+      const totalPages = Math.max(1, Math.ceil(lastFiltered.length / PAGE_SIZE));
+      if (currentPage > totalPages) currentPage = totalPages;
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const pageItems = lastFiltered.slice(start, start + PAGE_SIZE);
+      const cat = categorySelect?.value || "";
+      if (title) title.textContent = cat ? (appCategories.find(c => c.slug === cat)?.name || "Sản phẩm") : "Tất cả sản phẩm";
+      container.innerHTML = pageItems.length ? pageItems.map(p => productCard(p)).join("") : `<p class="empty-state">Không tìm thấy sản phẩm phù hợp.</p>`;
+      bindProductClicks(container);
+      renderPagination(totalPages);
+    }
+
+    searchInput?.addEventListener("input", () => { renderSuggestions(); render(true); });
+    searchInput?.addEventListener("focus", renderSuggestions);
+    document.addEventListener("click", e => { if (!e.target.closest(".product-search-wrap")) suggestBox?.classList.remove("show"); });
+    categorySelect?.addEventListener("change", () => render(true));
+    minPriceInput?.addEventListener("input", () => render(true));
+    maxPriceInput?.addEventListener("input", () => render(true));
+    sortSelect?.addEventListener("change", () => render(true));
     render();
   }
 
@@ -627,6 +702,51 @@
         <div class="checkout-total-row final-total"><span>Tổng thanh toán</span><strong>${money(finalTotal)}</strong></div>`;
     }
 
+    function qrRects(seedText) {
+      let seed = Array.from(seedText).reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+      let out = '<rect width="96" height="96" fill="#fff"/><rect x="4" y="4" width="24" height="24" fill="#111"/><rect x="8" y="8" width="16" height="16" fill="#fff"/><rect x="13" y="13" width="6" height="6" fill="#111"/><rect x="68" y="4" width="24" height="24" fill="#111"/><rect x="72" y="8" width="16" height="16" fill="#fff"/><rect x="77" y="13" width="6" height="6" fill="#111"/><rect x="4" y="68" width="24" height="24" fill="#111"/><rect x="8" y="72" width="16" height="16" fill="#fff"/><rect x="13" y="77" width="6" height="6" fill="#111"/>';
+      for (let y = 34; y < 92; y += 6) {
+        for (let x = 34; x < 92; x += 6) {
+          seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+          if (seed % 3 !== 0) out += `<rect x="${x}" y="${y}" width="5" height="5" fill="#111"/>`;
+        }
+      }
+      return out;
+    }
+
+    function ensurePaymentQRPanel() {
+      let panel = qs('#paymentQrPanel');
+      if (!panel && paymentForm) {
+        panel = document.createElement('div');
+        panel.id = 'paymentQrPanel';
+        panel.className = 'payment-qr-panel';
+        paymentForm.appendChild(panel);
+      }
+      return panel;
+    }
+
+    function updatePaymentQR() {
+      const panel = ensurePaymentQRPanel();
+      if (!panel) return;
+      const method = paymentForm?.querySelector("input[name='payment']:checked")?.value || 'cod';
+      const names = { zalopay: 'Ví ZaloPay', vnpay: 'VNPay', shopeepay: 'Ví ShopeePay', momo: 'Ví MoMo', cod: 'Thanh toán khi nhận hàng' };
+      if (method === 'cod') {
+        panel.style.display = 'none';
+        panel.innerHTML = '';
+        return;
+      }
+      const code = `${method.toUpperCase()}-MOT-${Date.now().toString().slice(-6)}`;
+      panel.style.display = 'grid';
+      panel.innerHTML = `
+        <div class="qr-box"><svg viewBox="0 0 96 96" aria-label="Mã QR ${names[method] || method}">${qrRects(code)}</svg></div>
+        <div class="qr-info">
+          <strong>Quét mã ${names[method] || 'thanh toán'}</strong>
+          <span>Mã giao dịch demo</span>
+          <code>${code}</code>
+          <small>Quét mã hoặc nhập mã này để mô phỏng thanh toán.</small>
+        </div>`;
+    }
+
     function field(name) {
       return addressForm?.querySelector(`[name="${name}"]`) || addressForm?.querySelector(`#${name}`);
     }
@@ -725,7 +845,8 @@
     }
 
     addressForm?.addEventListener("submit", e => { e.preventDefault(); if (validateCustomerForm()) toast("Đã lưu địa chỉ giao hàng."); });
-    paymentForm?.addEventListener("submit", e => { e.preventDefault(); toast("Đã lưu phương thức thanh toán."); });
+    paymentForm?.addEventListener("submit", e => { e.preventDefault(); updatePaymentQR(); toast("Đã lưu phương thức thanh toán."); });
+    paymentForm?.querySelectorAll("input[name='payment']").forEach(radio => radio.addEventListener("change", updatePaymentQR));
     promoButton?.addEventListener("click", applyPromo);
     confirmBtn.addEventListener("click", submitOrder);
 
@@ -736,6 +857,7 @@
       if (field("phone") && user.phone) field("phone").value = user.phone;
       if (field("email") && user.email) field("email").value = user.email;
     }
+    updatePaymentQR();
     renderOrder();
   }
 

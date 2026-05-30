@@ -116,12 +116,119 @@
     card.addEventListener('click', openPost);
     card.addEventListener('keydown', e => { if (e.key === 'Enter') openPost(); });
   });
-  document.getElementById('blogSearch')?.addEventListener('input', function(){
-    const key = blogNormalize(this.value);
+  const blogInput = document.getElementById('blogSearch');
+  const blogGrid = document.getElementById('blogGrid');
+  let emptyBlog = document.getElementById('blogEmptyState');
+  if (!emptyBlog && blogGrid) {
+    emptyBlog = document.createElement('p');
+    emptyBlog.id = 'blogEmptyState';
+    emptyBlog.className = 'blog-empty-state';
+    emptyBlog.textContent = 'Không tìm thấy bài viết phù hợp.';
+    emptyBlog.style.display = 'none';
+    blogGrid.after(emptyBlog);
+  }
+  blogInput?.addEventListener('input', function(){
+    const key = blogNormalize(this.value.trim());
+    let shown = 0;
     document.querySelectorAll('.real-blog').forEach(card => {
-      card.style.display = !key || blogNormalize(card.innerText + ' ' + card.dataset.blogKey).includes(key) ? '' : 'none';
+      const haystack = blogNormalize([card.innerText, card.dataset.blogKey, card.querySelector('h2')?.textContent, card.querySelector('p')?.textContent].join(' '));
+      const ok = !key || haystack.includes(key);
+      card.hidden = !ok;
+      if (ok) shown += 1;
     });
+    if (emptyBlog) emptyBlog.style.display = shown ? 'none' : 'block';
   });
 </script>
+
+<script id="blog-search-hard-fix">
+(function(){
+  const normalize = value => String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g,'d').replace(/Đ/g,'D')
+    .toLowerCase();
+  function runFilter(){
+    const input = document.getElementById('blogSearch');
+    const cards = Array.from(document.querySelectorAll('#blogGrid .real-blog'));
+    let empty = document.getElementById('blogEmptyState');
+    if (!empty) {
+      empty = document.createElement('p');
+      empty.id = 'blogEmptyState';
+      empty.className = 'blog-empty-state';
+      empty.textContent = 'Không tìm thấy bài viết phù hợp.';
+      document.getElementById('blogGrid')?.after(empty);
+    }
+    const key = normalize(input?.value || '');
+    let shown = 0;
+    cards.forEach(card => {
+      const text = normalize([card.dataset.blogKey, card.textContent, card.querySelector('h2')?.textContent, card.querySelector('p')?.textContent].join(' '));
+      const ok = !key || text.includes(key);
+      card.style.display = ok ? '' : 'none';
+      card.hidden = false;
+      if (ok) shown++;
+    });
+    if (empty) empty.style.display = shown ? 'none' : 'block';
+  }
+  function bind(){
+    const input = document.getElementById('blogSearch');
+    if (!input || input.dataset.searchFixed === '1') return;
+    input.dataset.searchFixed = '1';
+    ['input','change','keyup','search'].forEach(evt => input.addEventListener(evt, runFilter));
+    runFilter();
+  }
+  bind();
+  document.addEventListener('DOMContentLoaded', bind);
+})();
+</script>
+
+
+<script id="v19-blog-search-final">
+(function(){
+  const normalize = value => String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g,'d').replace(/Đ/g,'D')
+    .toLowerCase().trim();
+  function filterBlog(){
+    const input = document.getElementById('blogSearch');
+    const grid = document.getElementById('blogGrid');
+    if(!input || !grid) return;
+    let empty = document.getElementById('blogEmptyState');
+    if(!empty){
+      empty = document.createElement('p');
+      empty.id = 'blogEmptyState';
+      empty.className = 'blog-empty-state';
+      empty.textContent = 'Không tìm thấy bài viết phù hợp.';
+      grid.after(empty);
+    }
+    const key = normalize(input.value);
+    let count = 0;
+    grid.querySelectorAll('.real-blog').forEach(card => {
+      const haystack = normalize([
+        card.dataset.blogKey,
+        card.querySelector('h2')?.textContent,
+        card.querySelector('p')?.textContent,
+        card.querySelector('.blog-tag')?.textContent,
+        card.textContent
+      ].join(' '));
+      const ok = !key || haystack.includes(key);
+      card.classList.toggle('blog-filter-hidden', !ok);
+      card.hidden = false;
+      if(ok) count++;
+    });
+    empty.style.display = count ? 'none' : 'block';
+  }
+  function bindBlogSearchFinal(){
+    const input = document.getElementById('blogSearch');
+    if(!input || input.dataset.v19Bound === '1') return;
+    input.dataset.v19Bound = '1';
+    ['input','keyup','change','search'].forEach(evt => input.addEventListener(evt, filterBlog));
+    filterBlog();
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindBlogSearchFinal);
+  else bindBlogSearchFinal();
+})();
+</script>
+
 </body>
 </html>

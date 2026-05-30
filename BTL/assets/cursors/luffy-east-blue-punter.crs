@@ -1,0 +1,51 @@
+﻿[Help]
+Path=Luffy Help.cur
+
+[AppStarting]
+Path=Luffy Working.ani
+
+[Wait]
+Path=Luffy Busy.ani
+
+[Crosshair]
+Path=Luffy Precision.ani
+
+[IBeam]
+Path=Luffy Text.ani
+
+[NWPen]
+Path=Luffy Handwriting.cur
+
+[No]
+Path=Luffy Unavaible.cur
+
+[SizeNS]
+Path=Luffy Vertical.ani
+
+[SizeWE]
+Path=Luffy Horizontal.cur
+
+[SizeNWSE]
+Path=Luffy Diagonal 1.ani
+
+[SizeNESW]
+Path=Luffy Diagonal 2.ani
+
+[SizeAll]
+Path=Luffy Move.ani
+
+[UpArrow]
+Path=Luffy Alternate.cur
+
+[Hand]
+Path=Luffy Link.ani
+
+[Pin]
+Path=Luffy Location.cur
+
+[Person]
+Path=Luffy Person.cur
+
+[Arrow]
+Path=Luffy Normal.ani
+

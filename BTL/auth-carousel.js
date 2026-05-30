@@ -57,6 +57,17 @@
     document.body.appendChild(modal);
   }
 
+  function fitAuthHeight(index = 0) {
+    const win = document.querySelector('#authModal .auth-window');
+    const slides = [...document.querySelectorAll('#authModal .auth-slide')];
+    const slide = slides[index];
+    if (!win || !slide) return;
+    requestAnimationFrame(() => {
+      win.style.height = `${slide.scrollHeight}px`;
+    });
+  }
+
+
   async function api(path, options = {}) {
     const response = await fetch(API_BASE + path, {
       headers: { "Content-Type": "application/json", ...(options.headers || {}) },
@@ -78,6 +89,7 @@
     modal.style.display = "flex";
     document.body.style.overflow = "hidden";
     switchTab("login", 0);
+    fitAuthHeight(0);
   };
 
   window.closeAuth = function () {
@@ -92,6 +104,7 @@
     ensureAuthModal();
     const carousel = document.getElementById("authCarousel");
     if (carousel) carousel.style.transform = `translateX(-${index * 33.333}%)`;
+    fitAuthHeight(index);
     document.querySelectorAll(".auth-tabs .tab-item").forEach(tab => tab.classList.remove("active"));
     const active = type === "register" ? document.getElementById("tab-register") : document.getElementById("tab-login");
     active?.classList.add("active");
@@ -109,7 +122,7 @@
   window.handleLogin = async function () {
     const account = document.getElementById("loginEmail")?.value.trim();
     const password = document.getElementById("loginPassword")?.value.trim();
-    if (!account || !password) return alert("Vui lòng nhập tài khoản và mật khẩu.");
+    if (!account || !password) return (window.showToast ? window.showToast("Vui lòng nhập tài khoản và mật khẩu.", "warning") : alert("Vui lòng nhập tài khoản và mật khẩu."));
     try {
       let user;
       if (await backendReady()) {
@@ -124,7 +137,7 @@
       localStorage.setItem("currentUser", JSON.stringify(user));
       closeAuth();
       window.refreshAuthUI?.();
-      alert("Đăng nhập thành công.");
+      window.showToast ? window.showToast("Đăng nhập thành công.") : alert("Đăng nhập thành công.");
     } catch (error) {
       const box = document.getElementById("errorBox");
       if (box) { box.textContent = error.message; box.style.display = "block"; }
