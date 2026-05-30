@@ -1412,11 +1412,11 @@ html, body, button, input, select, textarea{
 
 body{
   background: var(--mot-soft-bg);
-  cursor: url("assets/cursors/Luffy Help.cur") 4 28, auto;
+  cursor: url("/assets/cursors/Luffy Help.cur") 4 28, auto;
 }
 
 a, button, .product-item, .category-item, .cart-box, .user-circle, .nav-item, .wishlist-btn, .btn-buy-now, .btn-add-cart{
-  cursor: url("assets/cursors/Luffy Alternate.cur") 4 28, pointer !important;
+  cursor: url("/assets/cursors/Luffy Alternate.cur") 4 28, pointer !important;
 }
 
 .top-header-banner img,
@@ -2170,8 +2170,8 @@ html, body, button, input, select, textarea,
 
 /* ================= V16 FINAL POLISH: ratio-safe banners, horizontal categories, pagination ================= */
 html, body, button, input, select, textarea{ font-family:"Be Vietnam Pro","Segoe UI",Arial,sans-serif !important; }
-body{ cursor:url("assets/cursors/Luffy Help.cur") 5 5, auto !important; }
-a, button, select, .product-item, .category-item, .cart-box, .user-circle, .wishlist-btn{ cursor:url("assets/cursors/Luffy Alternate.cur") 16 10, pointer !important; }
+body{ cursor:url("/assets/cursors/Luffy Help.cur") 5 5, auto !important; }
+a, button, select, .product-item, .category-item, .cart-box, .user-circle, .wishlist-btn{ cursor:url("/assets/cursors/Luffy Alternate.cur") 16 10, pointer !important; }
 
 .top-header-banner{ width:100% !important; background:#fff !important; display:flex !important; justify-content:center !important; overflow:hidden !important; }
 .top-header-banner img{ width:auto !important; max-width:100% !important; height:auto !important; max-height:none !important; object-fit:contain !important; display:block !important; }
@@ -2407,10 +2407,10 @@ a, button, select, .product-item, .category-item, .cart-box, .user-circle, .wish
 .checkout-total-row.final-total strong{ font-size:28px !important; }
 
 /* Luffy cursor set from uploaded cursor pack */
-html, body{ cursor:url("assets/cursors/Luffy Handwriting.cur"), auto !important; }
-a, button, select, .product-item, .category-item, .cart-box, .user-circle, .wishlist-btn, .blog-card.real-blog, .btn-login{ cursor:url("assets/cursors/Luffy Help.cur"), pointer !important; }
-input, textarea{ cursor:url("assets/cursors/Luffy Person.cur"), text !important; }
-:disabled, .disabled{ cursor:url("assets/cursors/Luffy Unavaible.cur"), not-allowed !important; }
+html, body{ cursor:url("/assets/cursors/Luffy Handwriting.cur"), auto !important; }
+a, button, select, .product-item, .category-item, .cart-box, .user-circle, .wishlist-btn, .blog-card.real-blog, .btn-login{ cursor:url("/assets/cursors/Luffy Help.cur"), pointer !important; }
+input, textarea{ cursor:url("/assets/cursors/Luffy Person.cur"), text !important; }
+:disabled, .disabled{ cursor:url("/assets/cursors/Luffy Unavaible.cur"), not-allowed !important; }
 
 @media(max-width:900px){
   .slideshow,.sale-banners{ width:calc(100% - 24px) !important; }
@@ -2426,7 +2426,7 @@ input, textarea{ cursor:url("assets/cursors/Luffy Person.cur"), text !important;
 
 /* Force Luffy cursor across all pages */
 html, body, body *, .admin-container, .admin-container *{
-  cursor: url("assets/cursors/Luffy Help.cur"), auto !important;
+  cursor: url("/assets/cursors/Luffy Help.cur"), auto !important;
 }
 a, button, select, summary,
 .product-item, .category-item, .blog-card, .real-blog,
@@ -2434,13 +2434,13 @@ a, button, select, summary,
 .wishlist-btn, .btn-buy-now, .btn-add-cart, .btn-checkout,
 .nav-item, .tab-item, .page-btn, .pagination-btn,
 [data-cart-minus], [data-cart-plus], [data-cart-remove]{
-  cursor: url("assets/cursors/Luffy Alternate.cur"), pointer !important;
+  cursor: url("/assets/cursors/Luffy Alternate.cur"), pointer !important;
 }
 input, textarea, [contenteditable="true"]{
-  cursor: url("assets/cursors/Luffy Person.cur"), text !important;
+  cursor: url("/assets/cursors/Luffy Person.cur"), text !important;
 }
 button:disabled, input:disabled, select:disabled, .disabled{
-  cursor: url("assets/cursors/Luffy Unavaible.cur"), not-allowed !important;
+  cursor: url("/assets/cursors/Luffy Unavaible.cur"), not-allowed !important;
 }
 
 /* Product toolbar: wider and no overlapping/truncation */

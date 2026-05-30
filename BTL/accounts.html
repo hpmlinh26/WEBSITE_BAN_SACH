@@ -5,19 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang cá nhân - Quản lý tài khoản</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="auth-carousel.css">
-    <link rel="stylesheet" href="styles-cart.css">
-    <link rel="stylesheet" href="accounts.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="enhancements.css">
 </head>
 <body>
     <!-- TOP HEADER BANNER -->
     <div class="top-header-banner">
-        <img src="assets/images/banner.jpg" alt="Banner Sale">
+        <img src="/assets/images/banner.jpg" alt="Banner Sale">
     </div>
 
     <!-- HEADER -->
@@ -26,7 +21,7 @@
             <!-- LOGO -->
             <div class="logo">
                 <a href="index.html">
-                    <img src="assets/images/logo.png" alt="Logo">
+                    <img src="/assets/images/logo.png" alt="Logo">
                 </a>
             </div>
 
@@ -60,9 +55,9 @@
                 </div>
 
                 <div class="icons">
-                    <a href="accounts.html?tab=form-thong-bao" class="header-icon-link notification-link" title="Thông báo"><img class="header-icon-img notification-icon" src="assets/images/icon-notification-header.png" alt="Thông báo"></a>
-                    <div class="cart-box"><img class="header-icon-img cart-icon-img" src="assets/images/icon-cart-header.png" alt="Giỏ hàng"><span class="badge">0</span></div>
-                    <div class="user-circle"><img class="header-icon-img user-icon-img" src="assets/images/icon-user-header.png" alt="Tài khoản"></div>
+                    <a href="accounts.html?tab=form-thong-bao" class="header-icon-link notification-link" title="Thông báo"><img class="header-icon-img notification-icon" src="/assets/images/icon-notification-header.png" alt="Thông báo"></a>
+                    <div class="cart-box"><img class="header-icon-img cart-icon-img" src="/assets/images/icon-cart-header.png" alt="Giỏ hàng"><span class="badge">0</span></div>
+                    <div class="user-circle"><img class="header-icon-img user-icon-img" src="/assets/images/icon-user-header.png" alt="Tài khoản"></div>
                 </div>
 
                 <button class="btn-login" onclick="openAuth()">Login</button>
@@ -78,7 +73,7 @@
             <aside class="profile-sidebar">
                 <div class="avatar-section">
                     <div class="avatar-placeholder">
-                        <img src="assets/images/user-sidebar-avatar.png" alt="Ảnh đại diện" class="profile-avatar-img">
+                        <img src="/assets/images/user-sidebar-avatar.png" alt="Ảnh đại diện" class="profile-avatar-img">
                     </div>
                     <span class="user-badge">Thành viên</span>
                 </div>
@@ -88,7 +83,7 @@
                     <div class="menu-item-group" id="accountGroup">
                         <div class="menu-item-header" id="accountGroupHeader">
                             <span class="menu-label">
-                                <img src="assets/images/user-sidebar-account.png" alt="" class="account-menu-icon">Thông tin tài khoản
+                                <img src="/assets/images/user-sidebar-account.png" alt="" class="account-menu-icon">Thông tin tài khoản
                             </span>
                             <span class="arrow-icon" aria-hidden="true"></span>
                         </div>
@@ -102,28 +97,28 @@
                     <!-- Menu Đơn hàng -->
                     <a href="#" class="menu-item" data-target="form-don-hang">
                         <span class="menu-label">
-                            <img src="assets/images/user-sidebar-orders.png" alt="" class="account-menu-icon">Đơn hàng của tôi
+                            <img src="/assets/images/user-sidebar-orders.png" alt="" class="account-menu-icon">Đơn hàng của tôi
                         </span>
                     </a>
 
                     <!-- Menu Thông báo -->
                     <a href="#" class="menu-item" data-target="form-thong-bao">
                         <span class="menu-label">
-                            <img src="assets/images/user-sidebar-notification.png" alt="" class="account-menu-icon">Thông báo
+                            <img src="/assets/images/user-sidebar-notification.png" alt="" class="account-menu-icon">Thông báo
                         </span>
                     </a>
 
                     <!-- Menu Yêu thích -->
                     <a href="#" class="menu-item" data-target="form-yeu-thich">
                         <span class="menu-label">
-                            <img src="assets/images/user-sidebar-wishlist.png" alt="" class="account-menu-icon">Yêu thích
+                            <img src="/assets/images/user-sidebar-wishlist.png" alt="" class="account-menu-icon">Yêu thích
                         </span>
                     </a>
 
                     <!-- Menu Voucher -->
                     <a href="#" class="menu-item" data-target="form-voucher">
                         <span class="menu-label">
-                            <img src="assets/images/user-sidebar-voucher.png" alt="" class="account-menu-icon">Voucher
+                            <img src="/assets/images/user-sidebar-voucher.png" alt="" class="account-menu-icon">Voucher
                         </span>
                     </a>
                 </nav>
@@ -440,10 +435,6 @@
         <div>Hỗ trợ khách hàng: mot@gmail.com.vn</div>
     </footer>
 
-    <script src="enhancements.js"></script>
-    <script src="data.js"></script>
-    <script src="auth-carousel.js"></script>
-    <script src="script.js"></script>
-    <script src="accounts.js"></script>
+  <script type="module" src="/src/js/entries/accounts.js"></script>
 </body>
 </html>

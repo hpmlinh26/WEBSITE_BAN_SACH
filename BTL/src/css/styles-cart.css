@@ -459,7 +459,7 @@ footer{
 
 /* Force Luffy cursor across all pages */
 html, body, body *, .admin-container, .admin-container *{
-  cursor: url("assets/cursors/Luffy Help.cur"), auto !important;
+  cursor: url("/assets/cursors/Luffy Help.cur"), auto !important;
 }
 a, button, select, summary,
 .product-item, .category-item, .blog-card, .real-blog,
@@ -467,13 +467,13 @@ a, button, select, summary,
 .wishlist-btn, .btn-buy-now, .btn-add-cart, .btn-checkout,
 .nav-item, .tab-item, .page-btn, .pagination-btn,
 [data-cart-minus], [data-cart-plus], [data-cart-remove]{
-  cursor: url("assets/cursors/Luffy Alternate.cur"), pointer !important;
+  cursor: url("/assets/cursors/Luffy Alternate.cur"), pointer !important;
 }
 input, textarea, [contenteditable="true"]{
-  cursor: url("assets/cursors/Luffy Person.cur"), text !important;
+  cursor: url("/assets/cursors/Luffy Person.cur"), text !important;
 }
 button:disabled, input:disabled, select:disabled, .disabled{
-  cursor: url("assets/cursors/Luffy Unavaible.cur"), not-allowed !important;
+  cursor: url("/assets/cursors/Luffy Unavaible.cur"), not-allowed !important;
 }
 
 /* Product toolbar: wider and no overlapping/truncation */
