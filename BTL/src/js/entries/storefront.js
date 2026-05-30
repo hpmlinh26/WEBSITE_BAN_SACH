@@ -1,4 +1,5 @@
 // Entry cho cac trang storefront: index, products, product-detail, blog, blog-detail, contact, cart.
+import '../../css/tokens.css';
 import '../../css/style.css';
 import '../../css/auth-carousel.css';
 import '../../css/enhancements.css';

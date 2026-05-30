@@ -54,7 +54,7 @@ body {
     top: 0;
     bottom: 0;
     width: 4px;
-    background-color: #c92127;
+    background-color: var(--mot-red);
     border-radius: 8px 0 0 8px;
 }
 
@@ -124,19 +124,19 @@ body {
 /* ACTIVE STATE */
 .user-profile-dashboard .menu-item-group.active .menu-item-header,
 .user-profile-dashboard .menu-item.active {
-    color: #c92127;
+    color: var(--mot-red);
     font-weight: 600;
 }
 
 .user-profile-dashboard .menu-item-group.active .menu-item-header i,
 .user-profile-dashboard .menu-item.active i {
-    color: #c92127;
+    color: var(--mot-red);
 }
 
 /* ARROW ICON */
 .user-profile-dashboard .arrow-icon {
     font-size: 12px;
-    color: #c92127;
+    color: var(--mot-red);
     transition: transform 0.3s ease;
     transform: rotate(0deg);
 }
@@ -167,11 +167,11 @@ body {
 }
 
 .user-profile-dashboard .submenu-item:hover {
-    color: #c92127;
+    color: var(--mot-red);
 }
 
 .user-profile-dashboard .submenu-item.active {
-    color: #c92127;
+    color: var(--mot-red);
     font-weight: 600;
 }
 
@@ -228,7 +228,7 @@ body {
 }
 
 .user-profile-dashboard .required {
-    color: #c92127;
+    color: var(--mot-red);
     margin-left: 3px;
 }
 
@@ -253,7 +253,7 @@ body {
 
 .user-profile-dashboard .input-wrapper input:focus,
 .user-profile-dashboard .input-wrapper select:focus {
-    border-color: #c92127;
+    border-color: var(--mot-red);
 }
 
 .user-profile-dashboard .custom-select {
@@ -304,7 +304,7 @@ body {
 }
 
 .user-profile-dashboard .toggle-password:hover {
-    color: #c92127;
+    color: var(--mot-red);
 }
 
 /* RADIO BUTTONS */
@@ -335,7 +335,7 @@ body {
 }
 
 .user-profile-dashboard .radio-label input:checked ~ .custom-radio {
-    border-color: #c92127;
+    border-color: var(--mot-red);
 }
 
 .user-profile-dashboard .radio-label input:checked ~ .custom-radio::after {
@@ -346,7 +346,7 @@ body {
     transform: translate(-50%, -50%);
     width: 10px;
     height: 10px;
-    background-color: #c92127;
+    background-color: var(--mot-red);
     border-radius: 50%;
 }
 
@@ -359,7 +359,7 @@ body {
 .user-profile-dashboard .btn-submit-profile {
     width: 200px;
     height: 45px;
-    background-color: #c92127;
+    background-color: var(--mot-red);
     color: #ffffff;
     border: none;
     border-radius: 5px;
@@ -398,13 +398,13 @@ body {
 }
 
 .user-profile-dashboard .order-tabs .tab-item:hover {
-    color: #c92127;
+    color: var(--mot-red);
 }
 
 .user-profile-dashboard .order-tabs .tab-item.active {
-    color: #c92127;
+    color: var(--mot-red);
     font-weight: 600;
-    border-bottom: 2px solid #c92127;
+    border-bottom: 2px solid var(--mot-red);
 }
 
 .user-profile-dashboard .order-card {
@@ -498,7 +498,7 @@ body {
     position: absolute;
     top: 10px;
     right: 0;
-    color: #c92127;
+    color: var(--mot-red);
     font-size: 13px;
     font-weight: 500;
 }
@@ -574,13 +574,13 @@ body {
 }
 
 .user-profile-dashboard .notification-tabs .tab-item:hover {
-    color: #c92127;
+    color: var(--mot-red);
 }
 
 .user-profile-dashboard .notification-tabs .tab-item.active {
-    color: #c92127;
+    color: var(--mot-red);
     font-weight: 600;
-    border-bottom: 2px solid #c92127;
+    border-bottom: 2px solid var(--mot-red);
 }
 
 .user-profile-dashboard .notification-card {
@@ -642,13 +642,13 @@ body {
 }
 
 .user-profile-dashboard .voucher-tabs .tab-item:hover {
-    color: #c92127;
+    color: var(--mot-red);
 }
 
 .user-profile-dashboard .voucher-tabs .tab-item.active {
-    color: #c92127;
+    color: var(--mot-red);
     font-weight: 600;
-    border-bottom: 2px solid #c92127;
+    border-bottom: 2px solid var(--mot-red);
 }
 
 .user-profile-dashboard .voucher-grid {
@@ -797,13 +797,13 @@ body {
   color: #666;
   font-size: 14px;
 }
-.account-mini-footer a { color:#c92127; text-decoration:none; margin-left:16px; font-weight:600; }
+.account-mini-footer a { color:var(--mot-red); text-decoration:none; margin-left:16px; font-weight:600; }
 .user-orders-list { display:flex; flex-direction:column; gap:18px; }
 .user-profile-dashboard .dynamic-order-card { padding: 22px 26px; }
 .user-profile-dashboard .order-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #eee; }
 .user-profile-dashboard .order-card-header strong { color:#222; font-size:17px; display:block; }
 .user-profile-dashboard .order-card-header span { color:#777; font-size:13px; }
-.user-profile-dashboard .order-status-tag { background:#fff3f3; color:#c92127 !important; padding:7px 14px; border-radius:999px; font-weight:700; }
+.user-profile-dashboard .order-status-tag { background:#fff3f3; color:var(--mot-red) !important; padding:7px 14px; border-radius:999px; font-weight:700; }
 .user-profile-dashboard .dynamic-order-item { display:flex; justify-content:space-between; align-items:center; gap:20px; padding: 18px 0; border-bottom:1px solid #f0f0f0; }
 .user-profile-dashboard .dynamic-order-item:last-child { border-bottom:0; }
 .user-profile-dashboard .dynamic-order-item .product-image { width:76px; height:104px; object-fit:cover; border-radius:8px; background:#f4f4f4; box-shadow:0 6px 14px rgba(0,0,0,.08); }
@@ -813,9 +813,9 @@ body {
 .user-profile-dashboard .dynamic-order-item .product-price-qty { display:grid; grid-template-columns: 120px 70px 120px; align-items:center; text-align:right; gap:16px; }
 .user-profile-dashboard .dynamic-order-item .current-price { font-weight:700; color:#111; display:block; }
 .user-profile-dashboard .dynamic-order-item .old-price { color:#999; text-decoration:line-through; font-size:13px; }
-.user-profile-dashboard .dynamic-order-item .total-item-price { color:#c92127; font-weight:800; }
+.user-profile-dashboard .dynamic-order-item .total-item-price { color:var(--mot-red); font-weight:800; }
 .user-profile-dashboard .empty-user-order { padding: 30px; text-align:center; }
-.user-profile-dashboard .empty-user-order a { color:#fff; background:#c92127; border-radius:999px; padding:10px 18px; display:inline-block; margin-top:12px; text-decoration:none; font-weight:700; }
+.user-profile-dashboard .empty-user-order a { color:#fff; background:var(--mot-red); border-radius:999px; padding:10px 18px; display:inline-block; margin-top:12px; text-decoration:none; font-weight:700; }
 .user-profile-dashboard .btn-order-action.muted { color:#777; border-color:#ddd; background:#fff; }
 @media (max-width: 900px) {
   .account-mini-footer, .user-profile-dashboard .dynamic-order-item, .user-profile-dashboard .order-card-header { flex-direction:column; align-items:flex-start; }
@@ -855,7 +855,7 @@ body {
   font-size: 28px;
   cursor: pointer;
 }
-.user-order-modal-card h2 { margin: 0 0 16px; color: #c92127; }
+.user-order-modal-card h2 { margin: 0 0 16px; color: var(--mot-red); }
 .user-order-meta { background: #f8fafc; border-radius: 14px; padding: 14px; margin-bottom: 16px; }
 .user-order-meta p { margin: 6px 0; }
 .user-order-modal-items { display: flex; flex-direction: column; gap: 12px; }
@@ -864,7 +864,7 @@ body {
 .user-order-modal-item h4 { margin: 0 0 4px; }
 .user-order-modal-item p { margin: 0; color: #666; }
 .user-order-modal-actions { margin-top: 18px; text-align: right; }
-.user-order-modal-actions .btn-order-action { background: #c92127; color: #fff; border-color: #c92127; text-decoration: none; }
+.user-order-modal-actions .btn-order-action { background: var(--mot-red); color: #fff; border-color: var(--mot-red); text-decoration: none; }
 
 
 /* ================= V10 VOUCHER CARD FIX ================= */
@@ -908,7 +908,7 @@ body {
 .user-profile-dashboard .menu-label::before{
   width:26px; height:26px; flex:0 0 26px; border-radius:8px;
   display:inline-flex; align-items:center; justify-content:center;
-  color:#c92127; font-weight:900; font-size:18px;
+  color:var(--mot-red); font-weight:900; font-size:18px;
 }
 .user-profile-dashboard .menu-item-group .menu-item-header .menu-label::before{ content:'👤'; font-family:'Segoe UI Emoji','Apple Color Emoji',Arial,sans-serif; }
 .user-profile-dashboard .menu-item[data-target="form-don-hang"] .menu-label::before{ content:'☷'; font-family:Arial,sans-serif; }
@@ -933,14 +933,14 @@ body {
   width:100%; height:230px; object-fit:cover; border-radius:14px; background:#f5f5f5;
 }
 .wishlist-card h3{ font-size:16px; line-height:1.35; margin:12px 0 6px; }
-.wishlist-card p{ color:#c92127; font-weight:800; margin:0 0 12px; }
+.wishlist-card p{ color:var(--mot-red); font-weight:800; margin:0 0 12px; }
 .wishlist-actions{ display:flex; gap:8px; flex-wrap:wrap; }
 .wishlist-actions a,
 .wishlist-actions button{
   border:0; border-radius:999px; padding:9px 12px; font-weight:800; cursor:pointer; text-decoration:none;
 }
-.wishlist-actions a{ background:#c92127; color:#fff; }
-.wishlist-actions button{ background:#fff0f1; color:#c92127; }
+.wishlist-actions a{ background:var(--mot-red); color:#fff; }
+.wishlist-actions button{ background:#fff0f1; color:var(--mot-red); }
 .empty-wishlist{ background:#fff; border-radius:16px; padding:24px; color:#667085; }
 
 
@@ -958,7 +958,7 @@ body {
   border-radius:8px !important;
   padding:34px 0 28px !important;
   overflow:hidden !important;
-  border-left:4px solid #c92127 !important;
+  border-left:4px solid var(--mot-red) !important;
   box-shadow:0 2px 14px rgba(16,24,40,.08) !important;
 }
 .user-profile-dashboard .profile-sidebar::before{ display:none !important; }
@@ -995,7 +995,7 @@ body {
   gap:14px !important;
 }
 .user-profile-dashboard .menu-item:hover,
-.user-profile-dashboard .menu-item-header:hover{ background:#fff7f7 !important; color:#c92127 !important; }
+.user-profile-dashboard .menu-item-header:hover{ background:#fff7f7 !important; color:var(--mot-red) !important; }
 .user-profile-dashboard .menu-label{
   display:flex !important;
   align-items:center !important;
@@ -1012,7 +1012,7 @@ body {
 }
 .user-profile-dashboard .menu-item.active,
 .user-profile-dashboard .menu-item-group.active .menu-item-header{
-  color:#c92127 !important;
+  color:var(--mot-red) !important;
   background:#fff !important;
   font-weight:700 !important;
 }
@@ -1023,7 +1023,7 @@ body {
   height:0 !important;
   border-left:5px solid transparent !important;
   border-right:5px solid transparent !important;
-  border-top:6px solid #c92127 !important;
+  border-top:6px solid var(--mot-red) !important;
   display:inline-block !important;
   transform:rotate(0deg) !important;
 }
@@ -1037,7 +1037,7 @@ body {
   padding:9px 0 !important;
   color:#666 !important;
 }
-.user-profile-dashboard .submenu-item.active{ color:#c92127 !important; }
+.user-profile-dashboard .submenu-item.active{ color:var(--mot-red) !important; }
 .user-profile-dashboard .profile-main-content{
   border-radius:10px !important;
   box-shadow:0 2px 14px rgba(16,24,40,.07) !important;

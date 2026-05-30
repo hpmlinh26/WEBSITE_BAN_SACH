@@ -1,0 +1,5 @@
+/* Design tokens - bien dung chung cho toan bo giao dien MOT Store.
+   Tach ra de mau thuong hieu chi khai bao mot noi (truoc day lap 159 lan). */
+:root {
+  --mot-red: #c92127; /* mau do thuong hieu chinh */
+}

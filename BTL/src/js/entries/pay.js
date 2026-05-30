@@ -1,4 +1,5 @@
 // Entry cho trang thanh toan (pay.html).
+import '../../css/tokens.css';
 import '../../css/style.css';
 import '../../css/auth-carousel.css';
 import '../../css/pay.css';

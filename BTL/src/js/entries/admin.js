@@ -1,5 +1,6 @@
 // Entry cho cac trang quan tri: admin-dashboard, products-manager, accounts-manager,
 // orders-manager, vouchers-manager.
+import '../../css/tokens.css';
 import '../../css/admin.css';
 import '../../css/enhancements.css';
 

@@ -1,4 +1,5 @@
 // Entry cho trang tai khoan ca nhan (accounts.html).
+import '../../css/tokens.css';
 import '../../css/style.css';
 import '../../css/auth-carousel.css';
 import '../../css/styles-cart.css';
