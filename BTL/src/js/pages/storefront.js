@@ -158,7 +158,7 @@ function productCard(product, options = {}) {
     <article class="product-item functional-card" data-product-id="${product.id}" tabindex="0">
       <div class="product-image">
         <button class="wishlist-btn ${isWishlisted(product.id) ? 'active' : ''}" data-wishlist="${product.id}" aria-label="Yêu thích ${escapeHtml(product.name)}"><i class="fa-solid fa-heart"></i></button>
-        <img src="${product.image}" alt="${escapeHtml(product.name)}" onerror="this.src='assets/images/Mangan.png'">
+        <img src="${product.image}" alt="${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.src='assets/images/Mangan.png'">
         <span class="discount-badge">-${product.discount || 20}%</span>
       </div>
       <div class="product-info">
@@ -204,7 +204,7 @@ function setupSearchSuggest(box, input, submit) {
           .map(
             (p) => `
       <a class="search-suggest-item" href="product-detail.html?id=${p.id}">
-        <img src="${p.image}" alt="${escapeHtml(p.name)}" onerror="this.src='assets/images/placeholder-cover.svg'">
+        <img src="${p.image}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="this.src='assets/images/placeholder-cover.svg'">
         <div><strong>${escapeHtml(p.name)}</strong><span>${money(p.price)} • ${escapeHtml(p.author || 'MOT Store')}</span></div>
       </a>`
           )
@@ -379,7 +379,7 @@ function initHomePage() {
         .map(
           (c) => `
       <a class="category-item" href="products.html?category=${encodeURIComponent(c.slug)}">
-        <div class="category-image"><img src="${c.image || 'assets/images/Mangan.png'}" alt="${escapeHtml(c.name)}" onerror="this.src='assets/images/Mangan.png'"></div>
+        <div class="category-image"><img src="${c.image || 'assets/images/Mangan.png'}" alt="${escapeHtml(c.name)}" loading="lazy" decoding="async" onerror="this.src='assets/images/Mangan.png'"></div>
         <p class="category-name">${escapeHtml(c.name)}</p>
       </a>`
         )
@@ -505,7 +505,7 @@ function initProductsPage() {
       ? list
           .map(
             (p) =>
-              `<button type="button" data-suggest-text="${escapeHtml(p.name)}"><img src="${p.image}" alt=""><span>${escapeHtml(p.name)}</span><b>${money(p.price)}</b></button>`
+              `<button type="button" data-suggest-text="${escapeHtml(p.name)}"><img src="${p.image}" alt="" loading="lazy" decoding="async"><span>${escapeHtml(p.name)}</span><b>${money(p.price)}</b></button>`
           )
           .join('')
       : `<p>Không có gợi ý phù hợp.</p>`;
@@ -608,7 +608,7 @@ function initCartPage() {
                   .map(
                     (item) => `
             <div class="cart-row" data-cart-id="${item.product.id}">
-              <img src="${item.product.image}" alt="${escapeHtml(item.product.name)}" onerror="this.src='assets/images/Mangan.png'">
+              <img src="${item.product.image}" alt="${escapeHtml(item.product.name)}" loading="lazy" decoding="async" onerror="this.src='assets/images/Mangan.png'">
               <div class="cart-row-info">
                 <h3>${escapeHtml(item.product.name)}</h3>
                 <p>${escapeHtml(item.product.author || 'MOT Store')}</p>

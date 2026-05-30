@@ -485,7 +485,19 @@ app.use((req, res, next) => {
   next();
 });
 // Phuc vu frontend da build (no-op neu thu muc dist chua ton tai).
-app.use(express.static(DIST_DIR));
+// Asset (anh, JS/CSS da hash) cache lau de bot tai lai; HTML luon revalidate.
+app.use(
+  express.static(DIST_DIR, {
+    maxAge: '1d',
+    setHeaders(res, filePath) {
+      if (filePath.endsWith('.html')) {
+        res.setHeader('Cache-Control', 'no-cache');
+      } else if (filePath.includes(`${path.sep}assets${path.sep}`)) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      }
+    },
+  })
+);
 app.get('/', (req, res) => {
   const indexFile = path.join(DIST_DIR, 'index.html');
   if (fs.existsSync(indexFile)) return res.sendFile(indexFile);

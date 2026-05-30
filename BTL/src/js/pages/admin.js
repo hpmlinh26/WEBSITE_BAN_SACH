@@ -189,7 +189,7 @@ function renderCategories() {
       .map(
         (c) => `
     <article class="category-admin-card">
-      <img src="${normalizeImage(c.image)}" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${escapeHtml(c.name)}">
+      <img src="${normalizeImage(c.image)}" loading="lazy" decoding="async" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${escapeHtml(c.name)}">
       <div><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.slug)}</p></div>
       <div class="card-actions">
         <button class="btn-edit" onclick="editCategory(${c.id})">Sửa</button>
@@ -209,7 +209,7 @@ function renderProducts() {
         const category = p.category || p.category_slug;
         return `<tr>
       <td>#${p.id}</td>
-      <td><img class="table-cover" src="${normalizeImage(p.image)}" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${escapeHtml(p.name || p.title)}"></td>
+      <td><img class="table-cover" src="${normalizeImage(p.image)}" loading="lazy" decoding="async" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${escapeHtml(p.name || p.title)}"></td>
       <td><strong>${escapeHtml(p.name || p.title)}</strong><small>${escapeHtml(p.slug || '')}</small></td>
       <td>${escapeHtml(p.author || 'Không rõ')}</td>
       <td>${money(p.price)}</td>

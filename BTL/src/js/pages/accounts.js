@@ -317,7 +317,7 @@ async function loadWishlist() {
     grid.innerHTML = selected
       .map(
         (p) => `<div class="wishlist-card" data-wish-card="${p.id}">
-            <img src="${img(p.image)}" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${p.name}">
+            <img src="${img(p.image)}" loading="lazy" decoding="async" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${p.name}">
             <h3>${p.name}</h3>
             <p>${money(p.price)}</p>
             <div class="wishlist-actions">
