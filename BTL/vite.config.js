@@ -4,6 +4,32 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 
 const root = import.meta.dirname;
 
+const entryCss = {
+  storefront: ['/src/css/tokens.css', '/src/css/style.css', '/src/css/auth-carousel.css', '/src/css/enhancements.css'],
+  accounts: [
+    '/src/css/tokens.css',
+    '/src/css/style.css',
+    '/src/css/auth-carousel.css',
+    '/src/css/styles-cart.css',
+    '/src/css/accounts.css',
+    '/src/css/enhancements.css',
+  ],
+  admin: ['/src/css/tokens.css', '/src/css/admin.css', '/src/css/enhancements.css'],
+  pay: ['/src/css/tokens.css', '/src/css/style.css', '/src/css/auth-carousel.css', '/src/css/pay.css', '/src/css/styles-cart.css', '/src/css/enhancements.css'],
+  invoice: ['/src/css/tokens.css', '/src/css/enhancements.css'],
+  'api-test': ['/src/css/tokens.css', '/src/css/enhancements.css'],
+};
+
+function injectEntryCss(html) {
+  const cssFiles = Object.entries(entryCss).find(([entry]) => html.includes(`/src/js/entries/${entry}.js`))?.[1] || [];
+  const links = cssFiles
+    .filter((href) => !html.includes(`href="${href}"`))
+    .map((href) => `  <link rel="stylesheet" href="${href}">`)
+    .join('\n');
+
+  return links ? html.replace('</head>', `${links}\n</head>`) : html;
+}
+
 // Plugin nho: chen partial HTML dung chung (header/footer/newsletter) luc build & dev.
 // Cu phap trong HTML: <!-- @partial:header -->  -> noi dung src/partials/header.html
 function htmlPartials() {
@@ -15,7 +41,7 @@ function htmlPartials() {
     transformIndexHtml: {
       order: 'pre',
       handler(html) {
-        return html.replace(/<!--\s*@partial:([\w-]+)\s*-->/g, (_, name) => read(name));
+        return injectEntryCss(html.replace(/<!--\s*@partial:([\w-]+)\s*-->/g, (_, name) => read(name)));
       },
     },
   };
