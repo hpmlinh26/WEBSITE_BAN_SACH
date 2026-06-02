@@ -43,7 +43,7 @@ function normalizeCategory(category) {
 }
 
 function getCurrentUser() {
-  return JSON.parse(localStorage.getItem('currentUser') || 'null');
+  try { return JSON.parse(localStorage.getItem('currentUser') || 'null'); } catch (_) { return null; }
 }
 
 function userStorageKey(base) {
@@ -52,7 +52,7 @@ function userStorageKey(base) {
 }
 
 function getCart() {
-  return JSON.parse(localStorage.getItem(userStorageKey('motCart')) || '{}');
+  try { return JSON.parse(localStorage.getItem(userStorageKey('motCart')) || '{}'); } catch (_) { return {}; }
 }
 
 function setCart(cart) {
@@ -97,7 +97,7 @@ window.handleNewsletterSubmit = function (button) {
 };
 
 function getWishlist() {
-  return JSON.parse(localStorage.getItem(userStorageKey('motWishlist')) || '[]');
+  try { return JSON.parse(localStorage.getItem(userStorageKey('motWishlist')) || '[]'); } catch (_) { return []; }
 }
 
 function setWishlist(list) {
@@ -165,9 +165,9 @@ async function addToCart(productId, quantity = 1, sourceElement = null) {
   const product = appProducts.find((p) => Number(p.id) === Number(productId));
   const currentQty = Number(cart[key] || 0);
   const nextQty = currentQty + Number(quantity || 1);
-  if (!product) return toast('Không tìm thấy sản phẩm.', 'error');
-  if (Number(product.stock || 0) <= 0) return toast('Sản phẩm này hiện đã hết hàng.', 'warning');
-  if (nextQty > Number(product.stock || 0)) return toast(`Chỉ còn ${product.stock} sản phẩm trong kho.`, 'warning');
+  if (!product) { toast('Không tìm thấy sản phẩm.', 'error'); return false; }
+  if (Number(product.stock || 0) <= 0) { toast('Sản phẩm này hiện đã hết hàng.', 'warning'); return false; }
+  if (nextQty > Number(product.stock || 0)) { toast(`Chỉ còn ${product.stock} sản phẩm trong kho.`, 'warning'); return false; }
   cart[key] = nextQty;
   setCart(cart);
   flyToCart(sourceElement, product);
@@ -180,6 +180,7 @@ async function addToCart(productId, quantity = 1, sourceElement = null) {
     }).catch(() => {});
   }
   toast('Đã thêm vào giỏ hàng');
+  return true;
 }
 
 function productCard(product, options = {}) {
@@ -189,7 +190,7 @@ function productCard(product, options = {}) {
       <div class="product-image">
         <button class="wishlist-btn ${isWishlisted(product.id) ? 'active' : ''}" data-wishlist="${product.id}" aria-label="Yêu thích ${escapeHtml(product.name)}"><i class="fa-solid fa-heart"></i></button>
         <img src="${product.image}" alt="${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.src='/assets/images/Mangan.png'">
-        <span class="discount-badge">-${product.discount || 20}%</span>
+        ${product.discount ? `<span class="discount-badge">-${product.discount}%</span>` : ''}
       </div>
       <div class="product-info">
         <div class="product-rating">★★★★★</div>
@@ -379,11 +380,11 @@ function bindProductClicks(root = document) {
   qsa('[data-buy]', root).forEach((btn) => {
     if (btn.dataset.boundBuy === '1') return;
     btn.dataset.boundBuy = '1';
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      addToCart(Number(btn.dataset.buy), 1, btn);
-      window.location.href = '/pages/cart.html';
+      const ok = await addToCart(Number(btn.dataset.buy), 1, btn);
+      if (ok) window.location.href = '/pages/cart.html';
     });
   });
 }
@@ -603,9 +604,12 @@ function initProductsPage() {
 function initProductDetailPage() {
   const box = qs('#productDetailRoot');
   if (!box) return;
-  const id = Number(new URLSearchParams(location.search).get('id')) || 1;
-  const product = appProducts.find((p) => Number(p.id) === id) || appProducts[0];
-  if (!product) return;
+  const id = Number(new URLSearchParams(location.search).get('id'));
+  const product = appProducts.find((p) => Number(p.id) === id);
+  if (!product) {
+    box.innerHTML = `<p class="empty-state" style="padding:2rem">Không tìm thấy sản phẩm. <a href="/pages/products.html">Xem tất cả sản phẩm</a></p>`;
+    return;
+  }
   box.innerHTML = `
     <div class="product-detail-card">
       <div class="detail-image"><img src="${product.image}" alt="${escapeHtml(product.name)}" onerror="this.src='/assets/images/Mangan.png'"></div>
@@ -614,7 +618,7 @@ function initProductDetailPage() {
         <h1>${escapeHtml(product.name)}</h1>
         <p class="detail-author">Tác giả: ${escapeHtml(product.author || 'MOT Store')}</p>
         <p class="detail-category">Danh mục: ${escapeHtml(product.categoryName || appCategories.find((c) => c.slug === product.category)?.name || 'Manga')}</p>
-        <div class="detail-price"><span>${money(product.price)}</span><del>${money(product.originalPrice)}</del><b>-${product.discount || 20}%</b></div>
+        <div class="detail-price"><span>${money(product.price)}</span><del>${money(product.originalPrice)}</del>${product.discount ? `<b>-${product.discount}%</b>` : ''}</div>
         <p class="detail-desc">${escapeHtml(product.description || 'Sản phẩm đang được bán tại MOT.vn.')}</p>
         <p class="detail-stock ${Number(product.stock || 0) <= 0 ? 'out' : ''}"><i class="fa-solid fa-box"></i> ${Number(product.stock || 0) > 0 ? `Còn ${product.stock} sản phẩm trong kho` : 'Sản phẩm tạm hết hàng'}</p>
         <div class="detail-actions">
@@ -932,7 +936,7 @@ function initPayPage() {
       customerEmail: customer.email,
       shippingAddress: customer.address,
       paymentMethod,
-      userId: user?.id || null,
+      userId: getCurrentUser()?.id || null,
       voucherCode: appliedVoucher?.code || '',
       items: items.map((item) => ({ productId: item.product.id, quantity: item.qty })),
     };
@@ -940,7 +944,7 @@ function initPayPage() {
       let order;
       try {
         order = await api('/orders', { method: 'POST', body: JSON.stringify(payload) });
-        if (user?.id) api(`/cart/by-user/${user.id}`, { method: 'DELETE' }).catch(() => {});
+        const _u = getCurrentUser(); if (_u?.id) api(`/cart/by-user/${_u.id}`, { method: 'DELETE' }).catch(() => {});
       } catch (backendError) {
         const localOrders = JSON.parse(localStorage.getItem('motOrders') || '[]');
         order = { id: Date.now(), ...payload, total: totalAfterVoucher(), status: 'pending' };
@@ -948,7 +952,8 @@ function initPayPage() {
         localStorage.setItem('motOrders', JSON.stringify(localOrders));
       }
       setCart({});
-      localStorage.setItem('lastOrderId', String(order.id));
+      const _lastKey = ((_uid) => _uid ? `lastOrderId:${_uid}` : 'lastOrderId')(getCurrentUser()?.id);
+      localStorage.setItem(_lastKey, String(order.id));
       toast(`Đặt hàng thành công! Mã đơn: #${order.id}`);
       window.location.href = `/pages/invoice.html?orderId=${order.id}`;
     } catch (error) {
@@ -1016,8 +1021,25 @@ function initSliderAndCountdown() {
   }, 1000);
 }
 
+function mergeGuestCart(user) {
+  if (!user?.id) return;
+  try {
+    const guestCart = JSON.parse(localStorage.getItem('motCart') || '{}');
+    if (!Object.keys(guestCart).length) return;
+    const userKey = `motCart:${user.id}`;
+    const userCart = JSON.parse(localStorage.getItem(userKey) || '{}');
+    for (const [id, qty] of Object.entries(guestCart)) {
+      userCart[id] = Number(userCart[id] || 0) + Number(qty);
+    }
+    localStorage.setItem(userKey, JSON.stringify(userCart));
+    localStorage.removeItem('motCart');
+    updateCartBadge();
+  } catch (_) {}
+}
+
 window.redirectToDetail = goProduct;
 window.addToCart = addToCart;
+window.mergeGuestCart = mergeGuestCart;
 window.updateCartBadge = updateCartBadge;
 window.refreshAuthUI = updateAuthUI;
 

@@ -100,23 +100,57 @@ document.addEventListener('DOMContentLoaded', function () {
     return true;
   }
 
-  function submitProfileForm(event) {
+  async function submitProfileForm(event) {
     event.preventDefault();
     const form = event.target;
     if (!validateProfileForm(form)) return;
-
+    const user = currentUser();
     const submitBtn = form.querySelector('.btn-submit-profile');
-    if (submitBtn) {
-      const originalText = submitBtn.innerText;
-      submitBtn.innerText = 'ĐANG XỬ LÝ...';
-      submitBtn.style.opacity = '0.7';
-      submitBtn.disabled = true;
-      setTimeout(() => {
-        alert('Dữ liệu của bạn đã được cập nhật thành công!');
-        submitBtn.innerText = originalText;
-        submitBtn.style.opacity = '1';
-        submitBtn.disabled = false;
-      }, 1200);
+    const originalText = submitBtn?.innerText;
+    if (submitBtn) { submitBtn.innerText = 'ĐANG XỬ LÝ...'; submitBtn.style.opacity = '0.7'; submitBtn.disabled = true; }
+    try {
+      const formType = form.dataset.formType;
+      if (formType === 'password') {
+        if (!user) throw new Error('Bạn cần đăng nhập để đổi mật khẩu.');
+        const currentPw = form.querySelector('[name="currentPassword"]')?.value || '';
+        const newPw = form.querySelector('[name="newPassword"]')?.value || '';
+        const account = user.email || user.phone || '';
+        await api('/auth/login', { method: 'POST', body: JSON.stringify({ account, password: currentPw }) });
+        const updated = await api(`/users/${user.id}`, {
+          method: 'PUT',
+          body: JSON.stringify({ fullName: user.fullName, email: user.email, phone: user.phone, role: user.role, password: newPw }),
+        });
+        localStorage.setItem('currentUser', JSON.stringify({ ...user, ...updated }));
+        form.reset();
+        alert('Đã đổi mật khẩu thành công!');
+      } else if (formType === 'address') {
+        const addr = {
+          city: form.querySelector('[name="city"]')?.value || '',
+          district: form.querySelector('[name="district"]')?.value || '',
+          ward: form.querySelector('[name="ward"]')?.value || '',
+          address: form.querySelector('[name="address"]')?.value || '',
+          note: form.querySelector('[name="note"]')?.value || '',
+        };
+        if (user) localStorage.setItem('currentUser', JSON.stringify({ ...user, address: addr }));
+        alert('Đã lưu địa chỉ!');
+      } else {
+        if (!user) throw new Error('Bạn cần đăng nhập để cập nhật thông tin.');
+        const first = form.querySelector('[name="firstName"]')?.value.trim() || '';
+        const last = form.querySelector('[name="lastName"]')?.value.trim() || '';
+        const phone = form.querySelector('[name="phone"]')?.value.trim() || user.phone || '';
+        const email = form.querySelector('[name="email"]')?.value.trim() || user.email || '';
+        const fullName = [first, last].filter(Boolean).join(' ') || user.fullName;
+        const updated = await api(`/users/${user.id}`, {
+          method: 'PUT',
+          body: JSON.stringify({ fullName, email, phone, role: user.role }),
+        });
+        localStorage.setItem('currentUser', JSON.stringify({ ...user, ...updated }));
+        alert('Đã cập nhật thông tin thành công!');
+      }
+    } catch (err) {
+      alert(err.message || 'Không thể cập nhật. Vui lòng thử lại.');
+    } finally {
+      if (submitBtn) { submitBtn.innerText = originalText; submitBtn.style.opacity = '1'; submitBtn.disabled = false; }
     }
   }
 
@@ -206,7 +240,7 @@ const statusFilterMap = { pending: 'pending', packing: 'pending', shipping: 'shi
 let loadedOrderDetails = [];
 
 function currentUser() {
-  return JSON.parse(localStorage.getItem('currentUser') || 'null');
+  try { return JSON.parse(localStorage.getItem('currentUser') || 'null'); } catch (_) { return null; }
 }
 
 function userStorageKey(base) {
@@ -238,7 +272,7 @@ async function loadOrders() {
     const details = await Promise.all(orders.slice(0, 8).map((o) => api(`/orders/${o.id}`).catch(() => ({ ...o, items: [] }))));
     renderOrders(details);
   } catch (error) {
-    const localOrders = JSON.parse(localStorage.getItem('motOrders') || '[]').filter((order) => belongsToCurrentUser(order, user));
+    const localOrders = ((() => { try { return JSON.parse(localStorage.getItem('motOrders') || '[]'); } catch (_) { return []; } })()).filter((order) => belongsToCurrentUser(order, user));
     renderOrders(localOrders);
   }
 }
@@ -357,7 +391,7 @@ async function loadWishlist() {
   const grid = document.getElementById('wishlistGrid');
   if (!grid) return;
   try {
-    const ids = JSON.parse(localStorage.getItem(userStorageKey('motWishlist')) || '[]').map(Number);
+    const ids = ((() => { try { return JSON.parse(localStorage.getItem(userStorageKey('motWishlist')) || '[]'); } catch (_) { return []; } })()).map(Number);
     if (!ids.length) {
       grid.innerHTML = '<div class="empty-wishlist">Bạn chưa có sản phẩm yêu thích nào. Hãy bấm biểu tượng trái tim ở trang sản phẩm để lưu lại.</div>';
       return;

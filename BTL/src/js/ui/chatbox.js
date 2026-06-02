@@ -135,7 +135,7 @@ function visitorSessionId() {
 }
 function visitorName() {
   try {
-    const user = JSON.parse(localStorage.getItem('motCurrentUser') || 'null');
+    const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
     return user?.fullName || user?.name || user?.email || 'Khách hàng';
   } catch (_) {
     return 'Khách hàng';

@@ -1,5 +1,5 @@
 const express = require('express');
-const { run, get, all } = require('../db');
+const { run, get, all, transaction } = require('../db');
 const { asyncHandler } = require('../lib/http');
 const { ORDER_STATUSES } = require('../config');
 const { toOrderResponse, toOrderItemResponse } = require('../serializers');
@@ -60,12 +60,15 @@ router.post('/', asyncHandler(async (req, res) => {
     }
   }
 
-  const result = await run('INSERT INTO orders (user_id, customer_name, customer_phone, customer_email, shipping_address, payment_method, status, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [payload.userId, payload.customerName, payload.customerPhone, payload.customerEmail, payload.shippingAddress, payload.paymentMethod, payload.status, total]);
-  for (const item of preparedItems) {
-    await run('INSERT INTO order_items(order_id, product_id, product_name, price, original_price, author, product_image, quantity, subtotal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [result.id, item.product.id, item.product.name, item.product.price, item.product.original_price || item.product.price, item.product.author, item.product.image, item.quantity, item.subtotal]);
-    await run('UPDATE products SET stock = MAX(stock - ?, 0), updated_at = CURRENT_TIMESTAMP WHERE id = ?', [item.quantity, item.product.id]);
-  }
-  res.status(201).json({ id: result.id, customerName: payload.customerName, total, status: payload.status });
+  const orderId = await transaction(async () => {
+    const result = await run('INSERT INTO orders (user_id, customer_name, customer_phone, customer_email, shipping_address, payment_method, status, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [payload.userId, payload.customerName, payload.customerPhone, payload.customerEmail, payload.shippingAddress, payload.paymentMethod, payload.status, total]);
+    for (const item of preparedItems) {
+      await run('INSERT INTO order_items(order_id, product_id, product_name, price, original_price, author, product_image, quantity, subtotal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [result.id, item.product.id, item.product.name, item.product.price, item.product.original_price || item.product.price, item.product.author, item.product.image, item.quantity, item.subtotal]);
+      await run('UPDATE products SET stock = MAX(stock - ?, 0), updated_at = CURRENT_TIMESTAMP WHERE id = ?', [item.quantity, item.product.id]);
+    }
+    return result.id;
+  });
+  res.status(201).json({ id: orderId, customerName: payload.customerName, total, status: payload.status });
 }));
 
 router.patch('/:id/status', asyncHandler(async (req, res) => {

@@ -3,7 +3,13 @@ import { api } from '../core/api.js';
 import { money, escapeHtml, assetPath as img } from '../core/format.js';
 
 const root = document.getElementById('invoiceRoot');
-const id = new URLSearchParams(location.search).get('orderId') || localStorage.getItem('lastOrderId');
+function _lastOrderKey() {
+  try {
+    const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    return user?.id ? `lastOrderId:${user.id}` : 'lastOrderId';
+  } catch (_) { return 'lastOrderId'; }
+}
+const id = new URLSearchParams(location.search).get('orderId') || localStorage.getItem(_lastOrderKey());
 
 async function render() {
   if (!id) {

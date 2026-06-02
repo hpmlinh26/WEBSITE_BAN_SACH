@@ -149,6 +149,7 @@ window.handleLogin = async function () {
       throw new Error('Tài khoản hoặc mật khẩu không đúng.');
     }
     localStorage.setItem('currentUser', JSON.stringify(user));
+    window.mergeGuestCart?.(user);
     closeAuth();
     window.refreshAuthUI?.();
     window.updateCartBadge?.();

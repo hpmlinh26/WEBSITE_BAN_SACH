@@ -33,4 +33,16 @@ function hashPassword(password) {
   return crypto.createHash('sha256').update(String(password)).digest('hex');
 }
 
-module.exports = { db, run, get, all, hashPassword };
+async function transaction(fn) {
+  await run('BEGIN TRANSACTION');
+  try {
+    const result = await fn();
+    await run('COMMIT');
+    return result;
+  } catch (err) {
+    try { await run('ROLLBACK'); } catch (_) {}
+    throw err;
+  }
+}
+
+module.exports = { db, run, get, all, hashPassword, transaction };
