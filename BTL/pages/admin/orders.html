@@ -60,7 +60,7 @@
       <div id="orderDetailBody" class="order-detail-body"></div>
       <form onsubmit="handleUpdateOrder(event)" class="order-status-form">
         <input type="hidden" id="orderId">
-        <div class="form-group"><label>Trạng thái</label><select id="orderStatus"><option value="pending">Chờ lấy hàng</option><option value="packing">Đang chuẩn bị</option><option value="shipping">Chờ giao hàng</option><option value="completed">Đã giao</option><option value="return">Trả hàng</option><option value="cancelled">Hủy</option></select></div>
+        <div class="form-group"><label>Trạng thái</label><select id="orderStatus" required><option value="pending">Chờ lấy hàng</option><option value="packing">Đang chuẩn bị</option><option value="shipping">Chờ giao hàng</option><option value="completed">Đã giao</option><option value="return">Trả hàng</option><option value="cancelled">Hủy</option></select></div>
         <button type="submit" class="btn-save">Lưu trạng thái</button>
       </form>
     </div>
@@ -72,14 +72,14 @@
       <h2>Thêm đơn hàng</h2>
       <form onsubmit="handleCreateOrder(event)">
         <div class="form-grid">
-          <div class="form-group"><label>Khách hàng</label><input id="orderCustomerName" required placeholder="VD: Nguyễn Văn A"></div>
-          <div class="form-group"><label>Số điện thoại</label><input id="orderCustomerPhone" required placeholder="0901234567" pattern="[0-9]{9,11}"></div>
-          <div class="form-group"><label>Email</label><input id="orderCustomerEmail" type="email" placeholder="email@example.com"></div>
-          <div class="form-group"><label>Thanh toán</label><select id="orderPaymentMethod"><option value="cod">COD</option><option value="momo">MoMo</option><option value="vnpay">VNPay</option><option value="zalopay">ZaloPay</option></select></div>
-          <div class="form-group full"><label>Địa chỉ giao hàng</label><input id="orderShippingAddress" required placeholder="Số nhà, phường/xã, quận/huyện, tỉnh/thành"></div>
+          <div class="form-group"><label>Khách hàng</label><input id="orderCustomerName" minlength="2" maxlength="120" autocomplete="name" required placeholder="VD: Nguyễn Văn A"></div>
+          <div class="form-group"><label>Số điện thoại</label><input id="orderCustomerPhone" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="0901234567" pattern="[0-9]{9,11}"></div>
+          <div class="form-group"><label>Email</label><input id="orderCustomerEmail" type="email" autocomplete="email" placeholder="email@example.com"></div>
+          <div class="form-group"><label>Thanh toán</label><select id="orderPaymentMethod" required><option value="cod">COD</option><option value="momo">MoMo</option><option value="vnpay">VNPay</option><option value="zalopay">ZaloPay</option></select></div>
+          <div class="form-group full"><label>Địa chỉ giao hàng</label><input id="orderShippingAddress" minlength="8" maxlength="240" autocomplete="street-address" required placeholder="Số nhà, phường/xã, quận/huyện, tỉnh/thành"></div>
           <div class="form-group"><label>Sản phẩm</label><select id="orderProductId" required></select></div>
-          <div class="form-group"><label>Số lượng</label><input id="orderQuantity" type="number" min="1" value="1" required></div>
-          <div class="form-group"><label>Trạng thái</label><select id="orderCreateStatus"><option value="pending">Chờ lấy hàng</option><option value="packing">Đang chuẩn bị</option><option value="shipping">Chờ giao hàng</option><option value="completed">Đã giao</option><option value="return">Trả hàng</option><option value="cancelled">Hủy</option></select></div>
+          <div class="form-group"><label>Số lượng</label><input id="orderQuantity" type="number" min="1" step="1" value="1" required></div>
+          <div class="form-group"><label>Trạng thái</label><select id="orderCreateStatus" required><option value="pending">Chờ lấy hàng</option><option value="packing">Đang chuẩn bị</option><option value="shipping">Chờ giao hàng</option><option value="completed">Đã giao</option><option value="return">Trả hàng</option><option value="cancelled">Hủy</option></select></div>
         </div>
         <button type="submit" class="btn-save">Tạo đơn hàng</button>
       </form>

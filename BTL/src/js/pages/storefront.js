@@ -46,12 +46,17 @@ function getCurrentUser() {
   return JSON.parse(localStorage.getItem('currentUser') || 'null');
 }
 
+function userStorageKey(base) {
+  const user = getCurrentUser();
+  return user?.id ? `${base}:${user.id}` : base;
+}
+
 function getCart() {
-  return JSON.parse(localStorage.getItem('motCart') || '{}');
+  return JSON.parse(localStorage.getItem(userStorageKey('motCart')) || '{}');
 }
 
 function setCart(cart) {
-  localStorage.setItem('motCart', JSON.stringify(cart));
+  localStorage.setItem(userStorageKey('motCart'), JSON.stringify(cart));
   updateCartBadge();
 }
 
@@ -73,12 +78,30 @@ function toast(message, type = 'success') {
   box.timer = setTimeout(() => box.classList.remove('show'), 1800);
 }
 
+window.handleNewsletterSubmit = function (button) {
+  const input = button?.closest('.newsletter')?.querySelector('input[type="email"]');
+  if (!input) return toast('Không tìm thấy ô nhập email.', 'error');
+  input.setCustomValidity('');
+  if (!input.value.trim()) {
+    input.setCustomValidity('Vui lòng nhập email.');
+  } else if (!input.checkValidity()) {
+    input.setCustomValidity('Email không hợp lệ.');
+  }
+  if (!input.checkValidity()) {
+    input.reportValidity();
+    input.focus();
+    return;
+  }
+  toast('Đăng ký nhận tin thành công!');
+  input.value = '';
+};
+
 function getWishlist() {
-  return JSON.parse(localStorage.getItem('motWishlist') || '[]');
+  return JSON.parse(localStorage.getItem(userStorageKey('motWishlist')) || '[]');
 }
 
 function setWishlist(list) {
-  localStorage.setItem('motWishlist', JSON.stringify([...new Set(list.map(Number))]));
+  localStorage.setItem(userStorageKey('motWishlist'), JSON.stringify([...new Set(list.map(Number))]));
 }
 
 function isWishlisted(id) {
@@ -312,6 +335,7 @@ function openUserMenu(event) {
     localStorage.removeItem('currentUser');
     pop.remove();
     updateAuthUI();
+    updateCartBadge();
     toast('Đã đăng xuất');
   });
 }
@@ -465,6 +489,25 @@ function initProductsPage() {
     return list;
   }
 
+  function validatePriceFilters() {
+    minPriceInput?.setCustomValidity('');
+    maxPriceInput?.setCustomValidity('');
+    const minPrice = Number(minPriceInput?.value || 0);
+    const maxPrice = Number(maxPriceInput?.value || 0);
+    if (minPriceInput?.value && minPrice < 0) return setPriceError(minPriceInput, 'Giá từ không được âm.');
+    if (maxPriceInput?.value && maxPrice < 0) return setPriceError(maxPriceInput, 'Giá đến không được âm.');
+    if (minPriceInput?.value && maxPriceInput?.value && minPrice > maxPrice) {
+      return setPriceError(maxPriceInput, 'Giá đến phải lớn hơn hoặc bằng giá từ.');
+    }
+    return true;
+  }
+
+  function setPriceError(input, message) {
+    input?.setCustomValidity(message);
+    input?.reportValidity();
+    return false;
+  }
+
   function renderPagination(totalPages) {
     if (!pagination) return;
     if (totalPages <= 1) {
@@ -530,6 +573,7 @@ function initProductsPage() {
 
   function render(resetPage = false) {
     if (resetPage) currentPage = 1;
+    if (!validatePriceFilters()) return;
     lastFiltered = getFilteredProducts();
     const totalPages = Math.max(1, Math.ceil(lastFiltered.length / PAGE_SIZE));
     if (currentPage > totalPages) currentPage = totalPages;
@@ -624,7 +668,7 @@ function initCartPage() {
               </div>
               <div class="qty-control">
                 <button data-cart-minus="${item.product.id}">-</button>
-                <input value="${item.qty}" max="${item.product.stock}" data-cart-qty="${item.product.id}" inputmode="numeric">
+                <input type="number" value="${item.qty}" min="1" max="${item.product.stock}" step="1" data-cart-qty="${item.product.id}" inputmode="numeric">
                 <button data-cart-plus="${item.product.id}">+</button>
               </div>
               <strong class="cart-subtotal">${money(item.product.price * item.qty)}</strong>
@@ -671,7 +715,7 @@ function initCartPage() {
   function setQty(id, qty) {
     const cart = getCart();
     const product = appProducts.find((p) => Number(p.id) === Number(id));
-    const cleanQty = Math.max(1, qty || 1);
+    const cleanQty = Math.max(1, Math.floor(qty || 1));
     if (product && cleanQty > Number(product.stock || 0)) {
       cart[id] = Number(product.stock || 1);
       toast(`Số lượng đã được điều chỉnh theo tồn kho (${product.stock}).`, 'warning');
@@ -891,6 +935,7 @@ function initPayPage() {
       customerEmail: customer.email,
       shippingAddress: customer.address,
       paymentMethod,
+      userId: user?.id || null,
       voucherCode: appliedVoucher?.code || '',
       items: items.map((item) => ({ productId: item.product.id, quantity: item.qty })),
     };

@@ -8,6 +8,23 @@ const { validateOrderPayload } = require('../validators');
 const router = express.Router();
 
 router.get('/', asyncHandler(async (req, res) => {
+  const userId = Number(req.query.userId || req.query.user_id || 0);
+  if (userId) {
+    const user = await get('SELECT id, email, phone FROM users WHERE id = ?', [userId]);
+    if (!user) return res.status(404).json({ message: 'Không tìm thấy tài khoản.' });
+    const where = ['user_id = ?'];
+    const params = [userId];
+    if (user.email) {
+      where.push('(user_id IS NULL AND customer_email = ?)');
+      params.push(user.email);
+    }
+    if (user.phone) {
+      where.push('(user_id IS NULL AND customer_phone = ?)');
+      params.push(user.phone);
+    }
+    const rows = await all(`SELECT * FROM orders WHERE ${where.join(' OR ')} ORDER BY id DESC`, params);
+    return res.json(rows.map(toOrderResponse));
+  }
   const rows = await all('SELECT * FROM orders ORDER BY id DESC');
   res.json(rows.map(toOrderResponse));
 }));
@@ -43,7 +60,7 @@ router.post('/', asyncHandler(async (req, res) => {
     }
   }
 
-  const result = await run('INSERT INTO orders (customer_name, customer_phone, customer_email, shipping_address, payment_method, status, total) VALUES (?, ?, ?, ?, ?, ?, ?)', [payload.customerName, payload.customerPhone, payload.customerEmail, payload.shippingAddress, payload.paymentMethod, payload.status, total]);
+  const result = await run('INSERT INTO orders (user_id, customer_name, customer_phone, customer_email, shipping_address, payment_method, status, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [payload.userId, payload.customerName, payload.customerPhone, payload.customerEmail, payload.shippingAddress, payload.paymentMethod, payload.status, total]);
   for (const item of preparedItems) {
     await run('INSERT INTO order_items(order_id, product_id, product_name, price, original_price, author, product_image, quantity, subtotal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [result.id, item.product.id, item.product.name, item.product.price, item.product.original_price || item.product.price, item.product.author, item.product.image, item.quantity, item.subtotal]);
     await run('UPDATE products SET stock = MAX(stock - ?, 0), updated_at = CURRENT_TIMESTAMP WHERE id = ?', [item.quantity, item.product.id]);

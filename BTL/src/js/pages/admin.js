@@ -314,7 +314,47 @@ async function reloadAll() {
 
 function modal(id, show = true) {
   const el = document.getElementById(id);
-  if (el) el.style.display = show ? 'flex' : 'none';
+  if (el) {
+    if (show) el.querySelectorAll('form.was-validated').forEach((form) => form.classList.remove('was-validated'));
+    el.style.display = show ? 'flex' : 'none';
+  }
+}
+
+const validEmail = (value) => !value || /^\S+@\S+\.\S+$/.test(value);
+const validPhone = (value) => !value || /^[0-9]{9,11}$/.test(String(value || '').replace(/\s+/g, ''));
+
+function setInvalid(input, message) {
+  input?.setCustomValidity(message || '');
+  if (message) {
+    input?.reportValidity();
+    input?.focus();
+  }
+  return !message;
+}
+
+function validateNativeForm(form) {
+  form?.classList.add('was-validated');
+  form?.querySelectorAll('input, select, textarea').forEach((field) => field.setCustomValidity(''));
+  if (!form?.checkValidity()) {
+    form?.reportValidity();
+    return false;
+  }
+  return true;
+}
+
+function updateVoucherValueLimit() {
+  const type = document.getElementById('voucherType')?.value;
+  const value = document.getElementById('voucherValue');
+  if (!value) return;
+  if (type === 'percent') {
+    value.max = '100';
+    value.step = '1';
+    value.placeholder = 'VD: 10';
+  } else {
+    value.removeAttribute('max');
+    value.step = '1000';
+    value.placeholder = 'VD: 10000';
+  }
 }
 
 window.reloadAdminData = reloadAll;
@@ -341,6 +381,7 @@ window.editCategory = function (id) {
 };
 window.handleSaveCategory = async function (event) {
   event.preventDefault();
+  if (!validateNativeForm(event.target)) return;
   const id = document.getElementById('categoryId').value;
   const name = document.getElementById('categoryName').value.trim();
   const payload = {
@@ -398,17 +439,29 @@ window.editProduct = function (id) {
 };
 window.handleSaveProduct = async function (event) {
   event.preventDefault();
+  if (!validateNativeForm(event.target)) return;
   const id = document.getElementById('productId').value;
+  const priceInput = document.getElementById('productPrice');
+  const originalPriceInput = document.getElementById('productOriginalPrice');
+  const discountInput = document.getElementById('productDiscount');
+  const stockInput = document.getElementById('productStock');
+  const price = Number(priceInput.value || 0);
+  const originalPrice = Number(originalPriceInput.value || 0);
+  const discount = Number(discountInput.value || 0);
+  const stock = Number(stockInput.value || 0);
+  if (originalPrice < price) return setInvalid(originalPriceInput, 'Giá gốc không được nhỏ hơn giá bán.');
+  if (!Number.isInteger(discount) || discount < 0 || discount > 100) return setInvalid(discountInput, 'Giảm giá phải là số nguyên từ 0 đến 100.');
+  if (!Number.isInteger(stock) || stock < 0) return setInvalid(stockInput, 'Số lượng tồn kho phải là số nguyên không âm.');
   const payload = {
     name: document.getElementById('productName').value.trim(),
     author: document.getElementById('productAuthor').value.trim(),
-    price: Number(document.getElementById('productPrice').value || 0),
-    originalPrice: Number(document.getElementById('productOriginalPrice').value || 0),
-    discount: Number(document.getElementById('productDiscount').value || 0),
+    price,
+    originalPrice,
+    discount,
     category: document.getElementById('productCategory').value,
     image: normalizeImage(document.getElementById('productImage').value),
     description: document.getElementById('productDescription').value.trim(),
-    stock: Math.max(0, Number(document.getElementById('productStock').value || 0)),
+    stock,
   };
   try {
     await api(id ? `/products/${id}` : '/products', { method: id ? 'PUT' : 'POST', body: JSON.stringify(payload) });
@@ -438,8 +491,14 @@ window.openAddOrder = function () {
 };
 window.handleCreateOrder = async function (event) {
   event.preventDefault();
+  if (!validateNativeForm(event.target)) return;
   const productId = Number(document.getElementById('orderProductId').value);
-  const quantity = Math.max(1, Number(document.getElementById('orderQuantity').value || 1));
+  const quantityInput = document.getElementById('orderQuantity');
+  const quantity = Number(quantityInput.value || 1);
+  const selectedProduct = state.products.find((p) => Number(p.id) === productId);
+  if (!productId || !selectedProduct) return setInvalid(document.getElementById('orderProductId'), 'Vui lòng chọn sản phẩm.');
+  if (!Number.isInteger(quantity) || quantity < 1) return setInvalid(quantityInput, 'Số lượng phải là số nguyên từ 1 trở lên.');
+  if (quantity > Number(selectedProduct.stock || 0)) return setInvalid(quantityInput, `Sản phẩm này chỉ còn ${selectedProduct.stock || 0} trong kho.`);
   const payload = {
     customerName: document.getElementById('orderCustomerName').value.trim(),
     customerPhone: document.getElementById('orderCustomerPhone').value.trim(),
@@ -498,6 +557,7 @@ window.openOrderModal = async function (id) {
 };
 window.handleUpdateOrder = async function (event) {
   event.preventDefault();
+  if (!validateNativeForm(event.target)) return;
   const id = document.getElementById('orderId').value;
   const status = document.getElementById('orderStatus').value;
   try {
@@ -543,13 +603,24 @@ window.editUser = function (id) {
 };
 window.handleSaveUser = async function (event) {
   event.preventDefault();
+  if (!validateNativeForm(event.target)) return;
   const id = document.getElementById('userId').value;
+  const emailInput = document.getElementById('userEmail');
+  const phoneInput = document.getElementById('userPhone');
+  const passwordInput = document.getElementById('userPassword');
+  const email = emailInput.value.trim();
+  const phone = phoneInput.value.trim();
+  const password = passwordInput.value.trim();
+  if (!email && !phone) return setInvalid(emailInput, 'Tài khoản cần có email hoặc số điện thoại.');
+  if (!validEmail(email)) return setInvalid(emailInput, 'Email không hợp lệ.');
+  if (!validPhone(phone)) return setInvalid(phoneInput, 'Số điện thoại phải gồm 9-11 chữ số.');
+  if (password && password.length < 6) return setInvalid(passwordInput, 'Mật khẩu phải có ít nhất 6 ký tự.');
   const payload = {
     fullName: document.getElementById('userFullName').value.trim(),
-    email: document.getElementById('userEmail').value.trim(),
-    phone: document.getElementById('userPhone').value.trim(),
+    email,
+    phone,
     role: document.getElementById('userRole').value,
-    password: document.getElementById('userPassword').value.trim(),
+    password,
   };
   try {
     await api(id ? `/users/${id}` : '/users', { method: id ? 'PUT' : 'POST', body: JSON.stringify(payload) });
@@ -577,6 +648,7 @@ window.openAddVoucher = function () {
   document.getElementById('voucherId').value = '';
   document.getElementById('voucherModalTitle').textContent = 'Thêm voucher';
   document.getElementById('voucherActive').value = '1';
+  updateVoucherValueLimit();
   modal('voucherModal');
 };
 window.editVoucher = function (id) {
@@ -592,18 +664,30 @@ window.editVoucher = function (id) {
   document.getElementById('voucherActive').value = v.active ? '1' : '0';
   document.getElementById('voucherExpiresAt').value = v.expiresAt || '';
   document.getElementById('voucherModalTitle').textContent = 'Cập nhật voucher';
+  updateVoucherValueLimit();
   modal('voucherModal');
 };
 window.handleSaveVoucher = async function (event) {
   event.preventDefault();
+  updateVoucherValueLimit();
+  if (!validateNativeForm(event.target)) return;
   const id = document.getElementById('voucherId').value;
+  const type = document.getElementById('voucherType').value;
+  const valueInput = document.getElementById('voucherValue');
+  const minOrderInput = document.getElementById('voucherMinOrder');
+  const expiresInput = document.getElementById('voucherExpiresAt');
+  const discountValue = Number(valueInput.value || 0);
+  const minOrder = Number(minOrderInput.value || 0);
+  if (type === 'percent' && discountValue > 100) return setInvalid(valueInput, 'Voucher giảm theo % không được vượt quá 100%.');
+  if (!Number.isFinite(minOrder) || minOrder < 0) return setInvalid(minOrderInput, 'Đơn tối thiểu phải là số không âm.');
+  if (expiresInput.value && new Date(`${expiresInput.value}T23:59:59`) < new Date()) return setInvalid(expiresInput, 'Hạn dùng voucher không nên là ngày trong quá khứ.');
   const payload = {
     code: document.getElementById('voucherCode').value.trim(),
     title: document.getElementById('voucherTitle').value.trim(),
     description: document.getElementById('voucherDescription').value.trim(),
-    discountType: document.getElementById('voucherType').value,
-    discountValue: Number(document.getElementById('voucherValue').value || 0),
-    minOrder: Number(document.getElementById('voucherMinOrder').value || 0),
+    discountType: type,
+    discountValue,
+    minOrder,
     active: document.getElementById('voucherActive').value === '1',
     expiresAt: document.getElementById('voucherExpiresAt').value,
   };
@@ -636,4 +720,8 @@ window.markFeedback = async function (id, status) {
   }
 };
 
-document.addEventListener('DOMContentLoaded', reloadAll);
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('voucherType')?.addEventListener('change', updateVoucherValueLimit);
+  updateVoucherValueLimit();
+  reloadAll();
+});

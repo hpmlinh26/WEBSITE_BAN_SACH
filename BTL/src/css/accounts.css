@@ -256,6 +256,11 @@ body {
     border-color: var(--mot-red);
 }
 
+.user-profile-dashboard .profile-form.was-validated .input-wrapper input:invalid,
+.user-profile-dashboard .profile-form.was-validated .input-wrapper select:invalid {
+    border-color: #c92127;
+}
+
 .user-profile-dashboard .custom-select {
     appearance: none;
     -webkit-appearance: none;

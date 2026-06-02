@@ -54,6 +54,7 @@ function toVoucherResponse(row) {
 function toOrderResponse(row) {
   return {
     id: row.id,
+    userId: row.user_id,
     customer: row.customer_name,
     customerName: row.customer_name,
     phone: row.customer_phone,

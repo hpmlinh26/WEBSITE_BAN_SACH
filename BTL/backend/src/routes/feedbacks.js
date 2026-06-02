@@ -18,6 +18,9 @@ router.post('/', asyncHandler(async (req, res) => {
   const subject = String(req.body.subject || 'Phản hồi của khách hàng').trim();
   const message = String(req.body.message || '').trim();
   if (!fullName || !message) return res.status(400).json({ message: 'Vui lòng nhập họ tên và nội dung phản hồi.' });
+  if (!email && !phone) return res.status(400).json({ message: 'Vui lòng nhập email hoặc số điện thoại để admin phản hồi.' });
+  if (email && !/^\S+@\S+\.\S+$/.test(email)) return res.status(400).json({ message: 'Email không hợp lệ.' });
+  if (phone && !/^[0-9]{9,11}$/.test(phone.replace(/\s+/g, ''))) return res.status(400).json({ message: 'Số điện thoại phải gồm 9-11 chữ số.' });
   const result = await run('INSERT INTO feedbacks(full_name, email, phone, subject, message, status) VALUES (?, ?, ?, ?, ?, ?)', [fullName, email, phone, subject, message, 'new']);
   res.status(201).json({ id: result.id, fullName, email, phone, subject, message, status: 'new' });
 }));

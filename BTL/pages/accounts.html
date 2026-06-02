@@ -83,25 +83,25 @@
                 <!-- TAB 1: HỒ SƠ CÁ NHÂN -->
                 <div id="form-ho-so" class="tab-content active">
                     <h2 class="content-title">Hồ sơ cá nhân</h2>
-                    <form class="profile-form" onsubmit="handleFormSubmit(event)">
+                    <form class="profile-form" data-form-type="profile" onsubmit="handleFormSubmit(event)">
                         <div class="form-group">
                             <label class="form-label">Họ <span class="required">*</span></label>
                             <div class="input-wrapper">
-                                <input type="text" placeholder="Nhập họ" required>
+                                <input type="text" name="firstName" placeholder="Nhập họ" autocomplete="family-name" minlength="1" required>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Tên <span class="required">*</span></label>
                             <div class="input-wrapper">
-                                <input type="text" placeholder="Nhập tên" required>
+                                <input type="text" name="lastName" placeholder="Nhập tên" autocomplete="given-name" minlength="1" required>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Số điện thoại</label>
                             <div class="input-wrapper input-with-action">
-                                <input type="text" placeholder="Nhập số điện thoại">
+                                <input type="tel" name="phone" placeholder="Nhập số điện thoại" autocomplete="tel" inputmode="numeric" pattern="[0-9]{9,11}">
                                 <a href="#" class="action-link">Thay đổi</a>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                         <div class="form-group">
                             <label class="form-label">Email</label>
                             <div class="input-wrapper input-with-action">
-                                <input type="email" placeholder="Nhập email">
+                                <input type="email" name="email" placeholder="Nhập email" autocomplete="email">
                                 <a href="#" class="action-link">Thay đổi</a>
                             </div>
                         </div>
@@ -137,32 +137,32 @@
                 <!-- TAB 2: ĐỊA CHỈ -->
                 <div id="form-dia-chi" class="tab-content">
                     <h2 class="content-title">Thêm địa chỉ mới</h2>
-                    <form class="profile-form" onsubmit="handleFormSubmit(event)">
+                    <form class="profile-form" data-form-type="address" onsubmit="handleFormSubmit(event)">
                         <div class="form-group">
                             <label class="form-label">Họ<span class="required">*</span></label>
                             <div class="input-wrapper">
-                                <input type="text" placeholder="Nhập họ">
+                                <input type="text" name="firstName" placeholder="Nhập họ" autocomplete="family-name" required>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Tên<span class="required">*</span></label>
                             <div class="input-wrapper">
-                                <input type="text" placeholder="Nhập tên">
+                                <input type="text" name="lastName" placeholder="Nhập tên" autocomplete="given-name" required>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Số điện thoại<span class="required">*</span></label>
                             <div class="input-wrapper">
-                                <input type="tel" placeholder="Nhập số điện thoại">
+                                <input type="tel" name="phone" placeholder="Nhập số điện thoại" autocomplete="tel" inputmode="numeric" pattern="[0-9]{9,11}" required>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Quốc gia<span class="required">*</span></label>
                             <div class="input-wrapper">
-                                <select class="custom-select">
+                                <select class="custom-select" name="country" required>
                                     <option value="vn">Việt Nam</option>
                                 </select>
                             </div>
@@ -171,7 +171,7 @@
                         <div class="form-group">
                             <label class="form-label">Tỉnh/Thành phố<span class="required">*</span></label>
                             <div class="input-wrapper">
-                                <select class="custom-select">
+                                <select class="custom-select" name="city" required>
                                     <option value="">-- Chọn Tỉnh/Thành phố --</option>
                                     <option value="hn">Hà Nội</option>
                                     <option value="hcm">TP. Hồ Chí Minh</option>
@@ -182,8 +182,12 @@
                         <div class="form-group">
                             <label class="form-label">Quận/Huyện<span class="required">*</span></label>
                             <div class="input-wrapper">
-                                <select class="custom-select">
+                                <select class="custom-select" name="district" required>
                                     <option value="">-- Chọn Quận/Huyện --</option>
+                                    <option value="ba-dinh">Ba Đình</option>
+                                    <option value="hoan-kiem">Hoàn Kiếm</option>
+                                    <option value="quan-1">Quận 1</option>
+                                    <option value="quan-3">Quận 3</option>
                                 </select>
                             </div>
                         </div>
@@ -191,8 +195,12 @@
                         <div class="form-group">
                             <label class="form-label">Xã/Phường<span class="required">*</span></label>
                             <div class="input-wrapper">
-                                <select class="custom-select">
+                                <select class="custom-select" name="ward" required>
                                     <option value="">-- Chọn Xã/Phường --</option>
+                                    <option value="phuc-xa">Phúc Xá</option>
+                                    <option value="truc-bach">Trúc Bạch</option>
+                                    <option value="ben-nghe">Bến Nghé</option>
+                                    <option value="vo-thi-sau">Võ Thị Sáu</option>
                                 </select>
                             </div>
                         </div>
@@ -200,14 +208,14 @@
                         <div class="form-group">
                             <label class="form-label">Ngõ, Số<span class="required">*</span></label>
                             <div class="input-wrapper">
-                                <input type="text" placeholder="Nhập số nhà, tên đường...">
+                                <input type="text" name="address" placeholder="Nhập số nhà, tên đường..." autocomplete="street-address" minlength="5" required>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Mã bưu điện</label>
                             <div class="input-wrapper">
-                                <input type="text" placeholder="Ghi chú, ngõ cụt hoặc chung cư...">
+                                <input type="text" name="note" placeholder="Ghi chú, ngõ cụt hoặc chung cư..." maxlength="120">
                             </div>
                         </div>
 
@@ -220,11 +228,11 @@
                 <!-- TAB 3: ĐỔI MẬT KHẨU -->
                 <div id="form-doi-mat-khau" class="tab-content">
                     <h2 class="content-title">Đổi mật khẩu</h2>
-                    <form class="profile-form" onsubmit="handleFormSubmit(event)">
+                    <form class="profile-form" data-form-type="password" onsubmit="handleFormSubmit(event)">
                         <div class="form-group">
                             <label class="form-label">Mật khẩu hiện tại<span class="required">*</span></label>
                             <div class="input-wrapper password-container">
-                                <input type="password" placeholder="Nhập mật khẩu hiện tại">
+                                <input type="password" name="currentPassword" placeholder="Nhập mật khẩu hiện tại" autocomplete="current-password" minlength="6" required>
                                 <i class="fa-regular fa-eye toggle-password"></i>
                             </div>
                         </div>
@@ -232,7 +240,7 @@
                         <div class="form-group">
                             <label class="form-label">Mật khẩu mới<span class="required">*</span></label>
                             <div class="input-wrapper password-container">
-                                <input type="password" placeholder="Nhập mật khẩu mới">
+                                <input type="password" name="newPassword" placeholder="Nhập mật khẩu mới" autocomplete="new-password" minlength="6" required>
                                 <i class="fa-regular fa-eye toggle-password"></i>
                             </div>
                         </div>
@@ -240,7 +248,7 @@
                         <div class="form-group">
                             <label class="form-label">Nhập lại mật khẩu mới<span class="required">*</span></label>
                             <div class="input-wrapper password-container">
-                                <input type="password" placeholder="Nhập lại mật khẩu mới">
+                                <input type="password" name="confirmPassword" placeholder="Nhập lại mật khẩu mới" autocomplete="new-password" minlength="6" required>
                                 <i class="fa-regular fa-eye toggle-password"></i>
                             </div>
                         </div>
@@ -276,19 +284,10 @@
                         <div class="tab-item" data-filter="Xác nhận">Xác nhận</div>
                     </div>
 
-                    <div class="notification-card">
-                        <div class="notification-item" data-category="Sự kiện">
-                            <h4 class="notice-title">Cập nhật email ngay để nhận quà từ Mot.vn!</h4>
-                            <p class="notice-body">
-                                Bạn vừa đăng kí tài khoản tại Mọt? Hãy cập nhật email ngay để nhận được các thông báo quà tặng dành cho khách hàng mới! Click ngay vào đây để cập nhật. Đừng quên tiếp tục tham gia mua sắm để nhận được những ưu đãi dành riêng cho khách hàng mới tại Fahasa.com.
-                            </p>
-                        </div>
-
-                        <div class="notification-item" data-category="Đơn hàng">
-                            <h4 class="notice-title">Đặt hàng thành công!!</h4>
-                            <p class="notice-body">
-                                Bạn vừa đặt hàng thành công đơn hàng có mã số 2947384NDH23, bưu kiện sẽ sớm được gửi đi hãy chú ý thông báo và kiểm tra lại thông tin đặt hàng.<br>Cảm ơn bạn đã tin tưởng và ủng hộ Mọt, chúc bạn có một ngày tốt lành, chúng tôi sẽ gửi đi sớm nhất có thể.
-                            </p>
+                    <div class="notification-card" id="userNotificationsList">
+                        <div class="notification-item" data-category="Tất cả">
+                            <h4 class="notice-title">Đang tải thông báo...</h4>
+                            <p class="notice-body">Thông báo của riêng tài khoản sẽ hiển thị tại đây.</p>
                         </div>
                     </div>
                 </div>

@@ -46,14 +46,14 @@
       <form onsubmit="handleSaveVoucher(event)">
         <input type="hidden" id="voucherId">
         <div class="form-grid">
-          <div class="form-group"><label>Mã voucher</label><input id="voucherCode" required placeholder="VD: MOT10K"></div>
-          <div class="form-group"><label>Tên voucher</label><input id="voucherTitle" required></div>
-          <div class="form-group"><label>Loại giảm</label><select id="voucherType"><option value="amount">Giảm tiền</option><option value="percent">Giảm %</option></select></div>
-          <div class="form-group"><label>Giá trị</label><input id="voucherValue" type="number" min="1" required></div>
-          <div class="form-group"><label>Đơn tối thiểu</label><input id="voucherMinOrder" type="number" min="0" value="0"></div>
-          <div class="form-group"><label>Trạng thái</label><select id="voucherActive"><option value="1">Đang bật</option><option value="0">Tắt</option></select></div>
+          <div class="form-group"><label>Mã voucher</label><input id="voucherCode" minlength="3" maxlength="30" pattern="[A-Za-z0-9_-]+" required placeholder="VD: MOT10K"></div>
+          <div class="form-group"><label>Tên voucher</label><input id="voucherTitle" minlength="2" maxlength="120" required></div>
+          <div class="form-group"><label>Loại giảm</label><select id="voucherType" required><option value="amount">Giảm tiền</option><option value="percent">Giảm %</option></select></div>
+          <div class="form-group"><label>Giá trị</label><input id="voucherValue" type="number" min="1" step="1" required></div>
+          <div class="form-group"><label>Đơn tối thiểu</label><input id="voucherMinOrder" type="number" min="0" step="1000" value="0"></div>
+          <div class="form-group"><label>Trạng thái</label><select id="voucherActive" required><option value="1">Đang bật</option><option value="0">Tắt</option></select></div>
           <div class="form-group"><label>Hạn dùng</label><input id="voucherExpiresAt" type="date"></div>
-          <div class="form-group full"><label>Mô tả</label><textarea id="voucherDescription" rows="3"></textarea></div>
+          <div class="form-group full"><label>Mô tả</label><textarea id="voucherDescription" rows="3" maxlength="500"></textarea></div>
         </div>
         <button type="submit" class="btn-save">Lưu voucher</button>
       </form>

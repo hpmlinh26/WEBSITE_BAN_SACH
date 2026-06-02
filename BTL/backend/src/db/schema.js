@@ -67,6 +67,7 @@ async function createSchema() {
 
   await run(`CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
     customer_name TEXT NOT NULL,
     customer_phone TEXT,
     customer_email TEXT,
@@ -74,8 +75,10 @@ async function createSchema() {
     payment_method TEXT DEFAULT 'cod',
     status TEXT DEFAULT 'pending',
     total INTEGER NOT NULL DEFAULT 0,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL
   )`);
+  await ensureColumn('orders', 'user_id', 'INTEGER');
 
   await run(`CREATE TABLE IF NOT EXISTS order_items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

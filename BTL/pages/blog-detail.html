@@ -17,7 +17,7 @@
   </section>
   <article class="blog-detail-card" id="postDetail"></article>
 </main>
-<section class="newsletter"><strong>Đăng kí nhận bản tin</strong><input type="email" placeholder="Nhập địa chỉ email"><button type="button" onclick="showToast ? showToast('Đăng ký nhận tin thành công!') : alert('Đăng ký nhận tin thành công!')">Đăng ký</button></section>
+<section class="newsletter"><strong>Đăng kí nhận bản tin</strong><input type="email" placeholder="Nhập địa chỉ email" autocomplete="email" required><button type="button" onclick="handleNewsletterSubmit(this)">Đăng ký</button></section>
 <!-- @partial:footer -->
 <script>
 const posts = {

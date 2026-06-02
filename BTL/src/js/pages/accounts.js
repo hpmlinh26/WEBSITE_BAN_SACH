@@ -65,42 +65,68 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  const validPhone = (value) => /^[0-9]{9,11}$/.test(String(value || '').replace(/\s+/g, ''));
+  const validEmail = (value) => /^\S+@\S+\.\S+$/.test(value);
+
+  function setFieldMessage(field, message) {
+    field?.setCustomValidity(message || '');
+    if (message) {
+      field?.reportValidity();
+      field?.focus();
+    }
+    return !message;
+  }
+
+  function validateProfileForm(form) {
+    form.classList.add('was-validated');
+    form.querySelectorAll('input, select').forEach((field) => field.setCustomValidity(''));
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return false;
+    }
+
+    const phone = form.querySelector('[name="phone"]');
+    const email = form.querySelector('[name="email"]');
+    if (phone?.value.trim() && !validPhone(phone.value)) return setFieldMessage(phone, 'Số điện thoại phải gồm 9-11 chữ số.');
+    if (email?.value.trim() && !validEmail(email.value.trim())) return setFieldMessage(email, 'Email không hợp lệ.');
+
+    if (form.dataset.formType === 'password') {
+      const current = form.querySelector('[name="currentPassword"]');
+      const next = form.querySelector('[name="newPassword"]');
+      const confirm = form.querySelector('[name="confirmPassword"]');
+      if (next.value.trim() === current.value.trim()) return setFieldMessage(next, 'Mật khẩu mới phải khác mật khẩu hiện tại.');
+      if (next.value.trim() !== confirm.value.trim()) return setFieldMessage(confirm, 'Mật khẩu nhập lại chưa khớp.');
+    }
+    return true;
+  }
+
+  function submitProfileForm(event) {
+    event.preventDefault();
+    const form = event.target;
+    if (!validateProfileForm(form)) return;
+
+    const submitBtn = form.querySelector('.btn-submit-profile');
+    if (submitBtn) {
+      const originalText = submitBtn.innerText;
+      submitBtn.innerText = 'ĐANG XỬ LÝ...';
+      submitBtn.style.opacity = '0.7';
+      submitBtn.disabled = true;
+      setTimeout(() => {
+        alert('Dữ liệu của bạn đã được cập nhật thành công!');
+        submitBtn.innerText = originalText;
+        submitBtn.style.opacity = '1';
+        submitBtn.disabled = false;
+      }, 1200);
+    }
+  }
+
+  window.handleFormSubmit = submitProfileForm;
+
   const allForms = document.querySelectorAll('.user-profile-dashboard .profile-form');
   allForms.forEach((form) => {
     form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const requiredFields = form.querySelectorAll('input, select');
-      let isFormValid = true;
-      requiredFields.forEach((field) => {
-        const formGroup = field.closest('.form-group');
-        if (formGroup && formGroup.querySelector('.required')) {
-          if (!field.value.trim()) {
-            field.style.borderColor = '#c92127';
-            isFormValid = false;
-          } else {
-            field.style.borderColor = '#dddddd';
-          }
-        }
-      });
-
-      if (!isFormValid) {
-        alert('Vui lòng kiểm tra lại và điền đầy đủ các thông tin bắt buộc (*).');
-        return;
-      }
-
-      const submitBtn = form.querySelector('.btn-submit-profile');
-      if (submitBtn) {
-        const originalText = submitBtn.innerText;
-        submitBtn.innerText = 'ĐANG XỬ LÝ...';
-        submitBtn.style.opacity = '0.7';
-        submitBtn.disabled = true;
-        setTimeout(() => {
-          alert('Dữ liệu của bạn đã được cập nhật thành công!');
-          submitBtn.innerText = originalText;
-          submitBtn.style.opacity = '1';
-          submitBtn.disabled = false;
-        }, 1200);
-      }
+      if (e.defaultPrevented) return;
+      submitProfileForm(e);
     });
   });
 
@@ -127,11 +153,12 @@ document.addEventListener('DOMContentLoaded', function () {
     notificationTabs.forEach((tab) => {
       tab.addEventListener('click', function () {
         notificationTabs.forEach((t) => t.classList.remove('active'));
-        this.classList.add('active');
-        const filter = this.getAttribute('data-filter');
-        notificationItems.forEach((item) => {
-          const category = item.getAttribute('data-category');
-          item.style.display = filter === 'all' || category === filter ? 'flex' : 'none';
+      this.classList.add('active');
+      const filter = this.getAttribute('data-filter');
+      const notificationItems = document.querySelectorAll('.notification-item');
+      notificationItems.forEach((item) => {
+        const category = item.getAttribute('data-category');
+        item.style.display = filter === 'all' || category === filter ? 'flex' : 'none';
         });
       });
     });
@@ -169,23 +196,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  window.handleFormSubmit = function (event) {
-    event.preventDefault();
-    const form = event.target;
-    const submitBtn = form.querySelector('.btn-submit-profile');
-    if (submitBtn) {
-      const originalText = submitBtn.innerText;
-      submitBtn.innerText = 'ĐANG XỬ LÝ...';
-      submitBtn.style.opacity = '0.7';
-      submitBtn.disabled = true;
-      setTimeout(() => {
-        alert('Dữ liệu của bạn đã được cập nhật thành công!');
-        submitBtn.innerText = originalText;
-        submitBtn.style.opacity = '1';
-        submitBtn.disabled = false;
-      }, 1200);
-    }
-  };
 });
 
 // ==================================================================================
@@ -195,15 +205,40 @@ const statusText = { pending: 'Chờ lấy hàng', packing: 'Đang chuẩn bị'
 const statusFilterMap = { pending: 'pending', packing: 'pending', shipping: 'shipping', completed: 'delivered', return: 'return', cancelled: 'return' };
 let loadedOrderDetails = [];
 
+function currentUser() {
+  return JSON.parse(localStorage.getItem('currentUser') || 'null');
+}
+
+function userStorageKey(base) {
+  const user = currentUser();
+  return user?.id ? `${base}:${user.id}` : base;
+}
+
+function belongsToCurrentUser(order, user = currentUser()) {
+  if (!user) return false;
+  if (order.userId || order.user_id) return Number(order.userId || order.user_id) === Number(user.id);
+  const orderEmail = String(order.email || order.customerEmail || order.customer_email || '').trim().toLowerCase();
+  const orderPhone = String(order.phone || order.customerPhone || order.customer_phone || '').replace(/\s+/g, '');
+  const userEmail = String(user.email || '').trim().toLowerCase();
+  const userPhone = String(user.phone || '').replace(/\s+/g, '');
+  return Boolean((userEmail && orderEmail === userEmail) || (userPhone && orderPhone === userPhone));
+}
+
 async function loadOrders() {
   const wrap = document.getElementById('userOrdersList');
   if (!wrap) return;
+  const user = currentUser();
+  if (!user?.id) {
+    renderOrders([]);
+    renderNotifications([]);
+    return;
+  }
   try {
-    const orders = await api('/orders');
+    const orders = await api(`/orders?userId=${encodeURIComponent(user.id)}`);
     const details = await Promise.all(orders.slice(0, 8).map((o) => api(`/orders/${o.id}`).catch(() => ({ ...o, items: [] }))));
     renderOrders(details);
   } catch (error) {
-    const localOrders = JSON.parse(localStorage.getItem('motOrders') || '[]');
+    const localOrders = JSON.parse(localStorage.getItem('motOrders') || '[]').filter((order) => belongsToCurrentUser(order, user));
     renderOrders(localOrders);
   }
 }
@@ -211,6 +246,7 @@ async function loadOrders() {
 function renderOrders(orders) {
   loadedOrderDetails = orders || [];
   window.__motUserOrders = loadedOrderDetails;
+  renderNotifications(loadedOrderDetails);
   const wrap = document.getElementById('userOrdersList');
   if (!wrap) return;
   if (!orders.length) {
@@ -251,6 +287,24 @@ function renderOrders(orders) {
     })
     .join('');
   bindOrderTabsAgain();
+}
+
+function renderNotifications(orders) {
+  const wrap = document.getElementById('userNotificationsList');
+  if (!wrap) return;
+  if (!orders.length) {
+    wrap.innerHTML = '<div class="notification-item" data-category="Tất cả"><h4 class="notice-title">Chưa có thông báo</h4><p class="notice-body">Các cập nhật về đơn hàng và ưu đãi của riêng bạn sẽ hiển thị tại đây.</p></div>';
+    return;
+  }
+  wrap.innerHTML = orders
+    .slice(0, 5)
+    .map(
+      (order) => `<div class="notification-item" data-category="Đơn hàng">
+        <h4 class="notice-title">Đơn hàng #${order.id} ${statusText[order.status] || 'đang được xử lý'}</h4>
+        <p class="notice-body">Tổng thanh toán: <b>${money(order.total)}</b>. Ngày đặt: ${order.date || String(order.createdAt || '').slice(0, 10) || 'chưa rõ'}.</p>
+      </div>`
+    )
+    .join('');
 }
 
 window.openUserOrderDetail = function (orderId) {
@@ -303,7 +357,7 @@ async function loadWishlist() {
   const grid = document.getElementById('wishlistGrid');
   if (!grid) return;
   try {
-    const ids = JSON.parse(localStorage.getItem('motWishlist') || '[]').map(Number);
+    const ids = JSON.parse(localStorage.getItem(userStorageKey('motWishlist')) || '[]').map(Number);
     if (!ids.length) {
       grid.innerHTML = '<div class="empty-wishlist">Bạn chưa có sản phẩm yêu thích nào. Hãy bấm biểu tượng trái tim ở trang sản phẩm để lưu lại.</div>';
       return;
@@ -330,8 +384,8 @@ async function loadWishlist() {
     grid.querySelectorAll('[data-remove-wish]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const id = Number(btn.dataset.removeWish);
-        const next = JSON.parse(localStorage.getItem('motWishlist') || '[]').map(Number).filter((x) => x !== id);
-        localStorage.setItem('motWishlist', JSON.stringify(next));
+        const next = JSON.parse(localStorage.getItem(userStorageKey('motWishlist')) || '[]').map(Number).filter((x) => x !== id);
+        localStorage.setItem(userStorageKey('motWishlist'), JSON.stringify(next));
         loadWishlist();
       });
     });
