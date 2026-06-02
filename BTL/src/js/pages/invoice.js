@@ -17,7 +17,7 @@ async function render() {
     const discount = Math.max(0, itemSubtotal - Number(order.total || 0));
     root.innerHTML = `
       <div class="invoice-head">
-        <div class="brand"><img src="assets/images/logo.png" alt="MOT"><div><h1>MOT Store</h1><p>Phòng B706, Tầng 7, Tòa A, Trường Đại học Thăng Long, Hà Nội</p></div></div>
+        <div class="brand"><img src="/assets/images/logo.png" alt="MOT"><div><h1>MOT Store</h1><p>Phòng B706, Tầng 7, Tòa A, Trường Đại học Thăng Long, Hà Nội</p></div></div>
         <div class="invoice-code"><h2>HÓA ĐƠN ĐIỆN TỬ</h2><p>Mã đơn: <b>#${order.id}</b></p><p>Ngày lập: ${order.date || String(order.createdAt || '').slice(0, 10)}</p></div>
       </div>
       <div class="invoice-grid">
@@ -28,7 +28,7 @@ async function render() {
         ${items
           .map(
             (item) =>
-              `<tr><td><div class="product-cell"><img src="${img(item.image)}" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${escapeHtml(item.productName || item.name)}"><span>${escapeHtml(item.productName || item.name)}</span></div></td><td>${money(item.price)}</td><td>${item.quantity}</td><td>${money(item.subtotal || item.price * item.quantity)}</td></tr>`
+              `<tr><td><div class="product-cell"><img src="${img(item.image)}" onerror="this.src='/assets/images/placeholder-cover.svg'" alt="${escapeHtml(item.productName || item.name)}"><span>${escapeHtml(item.productName || item.name)}</span></div></td><td>${money(item.price)}</td><td>${item.quantity}</td><td>${money(item.subtotal || item.price * item.quantity)}</td></tr>`
           )
           .join('')}
       </tbody></table>

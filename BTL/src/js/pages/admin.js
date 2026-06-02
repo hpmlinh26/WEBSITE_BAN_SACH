@@ -175,7 +175,7 @@ function renderDashboard() {
         .slice(0, 6)
         .map(
           (p) =>
-            `<li><img src="${normalizeImage(p.image)}" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${escapeHtml(p.name || p.title)}"><span>${escapeHtml(p.name || p.title)}</span><b>${Number(p.stock || 0)}</b></li>`
+            `<li><img src="${normalizeImage(p.image)}" onerror="this.src='/assets/images/placeholder-cover.svg'" alt="${escapeHtml(p.name || p.title)}"><span>${escapeHtml(p.name || p.title)}</span><b>${Number(p.stock || 0)}</b></li>`
         )
         .join('') || `<li class="empty-admin">Chưa có sản phẩm sắp hết hàng.</li>`;
   }
@@ -189,7 +189,7 @@ function renderCategories() {
       .map(
         (c) => `
     <article class="category-admin-card">
-      <img src="${normalizeImage(c.image)}" loading="lazy" decoding="async" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${escapeHtml(c.name)}">
+      <img src="${normalizeImage(c.image)}" loading="lazy" decoding="async" onerror="this.src='/assets/images/placeholder-cover.svg'" alt="${escapeHtml(c.name)}">
       <div><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.slug)}</p></div>
       <div class="card-actions">
         <button class="btn-edit" onclick="editCategory(${c.id})">Sửa</button>
@@ -209,7 +209,7 @@ function renderProducts() {
         const category = p.category || p.category_slug;
         return `<tr>
       <td>#${p.id}</td>
-      <td><img class="table-cover" src="${normalizeImage(p.image)}" loading="lazy" decoding="async" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${escapeHtml(p.name || p.title)}"></td>
+      <td><img class="table-cover" src="${normalizeImage(p.image)}" loading="lazy" decoding="async" onerror="this.src='/assets/images/placeholder-cover.svg'" alt="${escapeHtml(p.name || p.title)}"></td>
       <td><strong>${escapeHtml(p.name || p.title)}</strong><small>${escapeHtml(p.slug || '')}</small></td>
       <td>${escapeHtml(p.author || 'Không rõ')}</td>
       <td>${money(p.price)}</td>
@@ -325,7 +325,7 @@ window.openAddCategory = function () {
   document.getElementById('categoryId').value = '';
   document.getElementById('categoryName').value = '';
   document.getElementById('categorySlug').value = '';
-  document.getElementById('categoryImage').value = 'assets/products/sach-38.jpg';
+  document.getElementById('categoryImage').value = '/assets/products/sach-38.jpg';
   document.getElementById('categoryModalTitle').textContent = 'Thêm danh mục';
   modal('categoryModal');
 };
@@ -335,7 +335,7 @@ window.editCategory = function (id) {
   document.getElementById('categoryId').value = c.id;
   document.getElementById('categoryName').value = c.name;
   document.getElementById('categorySlug').value = c.slug;
-  document.getElementById('categoryImage').value = c.image || 'assets/images/placeholder-cover.svg';
+  document.getElementById('categoryImage').value = c.image || '/assets/images/placeholder-cover.svg';
   document.getElementById('categoryModalTitle').textContent = 'Sửa danh mục';
   modal('categoryModal');
 };
@@ -372,7 +372,7 @@ window.deleteCategory = async function (id) {
 window.openAddProduct = function () {
   document.querySelector('#productModal form')?.reset();
   document.getElementById('productId').value = '';
-  document.getElementById('productImage').value = 'assets/products/sach-38.jpg';
+  document.getElementById('productImage').value = '/assets/products/sach-38.jpg';
   document.getElementById('productDiscount').value = '20';
   document.getElementById('productStock').value = '100';
   document.getElementById('modalTitle').textContent = 'Thêm sản phẩm';
@@ -389,7 +389,7 @@ window.editProduct = function (id) {
   document.getElementById('productOriginalPrice').value = p.originalPrice || p.original_price || p.price || 0;
   document.getElementById('productDiscount').value = p.discount || 20;
   document.getElementById('productStock').value = p.stock ?? 100;
-  document.getElementById('productImage').value = p.image || 'assets/images/placeholder-cover.svg';
+  document.getElementById('productImage').value = p.image || '/assets/images/placeholder-cover.svg';
   document.getElementById('productDescription').value = p.description || '';
   fillCategorySelect();
   document.getElementById('productCategory').value = p.category || p.category_slug || '';
@@ -483,7 +483,7 @@ window.openOrderModal = async function (id) {
           items
             .map(
               (item) => `<div class="order-detail-item">
-          <img src="${normalizeImage(item.image)}" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${escapeHtml(item.productName || item.name)}">
+          <img src="${normalizeImage(item.image)}" onerror="this.src='/assets/images/placeholder-cover.svg'" alt="${escapeHtml(item.productName || item.name)}">
           <div><h4>${escapeHtml(item.productName || item.name)}</h4><p>${escapeHtml(item.author || 'MOT Store')} • SL: ${item.quantity}</p></div>
           <strong>${money(item.subtotal || item.price * item.quantity)}</strong>
         </div>`
@@ -491,7 +491,7 @@ window.openOrderModal = async function (id) {
             .join('') || '<p>Đơn hàng chưa có sản phẩm chi tiết.</p>'
         }
       </div>
-      <div class="invoice-link-row"><a class="btn-edit" href="invoice.html?orderId=${detail.id}" target="_blank">Xuất hóa đơn điện tử</a></div>`;
+      <div class="invoice-link-row"><a class="btn-edit" href="/pages/invoice.html?orderId=${detail.id}" target="_blank">Xuất hóa đơn điện tử</a></div>`;
   } catch (error) {
     if (body) body.innerHTML = `<p class="red-text">${escapeHtml(error.message)}</p>`;
   }

@@ -20,7 +20,7 @@ const ORDER_STATUSES = ['pending', 'packing', 'shipping', 'completed', 'return',
 const FEEDBACK_STATUSES = ['new', 'read', 'replied'];
 const USER_ROLES = ['admin', 'customer'];
 
-const PLACEHOLDER_IMAGE = 'assets/images/placeholder-cover.svg';
+const PLACEHOLDER_IMAGE = '/assets/images/placeholder-cover.svg';
 
 module.exports = {
   ROOT_DIR,

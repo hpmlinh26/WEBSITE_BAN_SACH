@@ -19,13 +19,13 @@ export function escapeHtml(value) {
     .replace(/'/g, '&#039;');
 }
 
-// Chuan hoa duong dan anh: ho tro http(s)/data/assets san co, ten file sach-*, con lai coi la o assets/images.
-export function assetPath(value, fallback = 'assets/images/placeholder-cover.svg') {
+// Chuan hoa duong dan anh: ho tro http(s)/data/assets san co, ten file sach-*, con lai coi la o /assets/images.
+export function assetPath(value, fallback = '/assets/images/placeholder-cover.svg') {
   const raw = String(value || '').trim();
   if (!raw) return fallback;
-  if (/^(https?:|data:|assets\/)/i.test(raw)) return raw;
-  if (/^sach-\d+\./i.test(raw)) return `assets/products/${raw}`;
-  return `assets/images/${raw}`;
+  if (/^(https?:|data:|\/?assets\/)/i.test(raw)) return raw.startsWith('assets/') ? `/${raw}` : raw;
+  if (/^sach-\d+\./i.test(raw)) return `/assets/products/${raw}`;
+  return `/assets/images/${raw}`;
 }
 
 export function slugify(value) {

@@ -1,4 +1,4 @@
-// Entry cho trang hoa don (invoice.html).
+// Entry cho trang hoa don (/pages/invoice.html).
 import '../../css/tokens.css';
 import '../../css/enhancements.css';
 

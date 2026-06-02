@@ -214,7 +214,7 @@ function renderOrders(orders) {
   const wrap = document.getElementById('userOrdersList');
   if (!wrap) return;
   if (!orders.length) {
-    wrap.innerHTML = `<div class="order-card empty-user-order"><p>Bạn chưa có đơn hàng nào.</p><a href="products.html">Mua ngay</a></div>`;
+    wrap.innerHTML = `<div class="order-card empty-user-order"><p>Bạn chưa có đơn hàng nào.</p><a href="/pages/products.html">Mua ngay</a></div>`;
     return;
   }
   wrap.innerHTML = orders
@@ -232,7 +232,7 @@ function renderOrders(orders) {
                     .map(
                       (item) => `<div class="order-item dynamic-order-item">
                     <div class="product-info">
-                        <img src="${img(item.image)}" alt="${item.productName || item.name}" class="product-image" onerror="this.src='assets/images/placeholder-cover.svg'">
+                        <img src="${img(item.image)}" alt="${item.productName || item.name}" class="product-image" onerror="this.src='/assets/images/placeholder-cover.svg'">
                         <div class="product-details"><h4 class="product-name">${item.productName || item.name}</h4><p>${item.author || 'MOT Store'}</p></div>
                     </div>
                     <div class="product-price-qty">
@@ -246,7 +246,7 @@ function renderOrders(orders) {
                 }
             </div>
             <div class="delivery-notice-box"><div class="notice-badge">Ngày giao hàng dự kiến: 20 Tháng 05</div><p class="notice-subtext">Tổng thanh toán: <b>${money(order.total)}</b></p></div>
-            <div class="order-footer-actions"><button class="btn-order-action" onclick="openUserOrderDetail(${order.id})">Xem chi tiết</button><a class="btn-order-action muted" href="invoice.html?orderId=${order.id}">Xuất hóa đơn</a></div>
+            <div class="order-footer-actions"><button class="btn-order-action" onclick="openUserOrderDetail(${order.id})">Xem chi tiết</button><a class="btn-order-action muted" href="/pages/invoice.html?orderId=${order.id}">Xuất hóa đơn</a></div>
         </div>`;
     })
     .join('');
@@ -273,12 +273,12 @@ window.openUserOrderDetail = function (orderId) {
               items
                 .map(
                   (item) =>
-                    `<div class="user-order-modal-item"><img src="${img(item.image)}" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${item.productName || item.name}"><div><h4>${item.productName || item.name}</h4><p>${item.author || 'MOT Store'} • SL: ${item.quantity}</p></div><strong>${money(item.subtotal || item.price * item.quantity)}</strong></div>`
+                    `<div class="user-order-modal-item"><img src="${img(item.image)}" onerror="this.src='/assets/images/placeholder-cover.svg'" alt="${item.productName || item.name}"><div><h4>${item.productName || item.name}</h4><p>${item.author || 'MOT Store'} • SL: ${item.quantity}</p></div><strong>${money(item.subtotal || item.price * item.quantity)}</strong></div>`
                 )
                 .join('') || '<p>Đơn hàng chưa có sản phẩm.</p>'
             }
         </div>
-        <div class="user-order-modal-actions"><a href="invoice.html?orderId=${order.id}" class="btn-order-action">Xuất hóa đơn điện tử</a></div>
+        <div class="user-order-modal-actions"><a href="/pages/invoice.html?orderId=${order.id}" class="btn-order-action">Xuất hóa đơn điện tử</a></div>
     </div>`;
   modal.classList.add('show');
 };
@@ -317,11 +317,11 @@ async function loadWishlist() {
     grid.innerHTML = selected
       .map(
         (p) => `<div class="wishlist-card" data-wish-card="${p.id}">
-            <img src="${img(p.image)}" loading="lazy" decoding="async" onerror="this.src='assets/images/placeholder-cover.svg'" alt="${p.name}">
+            <img src="${img(p.image)}" loading="lazy" decoding="async" onerror="this.src='/assets/images/placeholder-cover.svg'" alt="${p.name}">
             <h3>${p.name}</h3>
             <p>${money(p.price)}</p>
             <div class="wishlist-actions">
-                <a href="product-detail.html?id=${p.id}">Xem chi tiết</a>
+                <a href="/pages/product-detail.html?id=${p.id}">Xem chi tiết</a>
                 <button type="button" data-remove-wish="${p.id}">Bỏ thích</button>
             </div>
         </div>`
@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==================================================================================
-// 10. Mo dung tab tai khoan tu link header, vi du accounts.html?tab=form-thong-bao
+// 10. Mo dung tab tai khoan tu link header, vi du /pages/accounts.html?tab=form-thong-bao
 // ==================================================================================
 function activateTargetTab(targetId) {
   if (!targetId) return;

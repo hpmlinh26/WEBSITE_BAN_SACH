@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'node:path';
-import { readdirSync, readFileSync } from 'node:fs';
+import { relative, resolve } from 'node:path';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 
 const root = import.meta.dirname;
 
@@ -21,11 +21,20 @@ function htmlPartials() {
   };
 }
 
-// Multi-page app: moi file *.html o thu muc goc la mot entry rieng.
+function collectHtmlFiles(dir) {
+  if (!existsSync(dir)) return [];
+
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const fullPath = resolve(dir, entry.name);
+    if (entry.isDirectory()) return collectHtmlFiles(fullPath);
+    return entry.isFile() && entry.name.endsWith('.html') ? [fullPath] : [];
+  });
+}
+
+// Multi-page app: trang chu o root, cac trang con nam trong pages/.
+const htmlFiles = [resolve(root, 'index.html'), ...collectHtmlFiles(resolve(root, 'pages'))];
 const htmlEntries = Object.fromEntries(
-  readdirSync(root)
-    .filter((file) => file.endsWith('.html'))
-    .map((file) => [file.replace(/\.html$/, ''), resolve(root, file)])
+  htmlFiles.map((file) => [relative(root, file).replace(/\\/g, '/').replace(/\.html$/, ''), file])
 );
 
 export default defineConfig({

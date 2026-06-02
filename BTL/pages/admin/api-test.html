@@ -24,14 +24,14 @@
 <body>
   <div class="container">
     <h1>Test Backend API - MOT.vn</h1>
-    <p>Trang này dùng để kiểm tra nhanh Express + SQLite backend. Hãy mở bằng <b>http://localhost:3000/api-test.html</b>.</p>
+    <p>Trang này dùng để kiểm tra nhanh Express + SQLite backend. Hãy mở bằng <b>http://localhost:3000/pages/admin/api-test.html</b>.</p>
     <div class="actions">
       <button onclick="checkHealth()">Kiểm tra backend</button>
       <button onclick="loadProducts()">Load sản phẩm</button>
       <button onclick="createDemoOrder()">Tạo đơn demo</button>
-      <button class="secondary" onclick="location.href='index.html'">Về trang chủ</button>
-      <button class="secondary" onclick="location.href='products-manager.html'">Quản lý sản phẩm</button>
-      <button class="secondary" onclick="location.href='orders-manager.html'">Quản lý đơn hàng</button>
+      <button class="secondary" onclick="location.href='/index.html'">Về trang chủ</button>
+      <button class="secondary" onclick="location.href='/pages/admin/products.html'">Quản lý sản phẩm</button>
+      <button class="secondary" onclick="location.href='/pages/admin/orders.html'">Quản lý đơn hàng</button>
     </div>
     <div id="status" class="status">Chưa kiểm tra.</div>
     <div id="content"></div>

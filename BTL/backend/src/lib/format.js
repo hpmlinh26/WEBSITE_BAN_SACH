@@ -12,9 +12,9 @@ function makeSlug(value) {
 function normalizeAssetPath(value, fallback = PLACEHOLDER_IMAGE) {
   const raw = String(value || '').trim();
   if (!raw) return fallback;
-  if (/^(https?:|data:|assets\/)/i.test(raw)) return raw;
-  if (/^sach-\d+\./i.test(raw)) return `assets/products/${raw}`;
-  return `assets/images/${raw}`;
+  if (/^(https?:|data:|\/?assets\/)/i.test(raw)) return raw.startsWith('assets/') ? `/${raw}` : raw;
+  if (/^sach-\d+\./i.test(raw)) return `/assets/products/${raw}`;
+  return `/assets/images/${raw}`;
 }
 
 function assertRequired(value, message) {

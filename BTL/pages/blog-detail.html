@@ -11,7 +11,7 @@
 <!-- @partial:header -->
 <main class="blog-page-main">
   <section class="page-hero blog-hero">
-    <a class="blog-back-link" href="blog.html">Quay lại Blog</a>
+    <a class="blog-back-link" href="/pages/blog.html">Quay lại Blog</a>
     <h1 id="postTitle">Chi tiết bài viết</h1>
     <p id="postIntro">Đang tải nội dung bài viết...</p>
   </section>
@@ -24,7 +24,7 @@ const posts = {
   "one-piece": {
     title: "Vì sao One Piece vẫn là lựa chọn dễ đọc cho người mới?",
     tag: "Gợi ý đọc",
-    image: "assets/products/sach-38.jpg",
+    image: "/assets/products/sach-38.jpg",
     date: "28/05/2026",
     read: "4 phút đọc",
     intro: "One Piece là một trong những bộ truyện phù hợp để bắt đầu với nhóm manga phiêu lưu, hài hước và shounen.",
@@ -37,7 +37,7 @@ const posts = {
   "detective": {
     title: "Đọc manga trinh thám nên bắt đầu từ đâu?",
     tag: "Trinh thám",
-    image: "assets/products/sach-22.jpg",
+    image: "/assets/products/sach-22.jpg",
     date: "25/05/2026",
     read: "3 phút đọc",
     intro: "Manga trinh thám phù hợp với người thích suy luận, phá án và các cú xoay chuyển bất ngờ.",
@@ -50,7 +50,7 @@ const posts = {
   "tho-bay-mau": {
     title: "Thỏ Bảy Màu và sức hút của truyện tranh Việt",
     tag: "Thiếu nhi",
-    image: "assets/products/sach-53.jpg",
+    image: "/assets/products/sach-53.jpg",
     date: "20/05/2026",
     read: "5 phút đọc",
     intro: "Truyện tranh Việt ngày càng gần gũi với bạn đọc nhờ ngôn ngữ đời thường và tình huống hài hước.",
@@ -63,7 +63,7 @@ const posts = {
   "bao-quan": {
     title: "5 cách bảo quản sách không bị cong gáy, ố trang",
     tag: "Mẹo hay",
-    image: "assets/images/blog.png",
+    image: "/assets/images/blog.png",
     date: "18/05/2026",
     read: "4 phút đọc",
     intro: "Bảo quản đúng cách giúp sách giữ màu bìa, không cong gáy và ít bị ẩm mốc hơn.",
@@ -76,7 +76,7 @@ const posts = {
   "alice": {
     title: "Alice in Borderland: khi sinh tồn kết hợp tâm lý",
     tag: "Seinen",
-    image: "assets/products/sach-11.jpg",
+    image: "/assets/products/sach-11.jpg",
     date: "15/05/2026",
     read: "6 phút đọc",
     intro: "Alice in Borderland hấp dẫn nhờ các trò chơi sinh tồn, áp lực lựa chọn và yếu tố tâm lý căng thẳng.",
@@ -89,7 +89,7 @@ const posts = {
   "voucher": {
     title: "Cách săn voucher để mua truyện tiết kiệm hơn",
     tag: "Mua sắm",
-    image: "assets/images/banner.sale2.png",
+    image: "/assets/images/banner.sale2.png",
     date: "10/05/2026",
     read: "3 phút đọc",
     intro: "Kết hợp voucher và chọn đúng thời điểm mua giúp tối ưu chi phí khi sưu tầm truyện theo bộ.",
@@ -111,7 +111,7 @@ document.getElementById('postDetail').innerHTML = `
   <div class="blog-detail-meta"><span>${post.date}</span><span>${post.read}</span></div>
   <img src="${post.image}" alt="${post.title}">
   <div class="blog-detail-content">${post.paragraphs.map(p => `<p>${p}</p>`).join('')}</div>
-  <a class="blog-back-link" href="blog.html">Quay lại danh sách bài viết</a>
+  <a class="blog-back-link" href="/pages/blog.html">Quay lại danh sách bài viết</a>
 `;
 </script>
   <script type="module" src="/src/js/entries/storefront.js"></script>

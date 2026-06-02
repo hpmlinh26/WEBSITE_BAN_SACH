@@ -23,7 +23,7 @@ function getProducts() {
   return Array.isArray(list) ? list : [];
 }
 function productLink(p) {
-  return `product-detail.html?id=${encodeURIComponent(p.id)}`;
+  return `/pages/product-detail.html?id=${encodeURIComponent(p.id)}`;
 }
 function findProducts(text, limit = 4) {
   const q = norm(text)
@@ -56,7 +56,7 @@ function productCards(list) {
     .map(
       (p) => `
       <a class="mot-ai-product" href="${productLink(p)}">
-        <img src="${esc(p.image || p.img || 'assets/images/logo.png')}" alt="${esc(p.name || p.title)}">
+        <img src="${esc(p.image || p.img || '/assets/images/logo.png')}" alt="${esc(p.name || p.title)}">
         <div><strong>${esc(p.name || p.title)}</strong><small>${money(p.price || p.salePrice)} · ${esc(p.author || 'MOT Store')}</small></div>
       </a>`
     )

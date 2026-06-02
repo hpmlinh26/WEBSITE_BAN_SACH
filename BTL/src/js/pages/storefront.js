@@ -1,6 +1,6 @@
 // storefront.js - xu ly chung cho frontend MOT Store (truoc o script.js).
 import { api } from '../core/api.js';
-import { money, normalizeText, escapeHtml } from '../core/format.js';
+import { money, normalizeText, escapeHtml, assetPath } from '../core/format.js';
 
 const qs = (selector, root = document) => root.querySelector(selector);
 const qsa = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -12,11 +12,11 @@ async function fetchData() {
   try {
     const [products, categories] = await Promise.all([api('/products'), api('/categories')]);
     appProducts = products.map(normalizeProduct);
-    appCategories = categories;
+    appCategories = categories.map(normalizeCategory);
   } catch (error) {
     console.warn('Không kết nối backend, dùng dữ liệu seed:', error.message);
     appProducts = (window.products || []).map(normalizeProduct);
-    appCategories = window.categories || [];
+    appCategories = (window.categories || []).map(normalizeCategory);
   }
   window.products = appProducts;
   window.categories = appCategories;
@@ -30,8 +30,15 @@ function normalizeProduct(p) {
     originalPrice: p.originalPrice || p.original_price || p.price,
     category: p.category || p.category_slug,
     categoryName: p.categoryName || p.category_name || 'Manga',
-    image: p.image || 'assets/images/Mangan.png',
+    image: assetPath(p.image, '/assets/images/Mangan.png'),
     stock: Number(p.stock ?? 100),
+  };
+}
+
+function normalizeCategory(category) {
+  return {
+    ...category,
+    image: assetPath(category.image, '/assets/images/Mangan.png'),
   };
 }
 
@@ -158,7 +165,7 @@ function productCard(product, options = {}) {
     <article class="product-item functional-card" data-product-id="${product.id}" tabindex="0">
       <div class="product-image">
         <button class="wishlist-btn ${isWishlisted(product.id) ? 'active' : ''}" data-wishlist="${product.id}" aria-label="Yêu thích ${escapeHtml(product.name)}"><i class="fa-solid fa-heart"></i></button>
-        <img src="${product.image}" alt="${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.src='assets/images/Mangan.png'">
+        <img src="${product.image}" alt="${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.src='/assets/images/Mangan.png'">
         <span class="discount-badge">-${product.discount || 20}%</span>
       </div>
       <div class="product-info">
@@ -179,7 +186,7 @@ function productCard(product, options = {}) {
 }
 
 function goProduct(id) {
-  window.location.href = `product-detail.html?id=${id}`;
+  window.location.href = `/pages/product-detail.html?id=${id}`;
 }
 
 function setupSearchSuggest(box, input, submit) {
@@ -203,8 +210,8 @@ function setupSearchSuggest(box, input, submit) {
       ? list
           .map(
             (p) => `
-      <a class="search-suggest-item" href="product-detail.html?id=${p.id}">
-        <img src="${p.image}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="this.src='assets/images/placeholder-cover.svg'">
+      <a class="search-suggest-item" href="/pages/product-detail.html?id=${p.id}">
+        <img src="${p.image}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="this.src='/assets/images/placeholder-cover.svg'">
         <div><strong>${escapeHtml(p.name)}</strong><span>${money(p.price)} • ${escapeHtml(p.author || 'MOT Store')}</span></div>
       </a>`
           )
@@ -223,12 +230,12 @@ function setupSearchSuggest(box, input, submit) {
 }
 
 function initHeader() {
-  qsa('.logo a').forEach((a) => (a.href = 'index.html'));
+  qsa('.logo a').forEach((a) => (a.href = '/index.html'));
   qsa('.menu a').forEach((a) => {
     const text = a.textContent.trim().toUpperCase();
-    if (text.includes('TRANG CHỦ')) a.href = 'index.html';
-    if (text.includes('BLOG')) a.href = 'blog.html';
-    if (text.includes('LIÊN HỆ')) a.href = 'contact.html';
+    if (text.includes('TRANG CHỦ')) a.href = '/index.html';
+    if (text.includes('BLOG')) a.href = '/pages/blog.html';
+    if (text.includes('LIÊN HỆ')) a.href = '/pages/contact.html';
   });
 
   qsa('.dropdown-btn').forEach((btn) => {
@@ -246,7 +253,7 @@ function initHeader() {
     const button = qs('button', box);
     const submit = () => {
       const keyword = encodeURIComponent(input?.value.trim() || '');
-      window.location.href = keyword ? `products.html?search=${keyword}` : 'products.html';
+      window.location.href = keyword ? `/pages/products.html?search=${keyword}` : '/pages/products.html';
     };
     button?.addEventListener('click', submit);
     input?.addEventListener('keydown', (e) => {
@@ -258,7 +265,7 @@ function initHeader() {
   qsa('.cart-box').forEach((cart) => {
     cart.style.cursor = 'pointer';
     cart.addEventListener('click', () => {
-      window.location.href = 'cart.html';
+      window.location.href = '/pages/cart.html';
     });
   });
 
@@ -273,9 +280,9 @@ function initHeader() {
 function renderHeaderCategories() {
   qsa('.dropdown-menu').forEach((menu) => {
     menu.innerHTML =
-      `<p class="dropdown-title">DANH MỤC SẢN PHẨM</p><li><a href="products.html">Tất cả sản phẩm</a></li>` +
+      `<p class="dropdown-title">DANH MỤC SẢN PHẨM</p><li><a href="/pages/products.html">Tất cả sản phẩm</a></li>` +
       appCategories
-        .map((c) => `<li><a href="products.html?category=${encodeURIComponent(c.slug)}">${escapeHtml(c.name)}</a></li>`)
+        .map((c) => `<li><a href="/pages/products.html?category=${encodeURIComponent(c.slug)}">${escapeHtml(c.name)}</a></li>`)
         .join('');
   });
 }
@@ -294,8 +301,8 @@ function openUserMenu(event) {
   pop.innerHTML = `
     <strong>${escapeHtml(user.fullName || 'Tài khoản')}</strong>
     <span>${escapeHtml(user.email || user.phone || 'Khách hàng')}</span>
-    <a href="accounts.html">Hồ sơ cá nhân</a>
-    ${user.role === 'admin' ? `<a href="products-manager.html">Trang quản trị</a>` : ''}
+    <a href="/pages/accounts.html">Hồ sơ cá nhân</a>
+    ${user.role === 'admin' ? `<a href="/pages/admin/products.html">Trang quản trị</a>` : ''}
     <button type="button" id="logoutBtn">Đăng xuất</button>`;
   document.body.appendChild(pop);
   const rect = event.currentTarget.getBoundingClientRect();
@@ -355,7 +362,7 @@ function bindProductClicks(root = document) {
       e.preventDefault();
       e.stopPropagation();
       addToCart(Number(btn.dataset.buy), 1, btn);
-      window.location.href = 'cart.html';
+      window.location.href = '/pages/cart.html';
     });
   });
 }
@@ -371,15 +378,15 @@ function initHomePage() {
   if (categoryGrid) {
     categoryGrid.innerHTML =
       `
-      <a class="category-item all-category" href="products.html">
+      <a class="category-item all-category" href="/pages/products.html">
         <div class="category-image all-category-image"><span>Tất cả</span></div>
         <p class="category-name">Tất cả sản phẩm</p>
       </a>` +
       appCategories
         .map(
           (c) => `
-      <a class="category-item" href="products.html?category=${encodeURIComponent(c.slug)}">
-        <div class="category-image"><img src="${c.image || 'assets/images/Mangan.png'}" alt="${escapeHtml(c.name)}" loading="lazy" decoding="async" onerror="this.src='assets/images/Mangan.png'"></div>
+      <a class="category-item" href="/pages/products.html?category=${encodeURIComponent(c.slug)}">
+        <div class="category-image"><img src="${c.image || '/assets/images/Mangan.png'}" alt="${escapeHtml(c.name)}" loading="lazy" decoding="async" onerror="this.src='/assets/images/Mangan.png'"></div>
         <p class="category-name">${escapeHtml(c.name)}</p>
       </a>`
         )
@@ -393,7 +400,7 @@ function initHomePage() {
   }
 
   qsa('.btn-view-more').forEach((a) => {
-    a.href = 'products.html';
+    a.href = '/pages/products.html';
   });
   initSliderAndCountdown();
 }
@@ -560,9 +567,9 @@ function initProductDetailPage() {
   if (!product) return;
   box.innerHTML = `
     <div class="product-detail-card">
-      <div class="detail-image"><img src="${product.image}" alt="${escapeHtml(product.name)}" onerror="this.src='assets/images/Mangan.png'"></div>
+      <div class="detail-image"><img src="${product.image}" alt="${escapeHtml(product.name)}" onerror="this.src='/assets/images/Mangan.png'"></div>
       <div class="detail-info">
-        <p class="breadcrumb"><a href="index.html">Trang chủ</a> / <a href="products.html">Sản phẩm</a> / ${escapeHtml(product.name)}</p>
+        <p class="breadcrumb"><a href="/index.html">Trang chủ</a> / <a href="/pages/products.html">Sản phẩm</a> / ${escapeHtml(product.name)}</p>
         <h1>${escapeHtml(product.name)}</h1>
         <p class="detail-author">Tác giả: ${escapeHtml(product.author || 'MOT Store')}</p>
         <p class="detail-category">Danh mục: ${escapeHtml(product.categoryName || appCategories.find((c) => c.slug === product.category)?.name || 'Manga')}</p>
@@ -608,7 +615,7 @@ function initCartPage() {
                   .map(
                     (item) => `
             <div class="cart-row" data-cart-id="${item.product.id}">
-              <img src="${item.product.image}" alt="${escapeHtml(item.product.name)}" loading="lazy" decoding="async" onerror="this.src='assets/images/Mangan.png'">
+              <img src="${item.product.image}" alt="${escapeHtml(item.product.name)}" loading="lazy" decoding="async" onerror="this.src='/assets/images/Mangan.png'">
               <div class="cart-row-info">
                 <h3>${escapeHtml(item.product.name)}</h3>
                 <p>${escapeHtml(item.product.author || 'MOT Store')}</p>
@@ -625,7 +632,7 @@ function initCartPage() {
             </div>`
                   )
                   .join('')
-              : `<div class="empty-cart"><p>Giỏ hàng đang trống.</p><a href="products.html">Mua ngay</a></div>`
+              : `<div class="empty-cart"><p>Giỏ hàng đang trống.</p><a href="/pages/products.html">Mua ngay</a></div>`
           }
         </section>
         <aside class="cart-summary-card">
@@ -648,7 +655,7 @@ function initCartPage() {
       input.addEventListener('change', () => setQty(input.dataset.cartQty, Number(input.value || 1)))
     );
     qs('.btn-checkout')?.addEventListener('click', () => {
-      window.location.href = 'pay.html';
+      window.location.href = '/pages/pay.html';
     });
   }
 
@@ -737,7 +744,7 @@ function initPayPage() {
     const discount = Number(appliedVoucher?.discount || 0);
     const finalTotal = totalAfterVoucher();
     if (!items.length) {
-      orderList.innerHTML = `<div class="checkout-empty"><p>Chưa có sản phẩm nào trong giỏ hàng.</p><a href="products.html">Chọn sản phẩm</a></div>`;
+      orderList.innerHTML = `<div class="checkout-empty"><p>Chưa có sản phẩm nào trong giỏ hàng.</p><a href="/pages/products.html">Chọn sản phẩm</a></div>`;
       confirmBtn.disabled = true;
       confirmBtn.textContent = 'GIỎ HÀNG ĐANG TRỐNG';
       return;
@@ -749,7 +756,7 @@ function initPayPage() {
         .map(
           (item) => `
       <div class="order-item checkout-item" data-product-id="${item.product.id}">
-        <div class="item-image"><img src="${item.product.image}" alt="${escapeHtml(item.product.name)}" onerror="this.src='assets/images/placeholder-cover.svg'"></div>
+        <div class="item-image"><img src="${item.product.image}" alt="${escapeHtml(item.product.name)}" onerror="this.src='/assets/images/placeholder-cover.svg'"></div>
         <div class="item-info">
           <h3 class="item-title">${escapeHtml(item.product.name)}</h3>
           <p>${escapeHtml(item.product.author || 'MOT.vn')}</p>
@@ -901,7 +908,7 @@ function initPayPage() {
       setCart({});
       localStorage.setItem('lastOrderId', String(order.id));
       toast(`Đặt hàng thành công! Mã đơn: #${order.id}`);
-      window.location.href = `invoice.html?orderId=${order.id}`;
+      window.location.href = `/pages/invoice.html?orderId=${order.id}`;
     } catch (error) {
       confirmBtn.disabled = false;
       confirmBtn.textContent = 'XÁC NHẬN THANH TOÁN';

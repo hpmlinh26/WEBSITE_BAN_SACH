@@ -73,9 +73,9 @@
       <h3>Tìm kiếm bài viết</h3>
       <input id="blogSearch" class="sidebar-search" type="text" placeholder="Tìm kiếm bài viết...">
       <h3>Bài viết nổi bật</h3>
-      <a href="blog-detail.html?id=one-piece">Vì sao One Piece vẫn là lựa chọn dễ đọc?</a>
-      <a href="blog-detail.html?id=bao-quan">5 cách bảo quản sách không bị cong gáy</a>
-      <a href="blog-detail.html?id=voucher">Cách săn voucher để mua truyện tiết kiệm hơn</a>
+      <a href="/pages/blog-detail.html?id=one-piece">Vì sao One Piece vẫn là lựa chọn dễ đọc?</a>
+      <a href="/pages/blog-detail.html?id=bao-quan">5 cách bảo quản sách không bị cong gáy</a>
+      <a href="/pages/blog-detail.html?id=voucher">Cách săn voucher để mua truyện tiết kiệm hơn</a>
       <h3>Mạng xã hội</h3>
       <div class="social-row social-text-row">
         <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
@@ -90,7 +90,7 @@
 <script>
   const blogNormalize = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase();
   document.querySelectorAll('.real-blog').forEach(card => {
-    const openPost = () => { window.location.href = `blog-detail.html?id=${card.dataset.postId}`; };
+    const openPost = () => { window.location.href = `/pages/blog-detail.html?id=${card.dataset.postId}`; };
     card.addEventListener('click', openPost);
     card.addEventListener('keydown', e => { if (e.key === 'Enter') openPost(); });
   });
