@@ -1051,3 +1051,9 @@ body {
   .user-profile-dashboard .profile-dashboard-container{ width:calc(100% - 28px) !important; flex-direction:column !important; }
   .user-profile-dashboard .profile-sidebar{ width:100% !important; }
 }
+.user-orders-pagination { display:flex; justify-content:center; align-items:center; gap:6px; margin:20px 0 8px; flex-wrap:wrap; }
+.order-page-btn { min-width:36px; height:36px; padding:0 10px; border:1px solid #fecdd3; background:#fff; color:#c9192e; border-radius:10px; font-weight:700; cursor:pointer; font-size:14px; transition:background .15s,color .15s; }
+.order-page-btn:hover:not(:disabled) { background:#fff0f0; }
+.order-page-btn.active { background:#c9192e; color:#fff; border-color:#c9192e; }
+.order-page-btn:disabled { opacity:.4; cursor:not-allowed; }
+.order-page-dots { padding:0 4px; color:#98a2b3; font-size:14px; }

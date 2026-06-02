@@ -115,7 +115,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const currentPw = form.querySelector('[name="currentPassword"]')?.value || '';
         const newPw = form.querySelector('[name="newPassword"]')?.value || '';
         const account = user.email || user.phone || '';
-        await api('/auth/login', { method: 'POST', body: JSON.stringify({ account, password: currentPw }) });
+        const session = await api('/auth/login', { method: 'POST', body: JSON.stringify({ account, password: currentPw }) });
+        if (session.token) localStorage.setItem('authToken', session.token);
         const updated = await api(`/users/${user.id}`, {
           method: 'PUT',
           body: JSON.stringify({ fullName: user.fullName, email: user.email, phone: user.phone, role: user.role, password: newPw }),
@@ -238,6 +239,9 @@ document.addEventListener('DOMContentLoaded', function () {
 const statusText = { pending: 'Chờ lấy hàng', packing: 'Đang chuẩn bị', shipping: 'Chờ giao hàng', completed: 'Đã giao', return: 'Trả hàng', cancelled: 'Hủy' };
 const statusFilterMap = { pending: 'pending', packing: 'pending', shipping: 'shipping', completed: 'delivered', return: 'return', cancelled: 'return' };
 let loadedOrderDetails = [];
+const ORDER_PAGE_SIZE = 5;
+let _allUserOrders = [];
+let _orderPage = 1;
 
 function currentUser() {
   try { return JSON.parse(localStorage.getItem('currentUser') || 'null'); } catch (_) { return null; }
@@ -263,28 +267,65 @@ async function loadOrders() {
   if (!wrap) return;
   const user = currentUser();
   if (!user?.id) {
-    renderOrders([]);
+    renderOrders([], 0);
     renderNotifications([]);
     return;
   }
   try {
-    const orders = await api(`/orders?userId=${encodeURIComponent(user.id)}`);
-    const details = await Promise.all(orders.slice(0, 8).map((o) => api(`/orders/${o.id}`).catch(() => ({ ...o, items: [] }))));
-    renderOrders(details);
+    _allUserOrders = await api(`/orders?userId=${encodeURIComponent(user.id)}`);
+    _orderPage = 1;
+    await renderOrderPage(1);
   } catch (error) {
     const localOrders = ((() => { try { return JSON.parse(localStorage.getItem('motOrders') || '[]'); } catch (_) { return []; } })()).filter((order) => belongsToCurrentUser(order, user));
-    renderOrders(localOrders);
+    _allUserOrders = localOrders;
+    renderOrders(localOrders, localOrders.length);
   }
 }
 
-function renderOrders(orders) {
+async function renderOrderPage(page) {
+  _orderPage = page;
+  const slice = _allUserOrders.slice((page - 1) * ORDER_PAGE_SIZE, page * ORDER_PAGE_SIZE);
+  const details = await Promise.all(slice.map((o) => api(`/orders/${o.id}`).catch(() => ({ ...o, items: [] }))));
+  renderOrders(details, _allUserOrders.length);
+}
+
+function renderOrderPagination(total) {
+  const totalPages = Math.max(1, Math.ceil(total / ORDER_PAGE_SIZE));
+  let nav = document.getElementById('userOrdersPageNav');
+  if (!nav) {
+    nav = document.createElement('div');
+    nav.id = 'userOrdersPageNav';
+    nav.className = 'user-orders-pagination';
+    document.getElementById('userOrdersList')?.after(nav);
+  }
+  if (totalPages <= 1) { nav.innerHTML = ''; return; }
+  const clamp = (p) => Math.max(1, Math.min(totalPages, p));
+  const dots = [];
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === 1 || i === totalPages || Math.abs(i - _orderPage) <= 1) dots.push(i);
+    else if (dots[dots.length - 1] !== '...') dots.push('...');
+  }
+  nav.innerHTML = `
+    <button class="order-page-btn" data-p="${clamp(_orderPage - 1)}" ${_orderPage === 1 ? 'disabled' : ''}>‹</button>
+    ${dots.map((d) => d === '...' ? '<span class="order-page-dots">…</span>' : `<button class="order-page-btn ${d === _orderPage ? 'active' : ''}" data-p="${d}">${d}</button>`).join('')}
+    <button class="order-page-btn" data-p="${clamp(_orderPage + 1)}" ${_orderPage === totalPages ? 'disabled' : ''}>›</button>`;
+  nav.querySelectorAll('[data-p]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const next = Number(btn.dataset.p);
+      if (next !== _orderPage) renderOrderPage(next);
+    });
+  });
+}
+
+function renderOrders(orders, total = orders.length) {
   loadedOrderDetails = orders || [];
   window.__motUserOrders = loadedOrderDetails;
-  renderNotifications(loadedOrderDetails);
+  renderNotifications(_allUserOrders.length ? _allUserOrders : loadedOrderDetails);
   const wrap = document.getElementById('userOrdersList');
   if (!wrap) return;
-  if (!orders.length) {
+  if (!_allUserOrders.length && !orders.length) {
     wrap.innerHTML = `<div class="order-card empty-user-order"><p>Bạn chưa có đơn hàng nào.</p><a href="/pages/products.html">Mua ngay</a></div>`;
+    renderOrderPagination(0);
     return;
   }
   wrap.innerHTML = orders
@@ -321,6 +362,7 @@ function renderOrders(orders) {
     })
     .join('');
   bindOrderTabsAgain();
+  renderOrderPagination(total);
 }
 
 function renderNotifications(orders) {
