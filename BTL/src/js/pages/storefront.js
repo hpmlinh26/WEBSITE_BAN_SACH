@@ -333,10 +333,7 @@ function openUserMenu(event) {
   pop.style.right = `${Math.max(12, window.innerWidth - rect.right)}px`;
   qs('#logoutBtn', pop).addEventListener('click', () => {
     localStorage.removeItem('currentUser');
-    pop.remove();
-    updateAuthUI();
-    updateCartBadge();
-    toast('Đã đăng xuất');
+    window.location.replace('/index.html');
   });
 }
 
