@@ -7,6 +7,14 @@ const API_BASE = '/api';
 const TRANSIENT_STATUS = new Set([502, 503, 504]);
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+function authToken() {
+  try {
+    return localStorage.getItem('authToken') || '';
+  } catch (_) {
+    return '';
+  }
+}
+
 export async function api(path, options = {}) {
   // retry=false de tat thu lai (vd backendReady can tra ket qua nhanh).
   const { retry = true, ...fetchOptions } = options;
@@ -15,8 +23,13 @@ export async function api(path, options = {}) {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     let response;
     try {
+      const token = authToken();
       response = await fetch(API_BASE + path, {
-        headers: { 'Content-Type': 'application/json', ...(fetchOptions.headers || {}) },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(fetchOptions.headers || {}),
+        },
         ...fetchOptions,
       });
     } catch (networkError) {

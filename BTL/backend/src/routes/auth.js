@@ -1,6 +1,7 @@
 const express = require('express');
 const { run, get, hashPassword } = require('../db');
 const { asyncHandler } = require('../lib/http');
+const { signAuthToken } = require('../middleware/auth');
 const { toUserResponse } = require('../serializers');
 const { normalizeUserPayload } = require('../validators');
 
@@ -17,7 +18,7 @@ router.post('/login', asyncHandler(async (req, res) => {
   const password = String(req.body.password || '').trim();
   const user = await get('SELECT id, full_name, email, phone, role, password_hash FROM users WHERE lower(email) = ? OR phone = ?', [account, account]);
   if (!user || user.password_hash !== hashPassword(password)) return res.status(401).json({ message: 'Tài khoản hoặc mật khẩu không đúng.' });
-  res.json(toUserResponse(user));
+  res.json({ ...toUserResponse(user), token: signAuthToken(user) });
 }));
 
 module.exports = router;

@@ -12,6 +12,7 @@ const SEED_PATH = path.join(ROOT_DIR, 'seed-data.json');
 const DIST_DIR = path.join(ROOT_DIR, '..', 'dist');
 
 const PORT = process.env.PORT || 3000;
+const AUTH_SECRET = process.env.AUTH_SECRET || 'mot-store-demo-auth-secret';
 
 // Tang gia tri nay moi khi seed-data.json doi de DB tu seed lai catalog.
 const SEED_VERSION = 'v16-pagination-extra-books-polish';
@@ -29,6 +30,7 @@ module.exports = {
   SEED_PATH,
   DIST_DIR,
   PORT,
+  AUTH_SECRET,
   SEED_VERSION,
   ORDER_STATUSES,
   FEEDBACK_STATUSES,

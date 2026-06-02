@@ -148,6 +148,9 @@ window.handleLogin = async function () {
     } else {
       throw new Error('Tài khoản hoặc mật khẩu không đúng.');
     }
+    if (user.token) localStorage.setItem('authToken', user.token);
+    else localStorage.removeItem('authToken');
+    delete user.token;
     localStorage.setItem('currentUser', JSON.stringify(user));
     window.mergeGuestCart?.(user);
     closeAuth();
