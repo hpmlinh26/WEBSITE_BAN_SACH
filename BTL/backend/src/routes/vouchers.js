@@ -1,24 +1,32 @@
 const express = require('express');
 const { run, get, all } = require('../db');
 const { asyncHandler } = require('../lib/http');
+const { requireAuth, requireAdmin } = require('../middleware/auth');
 const { toVoucherResponse } = require('../serializers');
 const { normalizeVoucherPayload } = require('../validators');
 
 const router = express.Router();
 
-router.get('/', asyncHandler(async (req, res) => {
+router.get('/', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
+  const limit = Number(req.query.limit || 0);
+  const page = Math.max(1, Number(req.query.page || 1));
+  if (limit) {
+    const { count } = await get('SELECT COUNT(*) AS count FROM vouchers');
+    const rows = await all('SELECT * FROM vouchers ORDER BY id DESC LIMIT ? OFFSET ?', [limit, (page - 1) * limit]);
+    return res.json({ data: rows.map(toVoucherResponse), total: count, page, totalPages: Math.ceil(count / limit) });
+  }
   const rows = await all('SELECT * FROM vouchers ORDER BY id DESC');
   res.json(rows.map(toVoucherResponse));
 }));
 
-router.post('/', asyncHandler(async (req, res) => {
+router.post('/', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
   const v = normalizeVoucherPayload(req.body);
   const result = await run('INSERT INTO vouchers(code, title, description, discount_type, discount_value, min_order, active, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [v.code, v.title, v.description, v.discountType, v.discountValue, v.minOrder, v.active, v.expiresAt]);
   const created = await get('SELECT * FROM vouchers WHERE id = ?', [result.id]);
   res.status(201).json(toVoucherResponse(created));
 }));
 
-router.put('/:id', asyncHandler(async (req, res) => {
+router.put('/:id', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
   const exists = await get('SELECT id FROM vouchers WHERE id = ?', [req.params.id]);
   if (!exists) return res.status(404).json({ message: 'Không tìm thấy voucher.' });
   const v = normalizeVoucherPayload(req.body);
@@ -27,7 +35,7 @@ router.put('/:id', asyncHandler(async (req, res) => {
   res.json(toVoucherResponse(updated));
 }));
 
-router.delete('/:id', asyncHandler(async (req, res) => {
+router.delete('/:id', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
   const result = await run('DELETE FROM vouchers WHERE id = ?', [req.params.id]);
   if (!result.changes) return res.status(404).json({ message: 'Không tìm thấy voucher.' });
   res.json({ message: 'Đã xóa voucher.', id: Number(req.params.id) });

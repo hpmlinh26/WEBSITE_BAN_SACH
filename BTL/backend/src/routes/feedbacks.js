@@ -1,12 +1,20 @@
 const express = require('express');
-const { run, all } = require('../db');
+const { run, get, all } = require('../db');
 const { asyncHandler } = require('../lib/http');
+const { requireAuth, requireAdmin } = require('../middleware/auth');
 const { FEEDBACK_STATUSES } = require('../config');
 const { toFeedbackResponse } = require('../serializers');
 
 const router = express.Router();
 
-router.get('/', asyncHandler(async (req, res) => {
+router.get('/', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
+  const limit = Number(req.query.limit || 0);
+  const page = Math.max(1, Number(req.query.page || 1));
+  if (limit) {
+    const { count } = await get('SELECT COUNT(*) AS count FROM feedbacks');
+    const rows = await all('SELECT * FROM feedbacks ORDER BY id DESC LIMIT ? OFFSET ?', [limit, (page - 1) * limit]);
+    return res.json({ data: rows.map(toFeedbackResponse), total: count, page, totalPages: Math.ceil(count / limit) });
+  }
   const rows = await all('SELECT * FROM feedbacks ORDER BY id DESC');
   res.json(rows.map(toFeedbackResponse));
 }));
@@ -25,7 +33,7 @@ router.post('/', asyncHandler(async (req, res) => {
   res.status(201).json({ id: result.id, fullName, email, phone, subject, message, status: 'new' });
 }));
 
-router.patch('/:id/status', asyncHandler(async (req, res) => {
+router.patch('/:id/status', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
   const status = String(req.body.status || 'read').trim();
   if (!FEEDBACK_STATUSES.includes(status)) return res.status(400).json({ message: 'Trạng thái phản hồi không hợp lệ.' });
   const result = await run('UPDATE feedbacks SET status = ? WHERE id = ?', [status, req.params.id]);
