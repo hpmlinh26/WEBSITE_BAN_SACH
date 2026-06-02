@@ -157,6 +157,12 @@ body, .admin-container, .admin-table, .modal-content { font-family: Arial, Helve
 .invoice-link-row .btn-edit { text-decoration: none; display: inline-flex; }
 .admin-footer-minimal { background: transparent; border: 0; font-size: 13px; }
 .form-group small { color:#667085; font-weight:400; }
+.admin-pagination { display:flex; justify-content:center; align-items:center; gap:6px; margin:16px 0 4px; flex-wrap:wrap; }
+.admin-pagination .page-btn { min-width:36px; height:36px; padding:0 10px; border:1px solid #fecdd3; background:#fff; color:#c9192e; border-radius:10px; font-weight:700; cursor:pointer; font-size:14px; transition:background .15s,color .15s; }
+.admin-pagination .page-btn:hover:not(:disabled) { background:#fff0f0; }
+.admin-pagination .page-btn.active { background:#c9192e; color:#fff; border-color:#c9192e; }
+.admin-pagination .page-btn:disabled { opacity:.4; cursor:not-allowed; }
+.admin-pagination .page-dots { padding:0 4px; color:#98a2b3; font-size:14px; }
 @media (max-width: 980px){
   .admin-table { display:block; overflow-x:auto; white-space:nowrap; }
   .admin-table td, .admin-table th { padding: 12px; }

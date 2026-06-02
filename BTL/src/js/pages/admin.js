@@ -29,6 +29,39 @@ const state = {
   vouchers: [],
 };
 
+const ADMIN_PAGE_SIZE = 20;
+const pageState = { products: 1, orders: 1, users: 1, vouchers: 1, feedbacks: 1 };
+
+function adminPaginate(items, key, navId, onPageChange) {
+  const totalPages = Math.max(1, Math.ceil(items.length / ADMIN_PAGE_SIZE));
+  const current = Math.max(1, Math.min(totalPages, pageState[key]));
+  pageState[key] = current;
+  const nav = document.getElementById(navId);
+  if (nav) {
+    if (totalPages <= 1) {
+      nav.innerHTML = '';
+    } else {
+      const clamp = (p) => Math.max(1, Math.min(totalPages, p));
+      const dots = [];
+      for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || Math.abs(i - current) <= 1) dots.push(i);
+        else if (dots[dots.length - 1] !== '...') dots.push('...');
+      }
+      nav.innerHTML = `
+        <button class="page-btn" data-p="${clamp(current - 1)}" ${current === 1 ? 'disabled' : ''}>‹</button>
+        ${dots.map((d) => d === '...' ? '<span class="page-dots">…</span>' : `<button class="page-btn ${d === current ? 'active' : ''}" data-p="${d}">${d}</button>`).join('')}
+        <button class="page-btn" data-p="${clamp(current + 1)}" ${current === totalPages ? 'disabled' : ''}>›</button>`;
+      nav.querySelectorAll('[data-p]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const next = Number(btn.dataset.p);
+          if (next !== current) { pageState[key] = next; onPageChange(); }
+        });
+      });
+    }
+  }
+  return items.slice((current - 1) * ADMIN_PAGE_SIZE, current * ADMIN_PAGE_SIZE);
+}
+
 async function loadFromBackend() {
   try {
     const [categories, products, orders, feedbacks, users, vouchers] = await Promise.all([
@@ -203,8 +236,9 @@ function renderCategories() {
 function renderProducts() {
   const tbody = document.getElementById('productsList');
   if (!tbody) return;
+  const visible = adminPaginate(state.products, 'products', 'productsPageNav', renderProducts);
   tbody.innerHTML =
-    state.products
+    visible
       .map((p) => {
         const category = p.category || p.category_slug;
         return `<tr>
@@ -225,8 +259,9 @@ function renderProducts() {
 function renderOrders() {
   const tbody = document.getElementById('ordersList');
   if (!tbody) return;
+  const visible = adminPaginate(state.orders, 'orders', 'ordersPageNav', renderOrders);
   tbody.innerHTML =
-    state.orders
+    visible
       .map(
         (o) => `
     <tr>
@@ -246,8 +281,9 @@ function renderOrders() {
 function renderFeedbacks() {
   const wrap = document.getElementById('feedbackList');
   if (!wrap) return;
+  const visible = adminPaginate(state.feedbacks, 'feedbacks', 'feedbacksPageNav', renderFeedbacks);
   wrap.innerHTML =
-    state.feedbacks
+    visible
       .map(
         (f) => `
     <article class="feedback-card status-${f.status}">
@@ -265,8 +301,9 @@ function renderFeedbacks() {
 function renderUsers() {
   const tbody = document.getElementById('usersList');
   if (!tbody) return;
+  const visible = adminPaginate(state.users, 'users', 'usersPageNav', renderUsers);
   tbody.innerHTML =
-    state.users
+    visible
       .map(
         (u) => `
     <tr>
@@ -284,8 +321,9 @@ function renderUsers() {
 function renderVouchers() {
   const tbody = document.getElementById('vouchersList');
   if (!tbody) return;
+  const visible = adminPaginate(state.vouchers, 'vouchers', 'vouchersPageNav', renderVouchers);
   tbody.innerHTML =
-    state.vouchers
+    visible
       .map(
         (v) => `
     <tr>
@@ -302,6 +340,7 @@ function renderVouchers() {
 
 async function reloadAll() {
   await loadFromBackend();
+  Object.keys(pageState).forEach((k) => (pageState[k] = 1));
   renderCategories();
   renderProducts();
   renderOrders();
