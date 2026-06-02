@@ -894,6 +894,16 @@ html, body, input, select, button, textarea, a, p, span, strong, small, h1, h2, 
   border-color:var(--mot-red);
   border-bottom-right-radius:6px;
 }
+.mot-ai-msg.support.bot .mot-ai-bubble,
+.mot-ai-msg.bot.support .mot-ai-bubble{
+  border-color:#bfdbfe;
+  background:#eff6ff;
+}
+.mot-ai-msg.support.user .mot-ai-bubble,
+.mot-ai-msg.user.support .mot-ai-bubble{
+  background:#1d4ed8;
+  border-color:#1d4ed8;
+}
 .mot-ai-msg.bot .mot-ai-bubble{ border-bottom-left-radius:6px; }
 .mot-ai-bubble a{ color:var(--mot-red); font-weight:800; text-decoration:none; }
 .mot-ai-msg.user .mot-ai-bubble a{ color:#fff; }
@@ -959,6 +969,245 @@ html, body, input, select, button, textarea, a, p, span, strong, small, h1, h2, 
 @media(max-width:640px){
   .mot-ai-button{ right:16px; bottom:18px; width:58px; height:58px; }
   .mot-ai-panel{ right:12px; bottom:88px; height:520px; }
+}
+
+/* ================= Live support admin dock ================= */
+.mot-admin-chat-button{
+  position:fixed;
+  right:26px;
+  bottom:26px;
+  z-index:7100;
+  border:0;
+  border-radius:8px;
+  background:#111827;
+  color:#fff;
+  padding:12px 15px;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 16px 34px rgba(15,23,42,.24);
+}
+.mot-admin-chat-button b{
+  position:absolute;
+  top:-8px;
+  right:-8px;
+  min-width:22px;
+  height:22px;
+  border-radius:999px;
+  background:var(--mot-red);
+  color:#fff;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  border:2px solid #fff;
+}
+.mot-admin-chat-panel{
+  position:fixed;
+  right:26px;
+  bottom:78px;
+  z-index:7101;
+  width:min(820px, calc(100vw - 40px));
+  height:min(620px, calc(100vh - 110px));
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:8px;
+  box-shadow:0 24px 60px rgba(15,23,42,.24);
+  overflow:hidden;
+  display:none;
+}
+.mot-admin-chat-panel.open{ display:flex; flex-direction:column; }
+.mot-admin-chat-head{
+  min-height:68px;
+  padding:14px 16px;
+  background:#111827;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+.mot-admin-chat-head strong{ display:block; font-size:17px; }
+.mot-admin-chat-head span{ display:block; margin-top:3px; color:#cbd5e1; font-size:12px; }
+.mot-admin-chat-close{
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:8px;
+  background:rgba(255,255,255,.14);
+  color:#fff;
+  font-size:22px;
+  cursor:pointer;
+}
+.mot-admin-chat-main{
+  min-height:0;
+  flex:1;
+  display:grid;
+  grid-template-columns:270px minmax(0,1fr);
+}
+.mot-admin-chat-sessions{
+  min-height:0;
+  overflow:auto;
+  background:#f8fafc;
+  border-right:1px solid #e5e7eb;
+  padding:10px;
+}
+.mot-admin-chat-no-session{
+  color:#64748b;
+  text-align:center;
+  padding:28px 14px;
+  font-size:14px;
+}
+.mot-admin-chat-session{
+  position:relative;
+  width:100%;
+  border:1px solid transparent;
+  border-radius:8px;
+  background:transparent;
+  color:#111827;
+  text-align:left;
+  padding:11px 34px 11px 11px;
+  cursor:pointer;
+  display:block;
+  margin-bottom:8px;
+}
+.mot-admin-chat-session:hover,
+.mot-admin-chat-session.active{
+  background:#fff;
+  border-color:#e5e7eb;
+}
+.mot-admin-chat-session span,
+.mot-admin-chat-session strong,
+.mot-admin-chat-session small,
+.mot-admin-chat-session em,
+.mot-admin-chat-session i{
+  display:block;
+}
+.mot-admin-chat-session strong{ font-size:14px; line-height:1.2; }
+.mot-admin-chat-session small{
+  margin-top:2px;
+  color:#64748b;
+  font-size:11px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.mot-admin-chat-session em{
+  margin-top:8px;
+  color:#475569;
+  font-size:12px;
+  font-style:normal;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.mot-admin-chat-session i{
+  margin-top:6px;
+  color:#94a3b8;
+  font-size:11px;
+  font-style:normal;
+}
+.mot-admin-chat-session i.online{ color:#16a34a; font-weight:800; }
+.mot-admin-chat-session b{
+  position:absolute;
+  right:10px;
+  top:10px;
+  min-width:20px;
+  height:20px;
+  border-radius:999px;
+  background:var(--mot-red);
+  color:#fff;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+}
+.mot-admin-chat-room{
+  min-width:0;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  background:#fff;
+}
+.mot-admin-chat-empty{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  color:#64748b;
+  text-align:center;
+}
+.mot-admin-chat-messages{
+  flex:1;
+  display:none;
+  min-height:0;
+  overflow:auto;
+  padding:18px;
+  background:linear-gradient(180deg,#fff,#f8fafc);
+}
+.mot-admin-chat-msg{
+  margin-bottom:12px;
+  max-width:82%;
+}
+.mot-admin-chat-msg.admin{ margin-left:auto; text-align:right; }
+.mot-admin-chat-msg div{
+  display:inline-block;
+  padding:10px 12px;
+  border-radius:8px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  color:#111827;
+  line-height:1.45;
+  text-align:left;
+}
+.mot-admin-chat-msg.admin div{
+  background:#1d4ed8;
+  border-color:#1d4ed8;
+  color:#fff;
+}
+.mot-admin-chat-msg small{
+  display:block;
+  margin-top:4px;
+  color:#64748b;
+  font-size:11px;
+}
+.mot-admin-chat-form{
+  display:none;
+  gap:8px;
+  padding:12px;
+  border-top:1px solid #e5e7eb;
+  background:#fff;
+}
+.mot-admin-chat-input{
+  flex:1;
+  min-width:0;
+  border:1px solid #cbd5e1;
+  border-radius:8px;
+  padding:11px 12px;
+  font-size:14px;
+  outline:none;
+}
+.mot-admin-chat-input:focus{
+  border-color:#1d4ed8;
+  box-shadow:0 0 0 3px rgba(29,78,216,.12);
+}
+.mot-admin-chat-form button{
+  border:0;
+  border-radius:8px;
+  background:#111827;
+  color:#fff;
+  padding:0 16px;
+  font-weight:800;
+  cursor:pointer;
+}
+@media(max-width:760px){
+  .mot-admin-chat-panel{
+    right:10px;
+    bottom:72px;
+    width:calc(100vw - 20px);
+  }
+  .mot-admin-chat-main{ grid-template-columns:1fr; grid-template-rows:160px minmax(0,1fr); }
+  .mot-admin-chat-sessions{ border-right:0; border-bottom:1px solid #e5e7eb; }
 }
 
 /* Fix: dong bo font nut "SAN PHAM" (button.dropdown-btn) voi cac link nav khac.
