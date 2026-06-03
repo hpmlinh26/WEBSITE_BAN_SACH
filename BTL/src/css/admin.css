@@ -472,3 +472,136 @@ html, body, button, input, select, textarea,
 
 /* Cac quy tac patch V18 (cursor Luffy, toolbar...) da gom ve enhancements.css
    (nap cuoi cung tren moi trang) de tranh trung lap. */
+
+/* ===================================================================
+   DASHBOARD v2 — Redesign & Analytics Page
+   (Chuyen tu style.css sang day vi trang admin KHONG nap style.css)
+   =================================================================== */
+
+/* Welcome bar */
+.db-welcome{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:22px; padding:22px 26px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-lg); box-shadow:var(--shadow-card);
+}
+.db-welcome-text h1{ font-size:22px; font-weight:800; color:var(--text); margin:0 0 4px; }
+.db-welcome-text p{ color:var(--text-muted); margin:0; font-size:13.5px; }
+.db-welcome-actions{ display:flex; gap:12px; align-items:center; }
+
+.btn-db-analytics{
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--mot-red); color:#fff;
+  border-radius:999px; padding:11px 20px;
+  font-weight:700; font-size:13.5px; text-decoration:none;
+  box-shadow:0 8px 18px rgba(201,33,39,.18); transition:.2s;
+}
+.btn-db-analytics:hover{ background:var(--mot-red-dark); }
+
+/* KPI 4-card row — dong bo voi .admin-dashboard-card cua he thong */
+.db-kpi-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:18px; }
+
+.db-kpi-card{
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-md); padding:22px;
+  display:flex; gap:16px; align-items:flex-start;
+  box-shadow:var(--shadow-card);
+  transition:box-shadow .2s ease, transform .2s ease;
+}
+.db-kpi-card:hover{ transform:translateY(-2px); box-shadow:var(--shadow-card-hover); }
+
+.db-kpi-icon{
+  font-size:20px; width:44px; height:44px; flex:0 0 44px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:12px; background:var(--chip-bg);
+}
+
+.db-kpi-content{ display:flex; flex-direction:column; min-width:0; }
+.db-kpi-label{
+  font-size:11.5px; color:var(--text-muted); font-weight:600;
+  text-transform:uppercase; letter-spacing:.04em; margin-bottom:7px;
+}
+.db-kpi-value{ font-size:26px; font-weight:800; color:var(--text); line-height:1.1; margin-bottom:5px; }
+.db-kpi-content small{ font-size:11.5px; color:var(--text-faint); }
+
+/* Secondary metrics row */
+.db-meta-row{ display:flex; gap:14px; margin-bottom:24px; flex-wrap:wrap; }
+.db-meta-card{
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:14px; padding:14px 18px;
+  display:flex; gap:12px; align-items:center; flex:1 1 0; min-width:130px;
+  box-shadow:var(--shadow-card); transition:box-shadow .2s ease;
+}
+.db-meta-card:hover{ box-shadow:var(--shadow-card-hover); }
+.db-meta-icon{
+  font-size:16px; width:36px; height:36px; flex:0 0 36px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:10px; background:var(--chip-bg);
+}
+.db-meta-card strong{ font-size:19px; font-weight:800; color:var(--text); display:block; line-height:1.1; }
+.db-meta-card label{ font-size:11.5px; color:var(--text-muted); font-weight:600; cursor:default; }
+.db-meta-warn strong{ color:#ea580c; }
+.db-meta-warn .db-meta-icon{ background:#fff7ed; }
+
+/* Charts grid (3 cols: status | category | low-stock) */
+.db-content-grid{ display:grid; grid-template-columns:1fr 1fr .85fr; gap:22px; margin-bottom:26px; }
+.db-chart-section{ min-height:270px; }
+.db-lowstock-section .low-stock-list{ max-height:230px; overflow-y:auto; }
+
+/* Activity grid (recent orders | feedbacks) */
+.db-activity-grid{ display:grid; grid-template-columns:1.25fr 1fr; gap:22px; margin-bottom:28px; }
+
+/* "View all" link in section headers */
+.db-link-more{ font-size:12.5px; color:var(--mot-red); font-weight:700; text-decoration:none; }
+.db-link-more:hover{ text-decoration:underline; }
+
+/* Analytics CTA banner — tong do thuong hieu (giong gradient sidebar) */
+.db-analytics-cta{
+  background:linear-gradient(135deg,var(--mot-red-dark) 0%,var(--mot-red) 100%);
+  border-radius:var(--radius-md); padding:26px 32px;
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:32px; gap:24px;
+}
+.db-cta-text h3{ color:#fff; font-size:17px; font-weight:800; margin:0 0 5px; }
+.db-cta-text p{ color:rgba(255,255,255,.82); margin:0; font-size:13.5px; }
+.btn-cta-analytics{
+  background:#fff; color:var(--mot-red); border-radius:999px; padding:12px 22px;
+  font-weight:800; text-decoration:none; font-size:13.5px; white-space:nowrap; transition:.2s;
+  flex-shrink:0;
+}
+.btn-cta-analytics:hover{ background:var(--mot-red-soft); }
+
+/* ===== ANALYTICS PAGE ===== */
+.analytics-chart-full{ margin-bottom:22px; }
+
+.analytics-canvas-wrap{
+  position:relative; width:100%; padding:8px 0;
+}
+.analytics-canvas-wrap canvas{ width:100% !important; max-height:300px; }
+.analytics-tall canvas{ max-height:380px !important; }
+
+.analytics-doughnut-wrap{
+  display:flex; justify-content:center; align-items:center;
+  padding:12px; max-height:320px;
+}
+.analytics-doughnut-wrap canvas{ max-width:300px; max-height:300px; }
+
+.analytics-2col{ display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:22px; }
+
+/* ===== Responsive dashboard ===== */
+@media(max-width:1300px){
+  .db-kpi-grid{ grid-template-columns:1fr 1fr; }
+  .db-content-grid{ grid-template-columns:1fr 1fr; }
+  .db-lowstock-section{ grid-column:1/-1; }
+}
+@media(max-width:1100px){
+  .db-content-grid{ grid-template-columns:1fr; }
+  .db-activity-grid{ grid-template-columns:1fr; }
+  .analytics-2col{ grid-template-columns:1fr; }
+  .db-analytics-cta{ flex-direction:column; text-align:center; }
+}
+@media(max-width:760px){
+  .db-kpi-grid{ grid-template-columns:1fr; }
+  .db-meta-card{ flex:1 1 calc(50% - 7px); }
+  .db-welcome{ flex-direction:column; gap:14px; }
+}
