@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Vai trò &amp; phân quyền</title>
+  <title>Admin - Thư phản hồi & Nhận tin</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="admin-roles-page">
+<body class="admin-feedbacks-page">
   <div class="admin-container">
     <aside class="admin-sidebar">
       <div class="sidebar-header"><h2>MOT Admin</h2><p>Quản trị bán hàng</p></div>
@@ -21,26 +21,29 @@
         <a href="/pages/admin/orders.html" class="nav-item" data-module="orders">Quản lý đơn hàng</a>
         <a href="/pages/admin/blogs.html" class="nav-item" data-module="blogs">Quản lý blog</a>
         <a href="/pages/admin/vouchers.html" class="nav-item" data-module="vouchers">Quản lý voucher</a>
-        <a href="/pages/admin/feedbacks.html" class="nav-item" data-module="feedbacks,newsletter">Thư phản hồi & nhận tin</a>
-        <a href="/pages/admin/roles.html" class="nav-item active" data-module="roles">Vai trò &amp; phân quyền</a>
+        <a href="/pages/admin/feedbacks.html" class="nav-item active" data-module="feedbacks,newsletter">Thư phản hồi & nhận tin</a>
+        <a href="/pages/admin/roles.html" class="nav-item" data-module="roles">Vai trò &amp; phân quyền</a>
       </nav>
     </aside>
     <main class="admin-main">
       <div class="admin-header">
-        <div><h1>Vai trò &amp; phân quyền</h1><p>Cấu hình quyền truy cập từng module cho mỗi vai trò.</p></div>
+        <div><h1>Thư phản hồi & Đăng ký nhận tin</h1><p>Quản lý phản hồi từ trang Liên hệ và danh sách email đăng ký nhận bản tin.</p></div>
         <div class="admin-actions"><button class="btn-add light" onclick="reloadAdminData()">Tải lại</button></div>
       </div>
 
-      <div class="admin-tabs" id="rolesTabs"></div>
+      <section class="admin-section" id="feedbackAdminSection" data-perm="feedbacks:view">
+        <div class="section-title-row"><h2>Thư phản hồi của người dùng</h2><p>Phản hồi gửi từ trang Liên hệ sẽ hiển thị tại đây.</p></div>
+        <div id="feedbackList" class="feedback-admin-list"></div>
+        <div id="feedbacksPageNav" class="admin-pagination"></div>
+      </section>
 
-      <section class="admin-section">
-        <p class="roles-hint" id="rolesHint"></p>
-        <div class="roles-matrix-wrap">
-          <table class="admin-table roles-matrix" id="rolesMatrix"></table>
-        </div>
-        <div class="admin-actions" style="margin-top:18px">
-          <button class="btn-save" id="rolesSaveBtn" data-perm="roles:edit" onclick="saveRolePermissions()">Lưu phân quyền</button>
-        </div>
+      <section class="admin-section" id="newsletterSection" data-perm="newsletter:view">
+        <div class="section-title-row"><h2>Đăng ký nhận tin</h2><p>Danh sách email đăng ký nhận bản tin từ website.</p></div>
+        <table class="admin-table">
+          <thead><tr><th>ID</th><th>Email</th><th>Ngày đăng ký</th></tr></thead>
+          <tbody id="newsletterList"></tbody>
+        </table>
+        <div id="newsletterPageNav" class="admin-pagination"></div>
       </section>
 
       <footer class="admin-footer-minimal">© 2026 MOT Store Admin</footer>
