@@ -82,6 +82,8 @@ async function createSchema() {
   // Trang thai thanh toan online (VNPay): unpaid | paid | failed. payment_ref luu ma giao dich VNPay.
   await ensureColumn('orders', 'payment_status', "TEXT DEFAULT 'unpaid'");
   await ensureColumn('orders', 'payment_ref', 'TEXT');
+  // Ma giao dich (transId) MoMo tra ve khi thanh toan thanh cong - bat buoc de hoan tien.
+  await ensureColumn('orders', 'payment_trans_id', 'TEXT');
 
   await run(`CREATE TABLE IF NOT EXISTS order_items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

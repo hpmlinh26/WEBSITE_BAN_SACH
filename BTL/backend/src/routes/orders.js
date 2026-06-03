@@ -6,6 +6,7 @@ const { requireAuth, requirePermission } = require('../middleware/auth');
 const { can } = require('../db/permissions');
 const { toOrderResponse, toOrderItemResponse } = require('../serializers');
 const { validateOrderPayload } = require('../validators');
+const { refundOrder } = require('./payment');
 
 const router = express.Router();
 
@@ -108,7 +109,24 @@ router.patch('/:id/cancel', requireAuth, asyncHandler(async (req, res) => {
     }
     await run('UPDATE orders SET status = ? WHERE id = ?', ['cancelled', orderId]);
   });
-  res.json({ id: orderId, status: 'cancelled', message: 'Đã hủy đơn hàng.' });
+
+  // Don da thanh toan qua MoMo -> tu dong hoan tien cho khach. Loi hoan tien khong chan
+  // viec huy don (don da huy + hoan kho), chi bao lai de admin xu ly thu cong neu can.
+  let refund = { refunded: false };
+  if (order.payment_method === 'momo' && order.payment_status === 'paid') {
+    try {
+      refund = await refundOrder(order);
+    } catch (err) {
+      refund = { refunded: false, error: err.message };
+    }
+  }
+
+  const message = refund.refunded
+    ? 'Đã hủy đơn hàng và hoàn tiền qua MoMo.'
+    : refund.error
+      ? 'Đã hủy đơn hàng. Hoàn tiền MoMo thất bại, vui lòng liên hệ hỗ trợ.'
+      : 'Đã hủy đơn hàng.';
+  res.json({ id: orderId, status: 'cancelled', message, refund });
 }));
 
 router.patch('/:id/status', requireAuth, requirePermission('orders', 'edit'), asyncHandler(async (req, res) => {

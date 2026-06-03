@@ -56,6 +56,53 @@ async function createPayment({ orderDbId, amount, orderInfo, requestId, momoOrde
   return { payUrl: data.payUrl, momoOrderId };
 }
 
+// Hoan tien giao dich da thanh toan toi MoMo AIO v2.
+// transId: ma giao dich goc MoMo tra ve (KHONG phai orderId cua minh).
+// orderId: ma yeu cau hoan tien MOI (phai khac orderId goc).
+// amount: so tien hoan (sandbox mac dinh chi cho hoan toan bo = so tien goc).
+async function refund({ amount, transId, orderId, requestId, description }) {
+  if (!MOMO.refundEndpoint) {
+    const err = new Error('Chưa cấu hình MOMO_REFUND_ENDPOINT.');
+    err.status = 500;
+    throw err;
+  }
+
+  // Thu tu field khi ky refund KHAC voi luc create (alphabet, khong duoc doi).
+  const rawSignature =
+    `accessKey=${MOMO.accessKey}` +
+    `&amount=${amount}` +
+    `&description=${description}` +
+    `&orderId=${orderId}` +
+    `&partnerCode=${MOMO.partnerCode}` +
+    `&requestId=${requestId}` +
+    `&transId=${transId}`;
+
+  const body = {
+    partnerCode: MOMO.partnerCode,
+    orderId,
+    requestId,
+    amount: Number(amount),
+    transId: Number(transId),
+    lang: MOMO.lang,
+    description: description || '',
+    signature: sign(rawSignature),
+  };
+
+  const res = await fetch(MOMO.refundEndpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (data.resultCode !== 0) {
+    const err = new Error(data.message || 'MoMo từ chối hoàn tiền.');
+    err.status = 502;
+    err.momo = data;
+    throw err;
+  }
+  return data;
+}
+
 // Xac thuc chu ky MoMo gui kem khi redirect/IPN. Tra ve true neu hop le.
 function verifyCallback(params) {
   const rawSignature =
@@ -85,4 +132,4 @@ function decodeExtraData(extraData) {
   }
 }
 
-module.exports = { createPayment, verifyCallback, decodeExtraData, sign };
+module.exports = { createPayment, refund, verifyCallback, decodeExtraData, sign };

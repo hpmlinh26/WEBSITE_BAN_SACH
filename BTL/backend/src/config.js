@@ -98,6 +98,10 @@ const MOMO = {
   accessKey: process.env.MOMO_ACCESS_KEY || '',
   secretKey: process.env.MOMO_SECRET_KEY || '',
   endpoint: process.env.MOMO_ENDPOINT || '',
+  // Endpoint hoan tien. Mac dinh suy ra tu endpoint create (.../create -> .../refund).
+  refundEndpoint:
+    process.env.MOMO_REFUND_ENDPOINT ||
+    (process.env.MOMO_ENDPOINT || '').replace(/\/create$/, '/refund'),
   requestType: process.env.MOMO_REQUEST_TYPE || 'payWithMethod',
   lang: process.env.MOMO_LANG || 'vi',
   // MoMo redirect nguoi dung ve URL nay (browser-side) sau khi thanh toan.
