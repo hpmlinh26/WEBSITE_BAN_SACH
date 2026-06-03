@@ -1,4 +1,7 @@
 const path = require('path');
+// Nap bien moi truong tu backend/.env (neu co). Tren Render, bien duoc cau hinh
+// truc tiep trong render.yaml / Dashboard nen khong can file .env.
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 // backend/ root (file nay nam trong backend/src/).
 const ROOT_DIR = path.join(__dirname, '..');
@@ -82,7 +85,32 @@ const DEFAULT_PERMISSIONS = {
 
 const PLACEHOLDER_IMAGE = '/assets/images/placeholder-cover.svg';
 
+// URL goc cua app (de MoMo redirect ve sau khi thanh toan).
+// - Local: lay tu env APP_BASE_URL, mac dinh http://localhost:PORT.
+// - Render: tu dong dung RENDER_EXTERNAL_URL (Render bom san), nen redirect/IPN
+//   luon tro dung domain that ma khong can cau hinh tay.
+const APP_BASE_URL = process.env.APP_BASE_URL || process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+
+// Cau hinh cong thanh toan MoMo. Toan bo lay tu bien moi truong (xem backend/.env.example).
+// Local: dien trong backend/.env. Deploy: dien trong render.yaml hoac Render Dashboard.
+const MOMO = {
+  partnerCode: process.env.MOMO_PARTNER_CODE || '',
+  accessKey: process.env.MOMO_ACCESS_KEY || '',
+  secretKey: process.env.MOMO_SECRET_KEY || '',
+  endpoint: process.env.MOMO_ENDPOINT || '',
+  requestType: process.env.MOMO_REQUEST_TYPE || 'payWithMethod',
+  lang: process.env.MOMO_LANG || 'vi',
+  // MoMo redirect nguoi dung ve URL nay (browser-side) sau khi thanh toan.
+  redirectUrl: process.env.MOMO_REDIRECT_URL || `${APP_BASE_URL}/api/payment/momo/return`,
+  // MoMo goi server-to-server bao ket qua (chi hoat dong khi URL cong khai internet).
+  ipnUrl: process.env.MOMO_IPN_URL || `${APP_BASE_URL}/api/payment/momo/ipn`,
+  // Trang hoa don de redirect tiep sau khi xu ly ket qua.
+  invoicePath: process.env.MOMO_INVOICE_PATH || '/pages/invoice.html',
+};
+
 module.exports = {
+  APP_BASE_URL,
+  MOMO,
   ROOT_DIR,
   DATA_DIR,
   DB_PATH,

@@ -79,6 +79,9 @@ async function createSchema() {
     FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL
   )`);
   await ensureColumn('orders', 'user_id', 'INTEGER');
+  // Trang thai thanh toan online (VNPay): unpaid | paid | failed. payment_ref luu ma giao dich VNPay.
+  await ensureColumn('orders', 'payment_status', "TEXT DEFAULT 'unpaid'");
+  await ensureColumn('orders', 'payment_ref', 'TEXT');
 
   await run(`CREATE TABLE IF NOT EXISTS order_items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

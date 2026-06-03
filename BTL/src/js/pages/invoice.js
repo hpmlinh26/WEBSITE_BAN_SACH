@@ -9,7 +9,35 @@ function _lastOrderKey() {
     return user?.id ? `lastOrderId:${user.id}` : 'lastOrderId';
   } catch (_) { return 'lastOrderId'; }
 }
-const id = new URLSearchParams(location.search).get('orderId') || localStorage.getItem(_lastOrderKey());
+const params = new URLSearchParams(location.search);
+const id = params.get('orderId') || localStorage.getItem(_lastOrderKey());
+const paymentResult = params.get('payment'); // 'success' | 'failed' | null (sau khi MoMo redirect ve)
+
+// Nhan hien thi cho trang thai thanh toan.
+const PAYMENT_LABELS = { paid: 'Đã thanh toán', unpaid: 'Chưa thanh toán', failed: 'Thanh toán thất bại' };
+
+function paymentBanner(order) {
+  if (paymentResult === 'success' || order.paymentStatus === 'paid') {
+    return `<div class="pay-banner pay-ok">✓ Thanh toán MoMo thành công. Cảm ơn bạn!</div>`;
+  }
+  if (paymentResult === 'failed' || order.paymentStatus === 'failed') {
+    return `<div class="pay-banner pay-fail">✕ Thanh toán MoMo chưa hoàn tất. Bạn có thể thử lại bên dưới.</div>`;
+  }
+  return '';
+}
+
+async function payAgain(orderId, btn) {
+  btn.disabled = true;
+  btn.textContent = 'Đang chuyển tới MoMo...';
+  try {
+    const { payUrl } = await api('/payment/momo/create', { method: 'POST', body: JSON.stringify({ orderId }) });
+    window.location.href = payUrl;
+  } catch (error) {
+    btn.disabled = false;
+    btn.textContent = 'Thanh toán lại bằng MoMo';
+    alert(error.message || 'Không tạo được giao dịch MoMo.');
+  }
+}
 
 async function render() {
   if (!id) {
@@ -21,14 +49,16 @@ async function render() {
     const items = order.items || [];
     const itemSubtotal = items.reduce((sum, item) => sum + Number(item.subtotal || item.price * item.quantity || 0), 0);
     const discount = Math.max(0, itemSubtotal - Number(order.total || 0));
+    const canRetryMomo = order.paymentMethod === 'momo' && order.paymentStatus !== 'paid';
     root.innerHTML = `
+      ${paymentBanner(order)}
       <div class="invoice-head">
         <div class="brand"><img src="/assets/images/logo.png" alt="MOT"><div><h1>MOT Store</h1><p>Phòng B706, Tầng 7, Tòa A, Trường Đại học Thăng Long, Hà Nội</p></div></div>
         <div class="invoice-code"><h2>HÓA ĐƠN ĐIỆN TỬ</h2><p>Mã đơn: <b>#${order.id}</b></p><p>Ngày lập: ${order.date || String(order.createdAt || '').slice(0, 10)}</p></div>
       </div>
       <div class="invoice-grid">
         <div class="info-box"><h3>Thông tin khách hàng</h3><p><b>Họ tên:</b> ${escapeHtml(order.customerName || order.customer)}</p><p><b>SĐT:</b> ${escapeHtml(order.phone || '')}</p><p><b>Email:</b> ${escapeHtml(order.email || '')}</p></div>
-        <div class="info-box"><h3>Giao hàng & thanh toán</h3><p><b>Địa chỉ:</b> ${escapeHtml(order.shippingAddress || '')}</p><p><b>Phương thức:</b> ${escapeHtml(order.paymentMethod || 'COD')}</p><p><b>Trạng thái:</b> ${escapeHtml(order.status || 'pending')}</p></div>
+        <div class="info-box"><h3>Giao hàng & thanh toán</h3><p><b>Địa chỉ:</b> ${escapeHtml(order.shippingAddress || '')}</p><p><b>Phương thức:</b> ${escapeHtml(order.paymentMethod || 'COD')}</p><p><b>Thanh toán:</b> ${escapeHtml(PAYMENT_LABELS[order.paymentStatus] || 'Chưa thanh toán')}</p><p><b>Trạng thái:</b> ${escapeHtml(order.status || 'pending')}</p>${canRetryMomo ? `<button id="btnPayMomo" class="btn-pay-momo">Thanh toán lại bằng MoMo</button>` : ''}</div>
       </div>
       <table class="invoice-table"><thead><tr><th>Sản phẩm</th><th>Đơn giá</th><th>SL</th><th>Thành tiền</th></tr></thead><tbody>
         ${items
@@ -40,6 +70,8 @@ async function render() {
       </tbody></table>
       <div class="invoice-total"><div><span>Tạm tính</span><b>${money(itemSubtotal)}</b></div>${discount ? `<div><span>Ưu đãi</span><b>-${money(discount)}</b></div>` : ''}<div><span>Phí vận chuyển</span><b>0đ</b></div><div class="grand"><span>Tổng cộng</span><b>${money(order.total)}</b></div></div>
       <p class="invoice-note">Cảm ơn bạn đã mua hàng tại MOT Store. Hóa đơn này dùng cho demo bài tập lớn Công nghệ Web.</p>`;
+    const retryBtn = document.getElementById('btnPayMomo');
+    retryBtn?.addEventListener('click', () => payAgain(order.id, retryBtn));
   } catch (error) {
     root.innerHTML = `<p>${escapeHtml(error.message)}</p>`;
   }

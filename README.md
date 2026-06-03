@@ -125,3 +125,30 @@ node backend/server.js
 ```
 
 On Render free plan, SQLite data is stored on temporary disk. Product seed data is restored on startup; newly created orders/users can reset after redeploy or service sleep.
+
+## Thanh toán MoMo (sandbox)
+
+Tích hợp cổng thanh toán **MoMo AIO v2** (môi trường test). Khi khách chọn phương thức **Ví MoMo** ở trang thanh toán, hệ thống tạo đơn → gọi MoMo lấy `payUrl` → chuyển hướng sang trang MoMo → sau khi thanh toán, MoMo redirect về `/api/payment/momo/return`, backend xác thực chữ ký (HMAC-SHA256) và cập nhật `payment_status` của đơn, rồi đưa khách về hóa đơn.
+
+**Cấu hình** (xem `BTL/backend/.env.example`):
+
+```bash
+cd BTL/backend
+cp .env.example .env   # bộ credential test công khai của MoMo đã điền sẵn
+```
+
+- Local: biến nạp từ `backend/.env` (đã `.gitignore`).
+- Render: biến khai báo trong `render.yaml`; `APP_BASE_URL` tự lấy `RENDER_EXTERNAL_URL` nên `return`/`ipn` trỏ đúng domain.
+- IPN (`/api/payment/momo/ipn`) chỉ chạy khi URL public (Render) — localhost chỉ dùng luồng `return`.
+
+**Thẻ test MoMo (sandbox)** — quét QR bằng app MoMo test hoặc dùng thẻ ATM nội địa NCB:
+
+| Trường | Giá trị |
+| --- | --- |
+| Ngân hàng | NCB |
+| Số thẻ | `9704 0000 0000 0018` |
+| Tên chủ thẻ | `NGUYEN VAN A` |
+| Ngày phát hành | `03/07` |
+| OTP | `OTP` |
+
+Các phương thức ví khác (ZaloPay/ShopeePay/VNPay) chỉ là QR demo mô phỏng; **chỉ MoMo là luồng thanh toán thật**.

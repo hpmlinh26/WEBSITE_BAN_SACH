@@ -25,6 +25,29 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "22"
+      # APP_BASE_URL khong can dat: config tu dong dung RENDER_EXTERNAL_URL
+      # (Render bom san) nen redirect/IPN cua MoMo tro dung domain that.
+      # ===== Thanh toan MoMo =====
+      # sync: false => KHONG luu gia tri trong git. Khi Apply Blueprint, Render
+      # se hoi va luu cac bien nay trong Dashboard (Environment).
+      # Nhap bo credential TEST cong khai cua MoMo (xem backend/.env.example) hoac
+      # credential merchant that:
+      #   MOMO_PARTNER_CODE   = MOMOBKUN20180529
+      #   MOMO_ACCESS_KEY     = klm05TvNBzhg7h7j
+      #   MOMO_SECRET_KEY     = at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa
+      #   MOMO_ENDPOINT       = https://test-payment.momo.vn/v2/gateway/api/create
+      - key: MOMO_PARTNER_CODE
+        sync: false
+      - key: MOMO_ACCESS_KEY
+        sync: false
+      - key: MOMO_SECRET_KEY
+        sync: false
+      - key: MOMO_ENDPOINT
+        sync: false
+      - key: MOMO_REQUEST_TYPE
+        value: payWithMethod
+      - key: MOMO_LANG
+        value: vi
       # - key: DATA_DIR
       #   value: /var/data
     # disk:

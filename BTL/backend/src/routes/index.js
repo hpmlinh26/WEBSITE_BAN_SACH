@@ -15,5 +15,6 @@ router.use('/vouchers', require('./vouchers'));
 router.use('/feedbacks', require('./feedbacks'));
 router.use('/newsletter', require('./newsletter'));
 router.use('/blogs', require('./blogs'));
+router.use('/payment', require('./payment'));
 
 module.exports = router;

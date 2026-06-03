@@ -61,6 +61,8 @@ function toOrderResponse(row) {
     email: row.customer_email,
     shippingAddress: row.shipping_address,
     paymentMethod: row.payment_method,
+    paymentStatus: row.payment_status || 'unpaid',
+    paymentRef: row.payment_ref || null,
     status: row.status,
     total: row.total,
     date: String(row.created_at || '').slice(0, 10),

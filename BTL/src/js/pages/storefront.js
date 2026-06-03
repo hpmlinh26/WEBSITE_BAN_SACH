@@ -859,6 +859,18 @@ function initPayPage() {
       panel.innerHTML = '';
       return;
     }
+    // MoMo la cong thanh toan that (sandbox): khong dung QR demo, se redirect sang MoMo khi xac nhan.
+    if (method === 'momo') {
+      panel.style.display = 'grid';
+      panel.innerHTML = `
+        <div class="qr-box" style="display:flex;align-items:center;justify-content:center;font-size:34px">🟣</div>
+        <div class="qr-info">
+          <strong>Thanh toán qua Ví MoMo</strong>
+          <span>Cổng thanh toán thật (môi trường test)</span>
+          <small>Sau khi bấm "Xác nhận thanh toán", bạn sẽ được chuyển tới trang MoMo để hoàn tất giao dịch, rồi quay lại hóa đơn.</small>
+        </div>`;
+      return;
+    }
     const code = `${method.toUpperCase()}-MOT-${Date.now().toString().slice(-6)}`;
     panel.style.display = 'grid';
     panel.innerHTML = `
@@ -949,8 +961,10 @@ function initPayPage() {
     };
     try {
       let order;
+      let fromBackend = false;
       try {
         order = await api('/orders', { method: 'POST', body: JSON.stringify(payload) });
+        fromBackend = true;
         const _u = getCurrentUser(); if (_u?.id) api(`/cart/by-user/${_u.id}`, { method: 'DELETE' }).catch(() => {});
       } catch (backendError) {
         const localOrders = JSON.parse(localStorage.getItem('motOrders') || '[]');
@@ -961,6 +975,21 @@ function initPayPage() {
       setCart({});
       const _lastKey = ((_uid) => _uid ? `lastOrderId:${_uid}` : 'lastOrderId')(getCurrentUser()?.id);
       localStorage.setItem(_lastKey, String(order.id));
+
+      // Thanh toan online qua MoMo: tao giao dich roi chuyen huong sang cong MoMo.
+      if (paymentMethod === 'momo' && fromBackend) {
+        confirmBtn.textContent = 'ĐANG CHUYỂN TỚI MOMO...';
+        try {
+          const { payUrl } = await api('/payment/momo/create', { method: 'POST', body: JSON.stringify({ orderId: order.id }) });
+          window.location.href = payUrl;
+          return;
+        } catch (payError) {
+          toast(payError.message || 'Không tạo được giao dịch MoMo, đơn được giữ ở trạng thái chờ thanh toán.', 'error');
+          window.location.href = `/pages/invoice.html?orderId=${order.id}&payment=failed`;
+          return;
+        }
+      }
+
       toast(`Đặt hàng thành công! Mã đơn: #${order.id}`);
       window.location.href = `/pages/invoice.html?orderId=${order.id}`;
     } catch (error) {
