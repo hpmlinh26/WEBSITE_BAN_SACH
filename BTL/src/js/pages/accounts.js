@@ -317,6 +317,23 @@ function renderOrderPagination(total) {
   });
 }
 
+function formatDeliveryDate(createdAt) {
+  const date = new Date(createdAt || Date.now());
+  date.setDate(date.getDate() + 5);
+  return `${date.getDate()} Tháng ${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
+window.cancelUserOrder = async function (orderId) {
+  if (!confirm('Bạn có chắc muốn hủy đơn hàng này không?')) return;
+  try {
+    await api(`/orders/${orderId}/cancel`, { method: 'PATCH' });
+    alert('Đã hủy đơn hàng.');
+    loadOrders();
+  } catch (error) {
+    alert(error.message || 'Không thể hủy đơn hàng.');
+  }
+};
+
 function renderOrders(orders, total = orders.length) {
   loadedOrderDetails = orders || [];
   window.__motUserOrders = loadedOrderDetails;
@@ -356,8 +373,8 @@ function renderOrders(orders, total = orders.length) {
                     .join('') || '<p>Đơn hàng chưa có sản phẩm chi tiết.</p>'
                 }
             </div>
-            <div class="delivery-notice-box"><div class="notice-badge">Ngày giao hàng dự kiến: 20 Tháng 05</div><p class="notice-subtext">Tổng thanh toán: <b>${money(order.total)}</b></p></div>
-            <div class="order-footer-actions"><button class="btn-order-action" onclick="openUserOrderDetail(${order.id})">Xem chi tiết</button><a class="btn-order-action muted" href="/pages/invoice.html?orderId=${order.id}">Xuất hóa đơn</a></div>
+            <div class="delivery-notice-box"><div class="notice-badge">Ngày giao hàng dự kiến: ${formatDeliveryDate(order.createdAt)}</div><p class="notice-subtext">Tổng thanh toán: <b>${money(order.total)}</b></p></div>
+            <div class="order-footer-actions"><button class="btn-order-action" onclick="openUserOrderDetail(${order.id})">Xem chi tiết</button><a class="btn-order-action muted" href="/pages/invoice.html?orderId=${order.id}">Xuất hóa đơn</a>${['pending', 'packing'].includes(order.status) ? `<button class="btn-order-action danger" onclick="cancelUserOrder(${order.id})">Hủy đơn</button>` : ''}</div>
         </div>`;
     })
     .join('');

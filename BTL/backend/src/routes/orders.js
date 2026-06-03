@@ -89,6 +89,28 @@ router.post('/', asyncHandler(async (req, res) => {
   res.status(201).json({ id: orderId, customerName: payload.customerName, total, status: payload.status });
 }));
 
+router.patch('/:id/cancel', requireAuth, asyncHandler(async (req, res) => {
+  const orderId = Number(req.params.id);
+  const order = await get('SELECT * FROM orders WHERE id = ?', [orderId]);
+  if (!order) return res.status(404).json({ message: 'Không tìm thấy đơn hàng.' });
+  if (Number(order.user_id) !== Number(req.user.id) && !can(req.user.role, 'orders', 'edit')) {
+    return res.status(403).json({ message: 'Bạn không có quyền hủy đơn hàng này.' });
+  }
+  if (!['pending', 'packing'].includes(order.status)) {
+    return res.status(400).json({ message: 'Chỉ có thể hủy đơn khi đang chờ lấy hàng hoặc đang chuẩn bị.' });
+  }
+  const items = await all('SELECT * FROM order_items WHERE order_id = ?', [orderId]);
+  await transaction(async () => {
+    for (const item of items) {
+      if (item.product_id) {
+        await run('UPDATE products SET stock = stock + ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [item.quantity, item.product_id]);
+      }
+    }
+    await run('UPDATE orders SET status = ? WHERE id = ?', ['cancelled', orderId]);
+  });
+  res.json({ id: orderId, status: 'cancelled', message: 'Đã hủy đơn hàng.' });
+}));
+
 router.patch('/:id/status', requireAuth, requirePermission('orders', 'edit'), asyncHandler(async (req, res) => {
   const status = String(req.body.status || '').trim();
   if (!ORDER_STATUSES.includes(status)) return res.status(400).json({ message: 'Trạng thái không hợp lệ.' });
