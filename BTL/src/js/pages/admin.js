@@ -144,8 +144,8 @@ function renderDashboard() {
     const el = document.getElementById(id);
     if (el) el.textContent = value;
   };
-  const completedOrders = state.orders.filter((o) => o.status === 'completed');
-  const revenue = completedOrders.reduce((s, o) => s + Number(o.total || 0), 0);
+  const paidOrders = state.orders.filter((o) => o.paymentStatus === 'paid');
+  const revenue = paidOrders.reduce((s, o) => s + Number(o.total || 0), 0);
   const pendingCount = state.orders.filter((o) => ['pending', 'packing', 'shipping'].includes(o.status)).length;
   const lowStock = state.products.filter((p) => Number(p.stock || 0) <= 10).sort((a, b) => Number(a.stock || 0) - Number(b.stock || 0));
 
@@ -258,7 +258,7 @@ function renderAnalytics() {
 
   const revenueByMonth = months.map((m) =>
     state.orders
-      .filter((o) => o.status === 'completed')
+      .filter((o) => o.paymentStatus === 'paid')
       .filter((o) => { const d = new Date(o.date || o.createdAt || ''); return d.getFullYear() === m.year && d.getMonth() === m.month; })
       .reduce((s, o) => s + Number(o.total || 0), 0)
   );
@@ -351,7 +351,7 @@ function renderAnalytics() {
     return {
       name: c.name,
       revenue: state.orders
-        .filter((o) => o.status === 'completed')
+        .filter((o) => o.paymentStatus === 'paid')
         .reduce((sum, o) => {
           const itemRev = (o.items || [])
             .filter((it) => catProductIds.has(String(it.productId || it.id || '')))
