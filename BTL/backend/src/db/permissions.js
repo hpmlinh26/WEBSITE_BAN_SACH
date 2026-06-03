@@ -27,10 +27,8 @@ async function loadPermissions() {
   return cache;
 }
 
-// Seed quyen mac dinh cho manager/staff neu bang con trong.
+// Seed quyen mac dinh cho manager/staff; su dung INSERT OR IGNORE de them module moi ma khong ghi de quyen da chinh sua.
 async function seedPermissions() {
-  const rows = await all('SELECT COUNT(*) AS count FROM role_permissions');
-  if (rows[0] && rows[0].count > 0) return;
   for (const role of CONFIGURABLE_ROLES) {
     const roleDefaults = DEFAULT_PERMISSIONS[role] || {};
     for (const mod of PERMISSION_MODULES) {
@@ -38,7 +36,7 @@ async function seedPermissions() {
       for (const action of mod.actions) {
         const allowed = allowedActions.includes(action) ? 1 : 0;
         await run(
-          'INSERT OR REPLACE INTO role_permissions(role, module, action, allowed) VALUES (?, ?, ?, ?)',
+          'INSERT OR IGNORE INTO role_permissions(role, module, action, allowed) VALUES (?, ?, ?, ?)',
           [role, mod.key, action, allowed]
         );
       }

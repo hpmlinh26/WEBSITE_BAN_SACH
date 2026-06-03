@@ -123,6 +123,26 @@ async function createSchema() {
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
   )`);
 
+  await run(`CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  )`);
+
+  await run(`CREATE TABLE IF NOT EXISTS blogs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    slug TEXT NOT NULL UNIQUE,
+    excerpt TEXT,
+    content TEXT,
+    image TEXT,
+    tag TEXT,
+    author TEXT DEFAULT 'MOT Store',
+    status TEXT DEFAULT 'published',
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  )`);
+
   // Phan quyen theo vai tro: moi dong = (role, module, action) co duoc phep hay khong.
   await run(`CREATE TABLE IF NOT EXISTS role_permissions (
     role TEXT NOT NULL,

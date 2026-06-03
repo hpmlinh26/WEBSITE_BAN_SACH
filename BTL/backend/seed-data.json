@@ -1,5 +1,5 @@
 {
-  "seedVersion": "v16-pagination-extra-books-polish",
+  "seedVersion": "v17-blog-newsletter-cancel",
   "categories": [
     {
       "id": 1,
@@ -3286,6 +3286,58 @@
       "stock": 90,
       "description": "Qua bộ bách khoa toàn thư vĩ đại The Natural History, Pliny Người cha (Pliny the Elder) cho thấy một trực giác khoa học sơ khai nhưng đầy kinh ngạc về toàn bộ tri thức của thế giới cổ đại: thế giới không phải là một chỉnh thể có thể lý giải trọn vẹn bằng những thần thoại rời rạc, mà là một tập hợp đồ sộ những quan sát về thiên văn, địa lý, động vật học và khoáng sản luôn trượt khỏi mọi nỗ lực hệ thống hóa của một cá nhân duy nhất. Ông không tìm cách giải thích thế giới bằng những lý thuyết trừu tượng; thay vào đó, ông đặt hàng ngàn sự thật khách quan đan xen với những giai thoại dân gian và kinh nghiệm thực tiễn, như những dư ảnh văn hóa để lần theo dấu vết của nền văn minh La Mã đỉnh cao. Đây là một trong những công trình đơn lẻ quan trọng nhất còn tồn tại từ Đế chế La Mã, nơi những chi tiết về các loại đá quý hay tập tính của các loài thú hình như cũng có điều muốn lên tiếng về sự tò mò vô tận của con người trước vẻ đẹp của vạn vật.",
       "genre": "Bách khoa toàn thư / Lịch sử cổ đại / Khoa học tự nhiên"
+    }
+  ],
+  "blogs": [
+    {
+      "title": "Vì sao One Piece vẫn là lựa chọn dễ đọc cho người mới?",
+      "slug": "one-piece",
+      "excerpt": "One Piece có thế giới rộng, tuyến nhân vật rõ ràng và tinh thần phiêu lưu dễ cuốn. Đây là bộ phù hợp để bắt đầu với manga shounen.",
+      "content": "Điểm dễ tiếp cận của One Piece nằm ở tinh thần phiêu lưu rõ ràng: nhân vật chính có mục tiêu cụ thể, đội nhóm có cá tính riêng và mỗi chặng hành trình đều mở ra một vùng đất mới.\n\nVới người mới đọc manga, bộ truyện này giúp làm quen nhanh với cách xây dựng thế giới, nhịp hành động và cảm xúc đặc trưng của truyện tranh Nhật Bản.\n\nNếu chưa biết chọn tập nào, bạn có thể bắt đầu từ các tập đầu hoặc chọn những bản đặc biệt có nội dung ngắn gọn hơn để làm quen trước.",
+      "image": "/assets/products/sach-38.jpg",
+      "tag": "Gợi ý đọc",
+      "author": "MOT Store",
+      "status": "published"
+    },
+    {
+      "title": "Đọc manga trinh thám nên bắt đầu từ đâu?",
+      "slug": "detective",
+      "excerpt": "Nếu thích suy luận, phá án và các tình tiết bất ngờ, nhóm manga trinh thám là lựa chọn tốt để giữ nhịp đọc lâu dài.",
+      "content": "Khi bắt đầu với manga trinh thám, bạn nên chọn những bộ có vụ án ngắn, nhân vật dễ nhớ và lời giải rõ ràng. Điều này giúp việc đọc không bị quá nặng ngay từ đầu.\n\nCác bộ truyện thuộc nhóm này thường hấp dẫn ở chi tiết nhỏ: lời thoại, hiện trường, đồ vật xuất hiện thoáng qua hoặc hành động khác thường của nhân vật.\n\nMột thói quen thú vị là dừng lại trước phần phá án để tự đoán hung thủ. Đây cũng là lý do manga trinh thám giữ chân độc giả rất tốt.",
+      "image": "/assets/products/sach-22.jpg",
+      "tag": "Trinh thám",
+      "author": "MOT Store",
+      "status": "published"
+    },
+    {
+      "title": "Thỏ Bảy Màu và sức hút của truyện tranh Việt",
+      "slug": "tho-bay-mau",
+      "excerpt": "Nét vẽ đơn giản, tình huống hài hước và ngôn ngữ gần gũi giúp các bộ truyện tranh Việt ngày càng được bạn đọc trẻ yêu thích.",
+      "content": "Thỏ Bảy Màu tạo ấn tượng bằng nét vẽ đơn giản, biểu cảm rõ và các tình huống dễ liên tưởng trong đời sống. Đây là lợi thế giúp truyện tiếp cận nhiều nhóm độc giả.\n\nKhông chỉ dành cho thiếu nhi, dòng truyện tranh Việt còn phù hợp để đọc giải trí nhanh, tặng bạn bè hoặc sưu tầm theo bộ.\n\nKhi đưa các tác phẩm Việt vào cửa hàng, website có thêm màu sắc riêng thay vì chỉ tập trung vào các bộ manga Nhật quen thuộc.",
+      "image": "/assets/products/sach-53.jpg",
+      "tag": "Thiếu nhi",
+      "author": "MOT Store",
+      "status": "published"
+    },
+    {
+      "title": "5 cách bảo quản manga không bị cong gáy, ố trang",
+      "slug": "bao-quan",
+      "excerpt": "Đặt sách ở nơi khô thoáng, tránh nắng trực tiếp, dùng bọc sách vừa kích thước và không ép quá chặt trên kệ.",
+      "content": "Đặt sách ở nơi khô ráo, thoáng mát và tránh ánh nắng mặt trời chiếu trực tiếp là bước cơ bản nhất để giữ màu sắc và chất lượng giấy.\n\nDùng bọc sách bằng nhựa vừa kích thước giúp bảo vệ bìa khỏi bụi, ẩm và trầy xước. Nên chọn loại bọc không chứa PVC để tránh ảnh hưởng đến mực in.\n\nKhi xếp sách trên kệ, không nên ép quá chặt — để lại khoảng trống nhỏ giữa các quyển giúp không khí lưu thông và tránh cong gáy theo thời gian.",
+      "image": "/assets/images/blog.png",
+      "tag": "Mẹo hay",
+      "author": "MOT Store",
+      "status": "published"
+    },
+    {
+      "title": "Cách săn voucher để mua truyện tiết kiệm hơn",
+      "slug": "voucher",
+      "excerpt": "Kết hợp mã giảm giá, theo dõi flash sale và gom đơn đúng ngưỡng tối thiểu sẽ giúp đơn hàng tối ưu hơn.",
+      "content": "Theo dõi các chương trình flash sale và ngày khuyến mãi lớn để mua đúng thời điểm. Nhiều mã giảm giá chỉ áp dụng cho đơn đủ điều kiện tối thiểu.\n\nGom đơn cùng bạn bè hoặc mua theo bộ thường giúp đạt mức đơn tối thiểu và tận dụng được voucher có giá trị cao hơn.\n\nLưu ý hạn sử dụng của voucher và không để mã hết hạn trước khi dùng — đây là lỗi phổ biến nhất khi mua sắm trực tuyến.",
+      "image": "/assets/images/banner.sale2.png",
+      "tag": "Mua sắm",
+      "author": "MOT Store",
+      "status": "published"
     }
   ]
 }

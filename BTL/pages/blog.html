@@ -208,6 +208,37 @@
 })();
 </script>
 
+  <script>
+  (function () {
+    const escHtml = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    async function loadBlogsFromApi() {
+      try {
+        const res = await fetch('/api/blogs');
+        if (!res.ok) return;
+        const blogs = await res.json();
+        if (!Array.isArray(blogs) || !blogs.length) return;
+        const grid = document.getElementById('blogGrid');
+        if (!grid) return;
+        grid.innerHTML = blogs.map((b) => `
+          <article class="blog-card real-blog" data-post-id="${escHtml(b.slug)}" data-blog-key="${escHtml(b.slug + ' ' + (b.tag||'') + ' ' + (b.excerpt||''))}" tabindex="0" role="link">
+            ${b.image ? `<img src="${escHtml(b.image)}" alt="${escHtml(b.title)}" onerror="this.style.display='none'">` : ''}
+            ${b.tag ? `<span class="blog-tag">${escHtml(b.tag)}</span>` : ''}
+            <h2>${escHtml(b.title)}</h2>
+            <p>${escHtml(b.excerpt || '')}</p>
+            <small>${escHtml(String(b.createdAt||'').slice(0,10))}</small>
+            <span class="blog-readmore">Đọc tiếp</span>
+          </article>`).join('');
+        grid.querySelectorAll('.real-blog').forEach((card) => {
+          const go = () => { window.location.href = `/pages/blog-detail.html?id=${card.dataset.postId}`; };
+          card.addEventListener('click', go);
+          card.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
+        });
+      } catch (_) {}
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadBlogsFromApi);
+    else loadBlogsFromApi();
+  })();
+  </script>
   <script type="module" src="/src/js/entries/storefront.js"></script>
 </body>
 </html>

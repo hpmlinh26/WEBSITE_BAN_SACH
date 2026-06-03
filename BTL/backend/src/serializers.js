@@ -114,6 +114,23 @@ function toFeedbackResponse(row) {
   };
 }
 
+function toBlogResponse(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    excerpt: row.excerpt,
+    content: row.content,
+    image: row.image,
+    tag: row.tag,
+    author: row.author,
+    status: row.status,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    date: String(row.created_at || '').slice(0, 10),
+  };
+}
+
 module.exports = {
   toProductResponse,
   toUserResponse,
@@ -122,4 +139,5 @@ module.exports = {
   toOrderItemResponse,
   toCartItemResponse,
   toFeedbackResponse,
+  toBlogResponse,
 };

@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 const AUTH_SECRET = process.env.AUTH_SECRET || 'mot-store-demo-auth-secret';
 
 // Tang gia tri nay moi khi seed-data.json doi de DB tu seed lai catalog.
-const SEED_VERSION = 'v16-pagination-extra-books-polish';
+const SEED_VERSION = 'v17-blog-newsletter-cancel';
 
 const ORDER_STATUSES = ['pending', 'packing', 'shipping', 'completed', 'return', 'cancelled'];
 const FEEDBACK_STATUSES = ['new', 'read', 'replied'];
@@ -38,6 +38,8 @@ const PERMISSION_MODULES = [
   { key: 'feedbacks', label: 'Thư phản hồi', actions: ['view', 'edit'] },
   { key: 'customers', label: 'Khách hàng', actions: ['view', 'create', 'edit', 'delete'] },
   { key: 'staff', label: 'Người quản trị', actions: ['view', 'create', 'edit', 'delete'] },
+  { key: 'blogs', label: 'Blog', actions: ['view', 'create', 'edit', 'delete'] },
+  { key: 'newsletter', label: 'Đăng ký nhận tin', actions: ['view'] },
   { key: 'roles', label: 'Vai trò & phân quyền', actions: ['view', 'edit'] },
 ];
 
@@ -59,6 +61,8 @@ const DEFAULT_PERMISSIONS = {
     vouchers: ['view', 'create', 'edit', 'delete'],
     feedbacks: ['view', 'edit'],
     customers: ['view', 'create', 'edit', 'delete'],
+    blogs: ['view', 'create', 'edit', 'delete'],
+    newsletter: ['view'],
     staff: ['view'],
     roles: [],
   },
@@ -68,6 +72,8 @@ const DEFAULT_PERMISSIONS = {
     orders: ['view', 'edit'],
     vouchers: ['view'],
     feedbacks: ['view', 'edit'],
+    blogs: ['view', 'edit'],
+    newsletter: [],
     customers: ['view'],
     staff: [],
     roles: [],

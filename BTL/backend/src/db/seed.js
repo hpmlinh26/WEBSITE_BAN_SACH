@@ -114,6 +114,17 @@ async function seedFeedbacks() {
   }
 }
 
+async function seedBlogs(seed) {
+  const { count } = await get('SELECT COUNT(*) AS count FROM blogs');
+  if (count > 0) return;
+  for (const b of seed.blogs || []) {
+    await run(
+      'INSERT INTO blogs(title, slug, excerpt, content, image, tag, author, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [b.title, b.slug, b.excerpt || '', b.content || '', b.image || '', b.tag || '', b.author || 'MOT Store', b.status || 'published']
+    );
+  }
+}
+
 async function seedDatabase() {
   const seed = readSeed();
   await resetCatalogIfNeeded(seed);
@@ -124,6 +135,7 @@ async function seedDatabase() {
   await seedVouchers();
   await seedOrders();
   await seedFeedbacks();
+  await seedBlogs(seed);
 }
 
 module.exports = { seedDatabase };

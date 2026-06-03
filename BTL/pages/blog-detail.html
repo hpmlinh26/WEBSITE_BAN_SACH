@@ -100,19 +100,43 @@ const posts = {
     ]
   }
 };
-const id = new URLSearchParams(location.search).get('id') || 'one-piece';
-const post = posts[id] || posts['one-piece'];
-document.title = `MOT Store - ${post.title}`;
-document.getElementById('postTitle').textContent = post.title;
-document.getElementById('postIntro').textContent = post.intro;
-document.getElementById('postDetail').innerHTML = `
-  <span class="blog-tag">${post.tag}</span>
-  <h1>${post.title}</h1>
-  <div class="blog-detail-meta"><span>${post.date}</span><span>${post.read}</span></div>
-  <img src="${post.image}" alt="${post.title}">
-  <div class="blog-detail-content">${post.paragraphs.map(p => `<p>${p}</p>`).join('')}</div>
-  <a class="blog-back-link" href="/pages/blog.html">Quay lại danh sách bài viết</a>
-`;
+const slugParam = new URLSearchParams(location.search).get('id') || 'one-piece';
+function renderStaticPost(id) {
+  const post = posts[id] || posts['one-piece'];
+  document.title = `MOT Store - ${post.title}`;
+  document.getElementById('postTitle').textContent = post.title;
+  document.getElementById('postIntro').textContent = post.intro;
+  document.getElementById('postDetail').innerHTML = `
+    <span class="blog-tag">${post.tag}</span>
+    <h1>${post.title}</h1>
+    <div class="blog-detail-meta"><span>${post.date}</span></div>
+    <img src="${post.image}" alt="${post.title}">
+    <div class="blog-detail-content">${post.paragraphs.map(p => `<p>${p}</p>`).join('')}</div>
+    <a class="blog-back-link" href="/pages/blog.html">Quay lại danh sách bài viết</a>
+  `;
+}
+(async function loadPost() {
+  try {
+    const res = await fetch(`/api/blogs/${encodeURIComponent(slugParam)}`);
+    if (!res.ok) throw new Error('not found');
+    const b = await res.json();
+    const esc = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    document.title = `MOT Store - ${b.title}`;
+    document.getElementById('postTitle').textContent = b.title;
+    document.getElementById('postIntro').textContent = b.excerpt || '';
+    const paragraphs = (b.content || '').split('\n').filter(Boolean).map((p) => `<p>${esc(p)}</p>`).join('');
+    document.getElementById('postDetail').innerHTML = `
+      ${b.tag ? `<span class="blog-tag">${esc(b.tag)}</span>` : ''}
+      <h1>${esc(b.title)}</h1>
+      <div class="blog-detail-meta"><span>${esc(String(b.createdAt||'').slice(0,10))}</span></div>
+      ${b.image ? `<img src="${esc(b.image)}" alt="${esc(b.title)}" onerror="this.style.display='none'">` : ''}
+      <div class="blog-detail-content">${paragraphs}</div>
+      <a class="blog-back-link" href="/pages/blog.html">Quay lại danh sách bài viết</a>
+    `;
+  } catch (_) {
+    renderStaticPost(slugParam);
+  }
+})();
 </script>
   <script type="module" src="/src/js/entries/storefront.js"></script>
 </body>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Quản lý blog</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="admin-blogs-page">
+  <div class="admin-container">
+    <aside class="admin-sidebar">
+      <div class="sidebar-header"><h2>MOT Admin</h2><p>Quản trị bán hàng</p></div>
+      <nav class="sidebar-nav">
+        <a href="/index.html" class="nav-item">Về trang chủ</a>
+        <a href="/pages/admin/dashboard.html" class="nav-item" data-module="dashboard">Dashboard</a>
+        <a href="/pages/admin/products.html" class="nav-item" data-module="products">Quản lý sách & danh mục</a>
+        <a href="/pages/admin/accounts.html" class="nav-item" data-module="customers,staff">Quản lý tài khoản</a>
+        <a href="/pages/admin/orders.html" class="nav-item" data-module="orders">Quản lý đơn hàng</a>
+        <a href="/pages/admin/blogs.html" class="nav-item active" data-module="blogs">Quản lý blog</a>
+        <a href="/pages/admin/vouchers.html" class="nav-item" data-module="vouchers">Quản lý voucher</a>
+        <a href="/pages/admin/feedbacks.html" class="nav-item" data-module="feedbacks,newsletter">Thư phản hồi & nhận tin</a>
+        <a href="/pages/admin/roles.html" class="nav-item" data-module="roles">Vai trò &amp; phân quyền</a>
+      </nav>
+    </aside>
+    <main class="admin-main">
+      <div class="admin-header">
+        <div><h1>Quản lý blog</h1><p>Thêm, sửa, xóa bài viết blog. Bài viết sẽ hiển thị tại trang Blog của cửa hàng.</p></div>
+        <div class="admin-actions">
+          <button class="btn-add" data-perm="blogs:create" onclick="openAddBlog()">Thêm bài viết</button>
+          <button class="btn-add light" onclick="reloadAdminData()">Tải lại</button>
+        </div>
+      </div>
+
+      <section class="admin-section">
+        <div class="section-title-row"><h2>Danh sách bài viết</h2></div>
+        <table class="admin-table">
+          <thead><tr><th>ID</th><th>Tiêu đề</th><th>Slug</th><th>Tag</th><th>Trạng thái</th><th>Ngày tạo</th><th>Hành động</th></tr></thead>
+          <tbody id="blogsList"></tbody>
+        </table>
+        <div id="blogsPageNav" class="admin-pagination"></div>
+      </section>
+
+      <footer class="admin-footer-minimal">© 2026 MOT Store Admin</footer>
+    </main>
+  </div>
+
+  <div id="blogModal" class="modal" style="display:none">
+    <div class="modal-content wide-modal">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="blogModalTitle">Thêm bài viết</h2>
+      <form onsubmit="handleSaveBlog(event)">
+        <input type="hidden" id="blogId">
+        <div class="form-grid">
+          <div class="form-group full"><label>Tiêu đề</label><input id="blogTitle" required minlength="3" maxlength="240" placeholder="Tiêu đề bài viết"></div>
+          <div class="form-group"><label>Slug (URL)</label><input id="blogSlug" required maxlength="120" placeholder="vd: one-piece-review"></div>
+          <div class="form-group"><label>Tag</label><input id="blogTag" maxlength="60" placeholder="vd: Gợi ý đọc"></div>
+          <div class="form-group"><label>Tác giả</label><input id="blogAuthor" maxlength="80" placeholder="MOT Store"></div>
+          <div class="form-group"><label>Ảnh (URL)</label><input id="blogImage" maxlength="240" placeholder="/assets/products/sach-38.jpg"></div>
+          <div class="form-group"><label>Trạng thái</label>
+            <select id="blogStatus"><option value="published">Đã xuất bản</option><option value="draft">Nháp</option></select>
+          </div>
+          <div class="form-group full"><label>Tóm tắt</label><textarea id="blogExcerpt" rows="2" maxlength="400" placeholder="Mô tả ngắn hiển thị trong danh sách blog"></textarea></div>
+          <div class="form-group full"><label>Nội dung</label><textarea id="blogContent" rows="8" placeholder="Nội dung bài viết đầy đủ"></textarea></div>
+        </div>
+        <button type="submit" class="btn-save">Lưu bài viết</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="/src/js/entries/admin.js"></script>
+</body>
+</html>

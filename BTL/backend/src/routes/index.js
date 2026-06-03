@@ -13,5 +13,7 @@ router.use('/cart', require('./cart'));
 router.use('/orders', require('./orders'));
 router.use('/vouchers', require('./vouchers'));
 router.use('/feedbacks', require('./feedbacks'));
+router.use('/newsletter', require('./newsletter'));
+router.use('/blogs', require('./blogs'));
 
 module.exports = router;
