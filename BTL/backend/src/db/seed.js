@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { run, get, hashPassword } = require('./connection');
 const { SEED_PATH, SEED_VERSION } = require('../config');
+const { seedPermissions } = require('./permissions');
 
 function readSeed() {
   return JSON.parse(fs.readFileSync(SEED_PATH, 'utf8'));
@@ -51,6 +52,10 @@ async function seedUsers() {
   if (count > 0) return;
   await run('INSERT INTO users(full_name, email, phone, password_hash, role) VALUES (?, ?, ?, ?, ?)',
     ['Admin MOT', 'admin@mot.vn', '0337448886', hashPassword('123456'), 'admin']);
+  await run('INSERT INTO users(full_name, email, phone, password_hash, role) VALUES (?, ?, ?, ?, ?)',
+    ['Quản lý Demo', 'manager@mot.vn', '0337448887', hashPassword('123456'), 'manager']);
+  await run('INSERT INTO users(full_name, email, phone, password_hash, role) VALUES (?, ?, ?, ?, ?)',
+    ['Nhân viên Demo', 'staff@mot.vn', '0337448888', hashPassword('123456'), 'staff']);
   await run('INSERT INTO users(full_name, email, phone, password_hash, role) VALUES (?, ?, ?, ?, ?)',
     ['Khách hàng Demo', 'user@mot.vn', '0987654321', hashPassword('123456'), 'customer']);
 }
@@ -115,6 +120,7 @@ async function seedDatabase() {
   await seedCategories(seed);
   await seedProducts(seed);
   await seedUsers();
+  await seedPermissions();
   await seedVouchers();
   await seedOrders();
   await seedFeedbacks();

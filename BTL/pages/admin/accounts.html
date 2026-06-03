@@ -15,27 +15,49 @@
       <div class="sidebar-header"><h2>MOT Admin</h2><p>Quản trị bán hàng</p></div>
       <nav class="sidebar-nav">
         <a href="/index.html" class="nav-item">Về trang chủ</a>
-        <a href="/pages/admin/dashboard.html" class="nav-item">Dashboard</a>
-        <a href="/pages/admin/products.html" class="nav-item ">Quản lý sách & danh mục</a>
-        <a href="/pages/admin/accounts.html" class="nav-item active">Quản lý tài khoản</a>
-        <a href="/pages/admin/orders.html" class="nav-item ">Quản lý đơn hàng</a>
-        <a href="/pages/admin/vouchers.html" class="nav-item ">Quản lý voucher</a>
-        <a href="/pages/admin/orders.html#feedbackAdminSection" class="nav-item ">Thư phản hồi</a>
+        <a href="/pages/admin/dashboard.html" class="nav-item" data-module="dashboard">Dashboard</a>
+        <a href="/pages/admin/products.html" class="nav-item" data-module="products">Quản lý sách & danh mục</a>
+        <a href="/pages/admin/accounts.html" class="nav-item active" data-module="customers,staff">Quản lý tài khoản</a>
+        <a href="/pages/admin/orders.html" class="nav-item" data-module="orders">Quản lý đơn hàng</a>
+        <a href="/pages/admin/vouchers.html" class="nav-item" data-module="vouchers">Quản lý voucher</a>
+        <a href="/pages/admin/orders.html#feedbackAdminSection" class="nav-item" data-module="feedbacks">Thư phản hồi</a>
+        <a href="/pages/admin/roles.html" class="nav-item" data-module="roles">Vai trò &amp; phân quyền</a>
       </nav>
 
     </aside>
     <main class="admin-main">
       <div class="admin-header">
-        <div><h1>Quản lý tài khoản</h1><p>Hiển thị, thêm mới, cập nhật và xóa tài khoản khách hàng hoặc admin.</p></div>
-        <div class="admin-actions"><button class="btn-add" onclick="openAddUser()">Thêm tài khoản</button><button class="btn-add light" onclick="reloadAdminData()">Tải lại</button></div>
+        <div><h1>Quản lý tài khoản</h1><p>Tách riêng khách hàng và người quản trị (admin, quản lý, nhân viên).</p></div>
+        <div class="admin-actions"><button class="btn-add light" onclick="reloadAdminData()">Tải lại</button></div>
       </div>
-      <section class="admin-section">
+
+      <div class="admin-tabs">
+        <button type="button" class="admin-tab active" data-tab="customers" data-module="customers" onclick="switchAccountTab('customers')">Khách hàng</button>
+        <button type="button" class="admin-tab" data-tab="staff" data-module="staff" onclick="switchAccountTab('staff')">Người quản trị</button>
+      </div>
+
+      <section class="admin-section admin-tab-panel" id="customersPanel">
+        <div class="admin-actions" style="margin-bottom:14px">
+          <button class="btn-add" data-perm="customers:create" onclick="openAddUser('customers')">Thêm khách hàng</button>
+        </div>
+        <table class="admin-table">
+          <thead><tr><th>ID</th><th>Tài khoản</th><th>Số điện thoại</th><th>Ngày tạo</th><th>Hành động</th></tr></thead>
+          <tbody id="customersList"></tbody>
+        </table>
+        <div id="customersPageNav" class="admin-pagination"></div>
+      </section>
+
+      <section class="admin-section admin-tab-panel" id="staffPanel" hidden>
+        <div class="admin-actions" style="margin-bottom:14px">
+          <button class="btn-add" data-perm="staff:create" onclick="openAddUser('staff')">Thêm người quản trị</button>
+        </div>
         <table class="admin-table">
           <thead><tr><th>ID</th><th>Tài khoản</th><th>Số điện thoại</th><th>Vai trò</th><th>Ngày tạo</th><th>Hành động</th></tr></thead>
-          <tbody id="usersList"></tbody>
+          <tbody id="staffList"></tbody>
         </table>
-        <div id="usersPageNav" class="admin-pagination"></div>
+        <div id="staffPageNav" class="admin-pagination"></div>
       </section>
+
       <footer class="admin-footer-minimal">© 2026 MOT Store Admin</footer>
     </main>
   </div>
@@ -46,10 +68,11 @@
       <h2 id="userModalTitle">Thêm tài khoản</h2>
       <form onsubmit="handleSaveUser(event)">
         <input type="hidden" id="userId">
+        <input type="hidden" id="userGroup" value="customers">
         <div class="form-group"><label>Họ tên</label><input id="userFullName" minlength="2" maxlength="120" autocomplete="name" required></div>
         <div class="form-group"><label>Email</label><input id="userEmail" type="email" autocomplete="email" placeholder="email@example.com"></div>
         <div class="form-group"><label>Số điện thoại</label><input id="userPhone" type="tel" inputmode="numeric" autocomplete="tel" pattern="[0-9]{9,11}" placeholder="0901234567"></div>
-        <div class="form-group"><label>Vai trò</label><select id="userRole" required><option value="customer">Khách hàng</option><option value="admin">Admin</option></select></div>
+        <div class="form-group" id="userRoleGroup" hidden><label>Vai trò</label><select id="userRole"><option value="staff">Nhân viên</option><option value="manager">Người quản lý</option><option value="admin">Quản trị viên</option></select></div>
         <div class="form-group"><label>Mật khẩu <small>(bỏ trống nếu không đổi)</small></label><input id="userPassword" type="password" autocomplete="new-password" minlength="6"></div>
         <button type="submit" class="btn-save">Lưu tài khoản</button>
       </form>

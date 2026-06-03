@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const { AUTH_SECRET } = require('../config');
 const { get } = require('../db');
+const { can } = require('../db/permissions');
 
 function base64url(input) {
   return Buffer.from(input).toString('base64url');
@@ -74,4 +75,14 @@ function requireOwnerOrAdmin(getOwnerId) {
   };
 }
 
-module.exports = { signAuthToken, requireAuth, requireAdmin, requireOwnerOrAdmin };
+// Kiem tra quyen theo module + hanh dong (vd: requirePermission('products', 'create')).
+// admin luon duoc phep. Dung sau requireAuth.
+function requirePermission(module, action) {
+  return (req, res, next) => {
+    if (!req.user) return res.status(401).json({ message: 'Bạn cần đăng nhập để thực hiện thao tác này.' });
+    if (can(req.user.role, module, action)) return next();
+    return res.status(403).json({ message: 'Bạn không có quyền thực hiện thao tác này.' });
+  };
+}
+
+module.exports = { signAuthToken, requireAuth, requireAdmin, requireOwnerOrAdmin, requirePermission };

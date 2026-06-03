@@ -1,7 +1,7 @@
 const express = require('express');
 const { run, get, all } = require('../db');
 const { asyncHandler } = require('../lib/http');
-const { requireAuth, requireAdmin } = require('../middleware/auth');
+const { requireAuth, requirePermission } = require('../middleware/auth');
 const { toProductResponse } = require('../serializers');
 const { normalizeProductPayload } = require('../validators');
 
@@ -38,14 +38,14 @@ router.get('/:id', asyncHandler(async (req, res) => {
   res.json(toProductResponse(row));
 }));
 
-router.post('/', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
+router.post('/', requireAuth, requirePermission('products', 'create'), asyncHandler(async (req, res) => {
   const p = normalizeProductPayload(req.body);
   const result = await run('INSERT INTO products (name, title, author, price, original_price, discount, image, category_slug, slug, stock, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [p.name, p.title, p.author, p.price, p.originalPrice, p.discount, p.image, p.category, p.slug, p.stock, p.description]);
   const created = await get('SELECT * FROM products WHERE id = ?', [result.id]);
   res.status(201).json(toProductResponse(created));
 }));
 
-router.put('/:id', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
+router.put('/:id', requireAuth, requirePermission('products', 'edit'), asyncHandler(async (req, res) => {
   const exists = await get('SELECT id FROM products WHERE id = ?', [req.params.id]);
   if (!exists) return res.status(404).json({ message: 'Không tìm thấy sản phẩm.' });
   const p = normalizeProductPayload(req.body);
@@ -54,7 +54,7 @@ router.put('/:id', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
   res.json(toProductResponse(updated));
 }));
 
-router.delete('/:id', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
+router.delete('/:id', requireAuth, requirePermission('products', 'delete'), asyncHandler(async (req, res) => {
   const result = await run('DELETE FROM products WHERE id = ?', [req.params.id]);
   if (!result.changes) return res.status(404).json({ message: 'Không tìm thấy sản phẩm.' });
   res.json({ message: 'Đã xóa sản phẩm.', id: Number(req.params.id) });

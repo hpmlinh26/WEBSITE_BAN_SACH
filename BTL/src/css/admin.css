@@ -152,7 +152,25 @@ body, .admin-container, .admin-table, .modal-content { font-family: Arial, Helve
 .cell-actions { white-space: nowrap; }
 .role-pill { display:inline-flex; border-radius:999px; padding:7px 12px; font-size:12px; font-weight:800; }
 .role-admin { background:#fff7ed; color:#ea580c; }
+.role-manager { background:#f5f3ff; color:#7c3aed; }
+.role-staff { background:#ecfeff; color:#0891b2; }
 .role-customer { background:#eff6ff; color:#2563eb; }
+
+/* Tab phu trong khu vuc quan tri (vd: Khach hang / Nguoi quan tri) */
+.admin-tabs { display:flex; gap:8px; border-bottom:2px solid #eef0f4; margin-bottom:18px; flex-wrap:wrap; }
+.admin-tab { border:0; background:transparent; padding:12px 18px; font-size:15px; font-weight:700; color:#667085; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; border-radius:8px 8px 0 0; }
+.admin-tab:hover { color:#111827; background:#f9fafb; }
+.admin-tab.active { color:var(--mot-red, #e11d2a); border-bottom-color:var(--mot-red, #e11d2a); }
+.admin-tab-panel[hidden] { display:none; }
+
+/* Ma tran phan quyen */
+.roles-hint { color:#667085; font-size:14px; margin:0 0 16px; }
+.roles-matrix-wrap { overflow-x:auto; }
+.roles-matrix th, .roles-matrix td { text-align:center; }
+.roles-matrix th:first-child, .roles-matrix td:first-child { text-align:left; font-weight:700; }
+.roles-matrix input[type="checkbox"] { width:18px; height:18px; cursor:pointer; accent-color:var(--mot-red, #e11d2a); }
+.roles-matrix .perm-na { color:#cbd5e1; }
+.roles-matrix.readonly input[type="checkbox"] { cursor:not-allowed; }
 .invoice-link-row { margin-top: 16px; text-align: right; }
 .invoice-link-row .btn-edit { text-decoration: none; display: inline-flex; }
 .admin-footer-minimal { background: transparent; border: 0; font-size: 13px; }

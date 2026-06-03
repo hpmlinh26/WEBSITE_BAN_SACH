@@ -122,6 +122,15 @@ async function createSchema() {
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
   )`);
+
+  // Phan quyen theo vai tro: moi dong = (role, module, action) co duoc phep hay khong.
+  await run(`CREATE TABLE IF NOT EXISTS role_permissions (
+    role TEXT NOT NULL,
+    module TEXT NOT NULL,
+    action TEXT NOT NULL,
+    allowed INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (role, module, action)
+  )`);
 }
 
 module.exports = { createSchema, ensureColumn };

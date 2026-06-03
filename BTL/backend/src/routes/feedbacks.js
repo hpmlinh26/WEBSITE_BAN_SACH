@@ -1,13 +1,13 @@
 const express = require('express');
 const { run, get, all } = require('../db');
 const { asyncHandler } = require('../lib/http');
-const { requireAuth, requireAdmin } = require('../middleware/auth');
+const { requireAuth, requirePermission } = require('../middleware/auth');
 const { FEEDBACK_STATUSES } = require('../config');
 const { toFeedbackResponse } = require('../serializers');
 
 const router = express.Router();
 
-router.get('/', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
+router.get('/', requireAuth, requirePermission('feedbacks', 'view'), asyncHandler(async (req, res) => {
   const limit = Number(req.query.limit || 0);
   const page = Math.max(1, Number(req.query.page || 1));
   if (limit) {
@@ -33,7 +33,7 @@ router.post('/', asyncHandler(async (req, res) => {
   res.status(201).json({ id: result.id, fullName, email, phone, subject, message, status: 'new' });
 }));
 
-router.patch('/:id/status', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
+router.patch('/:id/status', requireAuth, requirePermission('feedbacks', 'edit'), asyncHandler(async (req, res) => {
   const status = String(req.body.status || 'read').trim();
   if (!FEEDBACK_STATUSES.includes(status)) return res.status(400).json({ message: 'Trạng thái phản hồi không hợp lệ.' });
   const result = await run('UPDATE feedbacks SET status = ? WHERE id = ?', [status, req.params.id]);

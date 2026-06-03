@@ -15,19 +15,20 @@
       <div class="sidebar-header"><h2>MOT Admin</h2><p>Quản trị bán hàng</p></div>
       <nav class="sidebar-nav">
         <a href="/index.html" class="nav-item">Về trang chủ</a>
-        <a href="/pages/admin/dashboard.html" class="nav-item">Dashboard</a>
-        <a href="/pages/admin/products.html" class="nav-item ">Quản lý sách & danh mục</a>
-        <a href="/pages/admin/accounts.html" class="nav-item ">Quản lý tài khoản</a>
-        <a href="/pages/admin/orders.html" class="nav-item active">Quản lý đơn hàng</a>
-        <a href="/pages/admin/vouchers.html" class="nav-item ">Quản lý voucher</a>
-        <a href="/pages/admin/orders.html#feedbackAdminSection" class="nav-item ">Thư phản hồi</a>
+        <a href="/pages/admin/dashboard.html" class="nav-item" data-module="dashboard">Dashboard</a>
+        <a href="/pages/admin/products.html" class="nav-item" data-module="products">Quản lý sách & danh mục</a>
+        <a href="/pages/admin/accounts.html" class="nav-item" data-module="customers,staff">Quản lý tài khoản</a>
+        <a href="/pages/admin/orders.html" class="nav-item active" data-module="orders">Quản lý đơn hàng</a>
+        <a href="/pages/admin/vouchers.html" class="nav-item" data-module="vouchers">Quản lý voucher</a>
+        <a href="/pages/admin/orders.html#feedbackAdminSection" class="nav-item" data-module="feedbacks">Thư phản hồi</a>
+        <a href="/pages/admin/roles.html" class="nav-item" data-module="roles">Vai trò &amp; phân quyền</a>
       </nav>
 
     </aside>
     <main class="admin-main">
       <div class="admin-header">
         <div><h1>Quản lý đơn hàng</h1><p>Hiển thị danh sách đơn hàng, thêm đơn mới, xem chi tiết sản phẩm và cập nhật trạng thái.</p></div>
-        <div class="admin-actions"><button class="btn-add" onclick="openAddOrder()">Thêm đơn hàng</button><button class="btn-add light" onclick="reloadAdminData()">Tải lại</button></div>
+        <div class="admin-actions"><button class="btn-add" data-perm="orders:create" onclick="openAddOrder()">Thêm đơn hàng</button><button class="btn-add light" onclick="reloadAdminData()">Tải lại</button></div>
       </div>
 
       <section class="admin-section dashboard-cards">

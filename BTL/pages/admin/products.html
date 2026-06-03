@@ -15,12 +15,13 @@
       <div class="sidebar-header"><h2>MOT Admin</h2><p>Quản trị bán hàng</p></div>
             <nav class="sidebar-nav">
         <a href="/index.html" class="nav-item">Về trang chủ</a>
-        <a href="/pages/admin/dashboard.html" class="nav-item">Dashboard</a>
-        <a href="/pages/admin/products.html" class="nav-item active">Quản lý sách & danh mục</a>
-        <a href="/pages/admin/accounts.html" class="nav-item ">Quản lý tài khoản</a>
-        <a href="/pages/admin/orders.html" class="nav-item ">Quản lý đơn hàng</a>
-        <a href="/pages/admin/vouchers.html" class="nav-item ">Quản lý voucher</a>
-        <a href="/pages/admin/orders.html#feedbackAdminSection" class="nav-item ">Thư phản hồi</a>
+        <a href="/pages/admin/dashboard.html" class="nav-item" data-module="dashboard">Dashboard</a>
+        <a href="/pages/admin/products.html" class="nav-item active" data-module="products">Quản lý sách & danh mục</a>
+        <a href="/pages/admin/accounts.html" class="nav-item" data-module="customers,staff">Quản lý tài khoản</a>
+        <a href="/pages/admin/orders.html" class="nav-item" data-module="orders">Quản lý đơn hàng</a>
+        <a href="/pages/admin/vouchers.html" class="nav-item" data-module="vouchers">Quản lý voucher</a>
+        <a href="/pages/admin/orders.html#feedbackAdminSection" class="nav-item" data-module="feedbacks">Thư phản hồi</a>
+        <a href="/pages/admin/roles.html" class="nav-item" data-module="roles">Vai trò &amp; phân quyền</a>
       </nav>
 
     </aside>
@@ -28,7 +29,7 @@
     <main class="admin-main">
       <div class="admin-header">
         <div><h1>Quản lý sản phẩm</h1><p>Admin có thể thêm danh mục, tên danh mục, ảnh bìa danh mục và sản phẩm sẽ đồng bộ theo danh mục.</p></div>
-        <div class="admin-actions"><button class="btn-add" onclick="openAddCategory()">Thêm danh mục</button><button class="btn-add" onclick="openAddProduct()">Thêm sản phẩm</button></div>
+        <div class="admin-actions"><button class="btn-add" data-perm="products:create" onclick="openAddCategory()">Thêm danh mục</button><button class="btn-add" data-perm="products:create" onclick="openAddProduct()">Thêm sản phẩm</button></div>
       </div>
 
       <section class="admin-section">

@@ -17,6 +17,7 @@ Website bán sách/manga dùng Vite, Express, SQLite và Socket.IO.
 - Giỏ hàng, thanh toán, voucher, hóa đơn.
 - Đăng nhập/đăng ký demo, trang tài khoản và lịch sử đơn hàng.
 - Admin quản lý sản phẩm, danh mục, tài khoản, đơn hàng, voucher, phản hồi.
+- Quản lý vai trò & phân quyền theo từng module (xem/thêm/sửa/xóa), tách riêng quản lý khách hàng và người quản trị.
 - Chat tư vấn nhanh và live support qua Socket.IO.
 
 ## Project Structure
@@ -92,8 +93,20 @@ Open `http://localhost:3000`.
 
 | Role | Account | Password |
 | --- | --- | --- |
-| Admin | `admin@mot.vn` | `123456` |
-| User | `user@mot.vn` | `123456` |
+| Admin (toàn quyền) | `admin@mot.vn` | `123456` |
+| Manager (người quản lý) | `manager@mot.vn` | `123456` |
+| Staff (nhân viên) | `staff@mot.vn` | `123456` |
+| Customer (khách hàng) | `user@mot.vn` | `123456` |
+
+> Các tài khoản `manager`/`staff` chỉ được tạo khi seed trên database trống. Nếu `backend/data/database.sqlite` đã có sẵn dữ liệu, hãy tạo chúng qua giao diện admin hoặc xóa file DB để seed lại.
+
+## Roles & Permissions
+
+- Vai trò cố định: `admin`, `manager`, `staff`, `customer`. `admin` luôn toàn quyền và không chỉnh sửa được; `manager`/`staff` cấu hình được; `customer` không truy cập khu vực quản trị.
+- Phân quyền theo từng module (Tổng quan, Sách & danh mục, Đơn hàng, Voucher, Phản hồi, Khách hàng, Người quản trị, Vai trò) với 4 hành động: xem/thêm/sửa/xóa. Dữ liệu lưu ở bảng `role_permissions`.
+- Cấu hình tại trang **Vai trò & phân quyền** (`pages/admin/roles.html`); thay đổi có hiệu lực ngay không cần đăng nhập lại.
+- Trang **Quản lý tài khoản** tách 2 tab: Khách hàng và Người quản trị.
+- Backend chặn bằng middleware `requirePermission(module, action)`; frontend ẩn/hiện menu và nút theo quyền (chỉ là lớp UX, bảo mật thật nằm ở backend).
 
 ## Deploy
 

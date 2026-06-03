@@ -1,6 +1,14 @@
-// admin.js - quan tri san pham, danh muc, tai khoan, don hang, voucher va phan hoi.
+// admin.js - quan tri san pham, danh muc, tai khoan, don hang, voucher, phan hoi va phan quyen.
 import { api } from '../core/api.js';
 import { money, escapeHtml, assetPath as normalizeImage, slugify } from '../core/format.js';
+import {
+  can,
+  ROLE_LABELS,
+  currentUser,
+  refreshPermissions,
+  applyNavGating,
+  applyActionGating,
+} from '../core/permissions.js';
 
 const statusText = {
   pending: 'Chờ lấy hàng',
@@ -11,7 +19,7 @@ const statusText = {
   cancelled: 'Hủy',
 };
 const feedbackStatus = { new: 'Mới', read: 'Đã đọc', replied: 'Đã phản hồi' };
-const roleText = { admin: 'Quản trị viên', customer: 'Khách hàng' };
+const roleText = ROLE_LABELS;
 function percent(value, total) {
   return total ? Math.round((Number(value || 0) * 100) / total) : 0;
 }
@@ -25,12 +33,14 @@ const state = {
   products: [],
   orders: [],
   feedbacks: [],
-  users: [],
+  customers: [],
+  staff: [],
   vouchers: [],
+  rolesData: null, // { modules, roles, matrix }
 };
 
 const ADMIN_PAGE_SIZE = 20;
-const pageState = { products: 1, orders: 1, users: 1, vouchers: 1, feedbacks: 1 };
+const pageState = { products: 1, orders: 1, customers: 1, staff: 1, vouchers: 1, feedbacks: 1 };
 
 function adminPaginate(items, key, navId, onPageChange) {
   const totalPages = Math.max(1, Math.ceil(items.length / ADMIN_PAGE_SIZE));
@@ -64,15 +74,17 @@ function adminPaginate(items, key, navId, onPageChange) {
 
 async function loadFromBackend() {
   try {
-    const [categories, products, orders, feedbacks, users, vouchers] = await Promise.all([
+    // Tai theo quyen: moi loi quyen (403) chi lam rong phan tuong ung, khong vo trang.
+    const [categories, products, orders, feedbacks, customers, staff, vouchers] = await Promise.all([
       api('/categories'),
       api('/products'),
-      api('/orders'),
-      api('/feedbacks').catch(() => []),
-      api('/users').catch(() => []),
-      api('/vouchers').catch(() => []),
+      can('orders', 'view') ? api('/orders').catch(() => []) : Promise.resolve([]),
+      can('feedbacks', 'view') ? api('/feedbacks').catch(() => []) : Promise.resolve([]),
+      can('customers', 'view') ? api('/users?group=customers').catch(() => []) : Promise.resolve([]),
+      can('staff', 'view') ? api('/users?group=staff').catch(() => []) : Promise.resolve([]),
+      can('vouchers', 'view') ? api('/vouchers').catch(() => []) : Promise.resolve([]),
     ]);
-    Object.assign(state, { categories, products, orders, feedbacks, users, vouchers });
+    Object.assign(state, { categories, products, orders, feedbacks, customers, staff, vouchers });
     window.categories = categories;
     window.products = products;
     window.orders = orders;
@@ -85,7 +97,8 @@ async function loadFromBackend() {
     state.products = window.products || [];
     state.orders = JSON.parse(localStorage.getItem('motOrders') || '[]');
     state.feedbacks = JSON.parse(localStorage.getItem('motFeedbacks') || '[]');
-    state.users = [];
+    state.customers = [];
+    state.staff = [];
     state.vouchers = [];
   }
 }
@@ -134,7 +147,7 @@ function renderDashboard() {
 
   set('dashboardProducts', state.products.length);
   set('dashboardCategories', state.categories.length);
-  set('dashboardUsers', state.users.length);
+  set('dashboardUsers', state.customers.length + state.staff.length);
   set('dashboardOrders', state.orders.length);
   set('dashboardRevenue', money(revenue));
   set('dashboardPending', pendingCount);
@@ -225,8 +238,8 @@ function renderCategories() {
       <img src="${normalizeImage(c.image)}" loading="lazy" decoding="async" onerror="this.src='/assets/images/placeholder-cover.svg'" alt="${escapeHtml(c.name)}">
       <div><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.slug)}</p></div>
       <div class="card-actions">
-        <button class="btn-edit" onclick="editCategory(${c.id})">Sửa</button>
-        <button class="btn-delete" onclick="deleteCategory(${c.id})">Xóa</button>
+        ${can('products', 'edit') ? `<button class="btn-edit" onclick="editCategory(${c.id})">Sửa</button>` : ''}
+        ${can('products', 'delete') ? `<button class="btn-delete" onclick="deleteCategory(${c.id})">Xóa</button>` : ''}
       </div>
     </article>`
       )
@@ -249,7 +262,7 @@ function renderProducts() {
       <td>${money(p.price)}</td>
       <td><span class="stock-pill ${Number(p.stock || 0) <= 10 ? 'low' : ''}">${Number(p.stock ?? 0)}</span></td>
       <td>${escapeHtml(p.categoryName || categoryName(category))}</td>
-      <td class="cell-actions"><button class="btn-edit" onclick="editProduct(${p.id})">Sửa</button><button class="btn-delete" onclick="deleteProduct(${p.id})">Xóa</button></td>
+      ${rowActions('products', p.id, 'editProduct', 'deleteProduct')}
     </tr>`;
       })
       .join('') || `<tr><td colspan="8">Chưa có sản phẩm.</td></tr>`;
@@ -270,7 +283,7 @@ function renderOrders() {
       <td>${money(o.total)}</td>
       <td><span class="status-pill status-${o.status}">${statusText[o.status] || escapeHtml(o.status)}</span></td>
       <td>${escapeHtml(o.date || String(o.createdAt || '').slice(0, 10))}</td>
-      <td class="cell-actions"><button class="btn-edit" onclick="openOrderModal(${o.id})">Xem chi tiết</button><button class="btn-delete" onclick="deleteOrder(${o.id})">Xóa</button></td>
+      <td class="cell-actions"><button class="btn-edit" onclick="openOrderModal(${o.id})">Xem chi tiết</button>${can('orders', 'delete') ? `<button class="btn-delete" onclick="deleteOrder(${o.id})">Xóa</button>` : ''}</td>
     </tr>`
       )
       .join('') || `<tr><td colspan="6">Chưa có đơn hàng.</td></tr>`;
@@ -292,16 +305,43 @@ function renderFeedbacks() {
         <span>${feedbackStatus[f.status] || escapeHtml(f.status)}</span>
       </div>
       <p class="feedback-message">${escapeHtml(f.message || '')}</p>
-      <div class="feedback-actions"><small>${escapeHtml(f.date || String(f.createdAt || '').slice(0, 10))}</small><div><button class="btn-edit" onclick="markFeedback(${f.id}, 'read')">Đã đọc</button><button class="btn-edit" onclick="markFeedback(${f.id}, 'replied')">Đã phản hồi</button></div></div>
+      <div class="feedback-actions"><small>${escapeHtml(f.date || String(f.createdAt || '').slice(0, 10))}</small><div>${can('feedbacks', 'edit') ? `<button class="btn-edit" onclick="markFeedback(${f.id}, 'read')">Đã đọc</button><button class="btn-edit" onclick="markFeedback(${f.id}, 'replied')">Đã phản hồi</button>` : ''}</div></div>
     </article>`
       )
       .join('') || `<div class="empty-admin">Chưa có phản hồi nào.</div>`;
 }
 
-function renderUsers() {
-  const tbody = document.getElementById('usersList');
+// Nut Sua/Xoa cho 1 dong, an theo quyen cua module.
+function rowActions(module, id, fnEdit, fnDelete) {
+  const buttons = [];
+  if (can(module, 'edit')) buttons.push(`<button class="btn-edit" onclick="${fnEdit}(${id})">Sửa</button>`);
+  if (can(module, 'delete')) buttons.push(`<button class="btn-delete" onclick="${fnDelete}(${id})">Xóa</button>`);
+  return `<td class="cell-actions">${buttons.join('') || '<small>—</small>'}</td>`;
+}
+
+function renderCustomers() {
+  const tbody = document.getElementById('customersList');
   if (!tbody) return;
-  const visible = adminPaginate(state.users, 'users', 'usersPageNav', renderUsers);
+  const visible = adminPaginate(state.customers, 'customers', 'customersPageNav', renderCustomers);
+  tbody.innerHTML =
+    visible
+      .map(
+        (u) => `
+    <tr>
+      <td>#${u.id}</td>
+      <td><strong>${escapeHtml(u.fullName)}</strong><small>${escapeHtml(u.email || 'Chưa có email')}</small></td>
+      <td>${escapeHtml(u.phone || '-')}</td>
+      <td>${escapeHtml(String(u.createdAt || '').slice(0, 10))}</td>
+      ${rowActions('customers', u.id, 'editUser', 'deleteUser')}
+    </tr>`
+      )
+      .join('') || `<tr><td colspan="5">Chưa có khách hàng.</td></tr>`;
+}
+
+function renderStaff() {
+  const tbody = document.getElementById('staffList');
+  if (!tbody) return;
+  const visible = adminPaginate(state.staff, 'staff', 'staffPageNav', renderStaff);
   tbody.innerHTML =
     visible
       .map(
@@ -312,10 +352,10 @@ function renderUsers() {
       <td>${escapeHtml(u.phone || '-')}</td>
       <td><span class="role-pill role-${u.role}">${roleText[u.role] || u.role}</span></td>
       <td>${escapeHtml(String(u.createdAt || '').slice(0, 10))}</td>
-      <td class="cell-actions"><button class="btn-edit" onclick="editUser(${u.id})">Sửa</button><button class="btn-delete" onclick="deleteUser(${u.id})">Xóa</button></td>
+      ${rowActions('staff', u.id, 'editUser', 'deleteUser')}
     </tr>`
       )
-      .join('') || `<tr><td colspan="6">Chưa có tài khoản.</td></tr>`;
+      .join('') || `<tr><td colspan="6">Chưa có người quản trị.</td></tr>`;
 }
 
 function renderVouchers() {
@@ -332,7 +372,7 @@ function renderVouchers() {
       <td>${money(v.minOrder)}</td>
       <td><span class="status-pill ${v.active ? 'status-completed' : 'status-cancelled'}">${v.active ? 'Đang bật' : 'Đã tắt'}</span></td>
       <td>${escapeHtml(v.expiresAt || 'Không giới hạn')}</td>
-      <td class="cell-actions"><button class="btn-edit" onclick="editVoucher(${v.id})">Sửa</button><button class="btn-delete" onclick="deleteVoucher(${v.id})">Xóa</button></td>
+      ${rowActions('vouchers', v.id, 'editVoucher', 'deleteVoucher')}
     </tr>`
       )
       .join('') || `<tr><td colspan="6">Chưa có voucher.</td></tr>`;
@@ -345,10 +385,14 @@ async function reloadAll() {
   renderProducts();
   renderOrders();
   renderFeedbacks();
-  renderUsers();
+  renderCustomers();
+  renderStaff();
   renderVouchers();
   renderDashboard();
   showBackendStatus();
+  applyNavGating();
+  applyActionGating();
+  await renderRolesPage();
 }
 
 function modal(id, show = true) {
@@ -619,25 +663,58 @@ window.deleteOrder = async function (id) {
   }
 };
 
-// Users
-window.openAddUser = function () {
+// Users (tach 2 nhom: customers / staff)
+// Chuyen tab Khach hang <-> Nguoi quan tri.
+window.switchAccountTab = function (tab) {
+  document.querySelectorAll('.admin-tab[data-tab]').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.tab === tab);
+  });
+  const customersPanel = document.getElementById('customersPanel');
+  const staffPanel = document.getElementById('staffPanel');
+  if (customersPanel) customersPanel.hidden = tab !== 'customers';
+  if (staffPanel) staffPanel.hidden = tab !== 'staff';
+};
+
+// Chinh select vai tro theo nhom va quyen cua nguoi dang dang nhap.
+function setupRoleField(group, role) {
+  const roleGroup = document.getElementById('userRoleGroup');
+  const roleSelect = document.getElementById('userRole');
+  if (!roleGroup || !roleSelect) return;
+  const isStaff = group === 'staff';
+  roleGroup.hidden = !isStaff;
+  // Chi admin moi duoc gan vai tro admin.
+  const allowAdmin = currentUser()?.role === 'admin';
+  const options = [
+    { value: 'staff', label: ROLE_LABELS.staff },
+    { value: 'manager', label: ROLE_LABELS.manager },
+  ];
+  if (allowAdmin) options.push({ value: 'admin', label: ROLE_LABELS.admin });
+  roleSelect.innerHTML = options.map((o) => `<option value="${o.value}">${o.label}</option>`).join('');
+  if (isStaff) roleSelect.value = options.some((o) => o.value === role) ? role : 'staff';
+}
+
+window.openAddUser = function (group = 'customers') {
   document.querySelector('#userModal form')?.reset();
   document.getElementById('userId').value = '';
-  document.getElementById('userModalTitle').textContent = 'Thêm tài khoản';
+  document.getElementById('userGroup').value = group;
+  setupRoleField(group, 'staff');
+  document.getElementById('userModalTitle').textContent = group === 'staff' ? 'Thêm người quản trị' : 'Thêm khách hàng';
   document.getElementById('userPassword').required = true;
   modal('userModal');
 };
 window.editUser = function (id) {
-  const u = state.users.find((x) => Number(x.id) === Number(id));
+  const u = [...state.customers, ...state.staff].find((x) => Number(x.id) === Number(id));
   if (!u) return;
+  const group = u.role === 'customer' ? 'customers' : 'staff';
   document.getElementById('userId').value = u.id;
+  document.getElementById('userGroup').value = group;
   document.getElementById('userFullName').value = u.fullName || '';
   document.getElementById('userEmail').value = u.email || '';
   document.getElementById('userPhone').value = u.phone || '';
-  document.getElementById('userRole').value = u.role || 'customer';
+  setupRoleField(group, u.role);
   document.getElementById('userPassword').value = '';
   document.getElementById('userPassword').required = false;
-  document.getElementById('userModalTitle').textContent = 'Cập nhật tài khoản';
+  document.getElementById('userModalTitle').textContent = group === 'staff' ? 'Cập nhật người quản trị' : 'Cập nhật khách hàng';
   modal('userModal');
 };
 window.handleSaveUser = async function (event) {
@@ -654,11 +731,14 @@ window.handleSaveUser = async function (event) {
   if (!validEmail(email)) return setInvalid(emailInput, 'Email không hợp lệ.');
   if (!validPhone(phone)) return setInvalid(phoneInput, 'Số điện thoại phải gồm 9-11 chữ số.');
   if (password && password.length < 6) return setInvalid(passwordInput, 'Mật khẩu phải có ít nhất 6 ký tự.');
+  // Khach hang luon co vai tro 'customer'; nhom quan tri lay tu select.
+  const group = document.getElementById('userGroup').value;
+  const role = group === 'staff' ? document.getElementById('userRole').value : 'customer';
   const payload = {
     fullName: document.getElementById('userFullName').value.trim(),
     email,
     phone,
-    role: document.getElementById('userRole').value,
+    role,
     password,
   };
   try {
@@ -759,8 +839,107 @@ window.markFeedback = async function (id, status) {
   }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+// ===== Vai trò & phân quyền =====
+const ACTION_LABELS = { view: 'Xem', create: 'Thêm', edit: 'Sửa', delete: 'Xóa' };
+const MATRIX_COLUMNS = ['view', 'create', 'edit', 'delete'];
+let selectedRole = null;
+
+window.switchRoleTab = function (role) {
+  selectedRole = role;
+  renderRolesMatrix();
+};
+
+function renderRoleTabs() {
+  const tabs = document.getElementById('rolesTabs');
+  const data = state.rolesData;
+  if (!tabs || !data) return;
+  tabs.innerHTML = data.roles
+    .map(
+      (r) => `<button type="button" class="admin-tab ${r.key === selectedRole ? 'active' : ''}" onclick="switchRoleTab('${r.key}')">${escapeHtml(r.label)}</button>`
+    )
+    .join('');
+}
+
+function renderRolesMatrix() {
+  const table = document.getElementById('rolesMatrix');
+  const data = state.rolesData;
+  if (!table || !data) return;
+  renderRoleTabs();
+  const roleDef = data.roles.find((r) => r.key === selectedRole) || data.roles[0];
+  const editable = Boolean(roleDef?.editable) && can('roles', 'edit');
+  const matrix = data.matrix[selectedRole] || {};
+
+  const thead = `<thead><tr><th>Module</th>${MATRIX_COLUMNS.map((c) => `<th>${ACTION_LABELS[c]}</th>`).join('')}</tr></thead>`;
+  const rows = data.modules
+    .map((mod) => {
+      const cells = MATRIX_COLUMNS.map((action) => {
+        if (!mod.actions.includes(action)) return '<td class="perm-na">–</td>';
+        const checked = matrix[mod.key]?.[action] ? 'checked' : '';
+        const disabled = editable ? '' : 'disabled';
+        return `<td><input type="checkbox" data-module="${mod.key}" data-action="${action}" ${checked} ${disabled}></td>`;
+      }).join('');
+      return `<tr><td>${escapeHtml(mod.label)}</td>${cells}</tr>`;
+    })
+    .join('');
+  table.className = `admin-table roles-matrix${editable ? '' : ' readonly'}`;
+  table.innerHTML = thead + `<tbody>${rows}</tbody>`;
+
+  const hint = document.getElementById('rolesHint');
+  if (hint) {
+    if (!roleDef?.editable) hint.textContent = `${roleDef?.label || 'Vai trò này'} có toàn quyền hệ thống và không thể chỉnh sửa.`;
+    else if (!can('roles', 'edit')) hint.textContent = `Bạn chỉ có quyền xem phân quyền của vai trò ${roleDef.label}.`;
+    else hint.textContent = `Tích chọn quyền cho vai trò: ${roleDef.label}. Nhớ bấm "Lưu phân quyền".`;
+  }
+  const saveBtn = document.getElementById('rolesSaveBtn');
+  if (saveBtn) saveBtn.style.display = editable ? '' : 'none';
+}
+
+async function renderRolesPage() {
+  const table = document.getElementById('rolesMatrix');
+  if (!table) return; // khong phai trang roles
+  if (!can('roles', 'view')) {
+    table.innerHTML = '<tbody><tr><td>Bạn không có quyền xem trang này.</td></tr></tbody>';
+    return;
+  }
+  try {
+    const data = await api('/roles');
+    state.rolesData = data;
+    if (!selectedRole || !data.roles.some((r) => r.key === selectedRole)) {
+      const firstEditable = data.roles.find((r) => r.editable);
+      selectedRole = (firstEditable || data.roles[0]).key;
+    }
+    renderRolesMatrix();
+  } catch (error) {
+    table.innerHTML = `<tbody><tr><td>${escapeHtml(error.message)}</td></tr></tbody>`;
+  }
+}
+
+window.saveRolePermissions = async function () {
+  if (!state.rolesData || !selectedRole) return;
+  const roleDef = state.rolesData.roles.find((r) => r.key === selectedRole);
+  if (!roleDef?.editable) return;
+  const permissions = {};
+  document.querySelectorAll('#rolesMatrix input[type="checkbox"]').forEach((cb) => {
+    const mod = cb.dataset.module;
+    const action = cb.dataset.action;
+    if (!permissions[mod]) permissions[mod] = {};
+    permissions[mod][action] = cb.checked;
+  });
+  try {
+    await api(`/roles/${selectedRole}`, { method: 'PUT', body: JSON.stringify({ permissions }) });
+    // Cap nhat lai du lieu va quyen cua chinh minh (phong khi sua vai tro cua minh).
+    await refreshPermissions();
+    await renderRolesPage();
+    alert('Đã lưu phân quyền.');
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('voucherType')?.addEventListener('change', updateVoucherValueLimit);
   updateVoucherValueLimit();
-  reloadAll();
+  // Lay quyen moi nhat tu server truoc khi render (phong khi admin vua doi phan quyen).
+  await refreshPermissions();
+  await reloadAll();
 });

@@ -2,7 +2,8 @@ const express = require('express');
 const { run, get, all, transaction } = require('../db');
 const { asyncHandler } = require('../lib/http');
 const { ORDER_STATUSES } = require('../config');
-const { requireAuth, requireAdmin } = require('../middleware/auth');
+const { requireAuth, requirePermission } = require('../middleware/auth');
+const { can } = require('../db/permissions');
 const { toOrderResponse, toOrderItemResponse } = require('../serializers');
 const { validateOrderPayload } = require('../validators');
 
@@ -14,7 +15,7 @@ router.get('/', requireAuth, asyncHandler(async (req, res) => {
   const page = Math.max(1, Number(req.query.page || 1));
 
   if (userId) {
-    if (req.user.role !== 'admin' && Number(req.user.id) !== userId) return res.status(403).json({ message: 'Bạn không có quyền xem đơn hàng này.' });
+    if (Number(req.user.id) !== userId && !can(req.user.role, 'orders', 'view')) return res.status(403).json({ message: 'Bạn không có quyền xem đơn hàng này.' });
     const user = await get('SELECT id, email, phone FROM users WHERE id = ?', [userId]);
     if (!user) return res.status(404).json({ message: 'Không tìm thấy tài khoản.' });
     const where = ['user_id = ?'];
@@ -34,7 +35,7 @@ router.get('/', requireAuth, asyncHandler(async (req, res) => {
     return res.json({ data, total, page, totalPages: Math.ceil(total / limit) });
   }
 
-  if (req.user.role !== 'admin') return res.status(403).json({ message: 'Bạn không có quyền xem toàn bộ đơn hàng.' });
+  if (!can(req.user.role, 'orders', 'view')) return res.status(403).json({ message: 'Bạn không có quyền xem toàn bộ đơn hàng.' });
 
   if (limit) {
     const { count } = await get('SELECT COUNT(*) AS count FROM orders');
@@ -88,7 +89,7 @@ router.post('/', asyncHandler(async (req, res) => {
   res.status(201).json({ id: orderId, customerName: payload.customerName, total, status: payload.status });
 }));
 
-router.patch('/:id/status', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
+router.patch('/:id/status', requireAuth, requirePermission('orders', 'edit'), asyncHandler(async (req, res) => {
   const status = String(req.body.status || '').trim();
   if (!ORDER_STATUSES.includes(status)) return res.status(400).json({ message: 'Trạng thái không hợp lệ.' });
   const result = await run('UPDATE orders SET status = ? WHERE id = ?', [status, req.params.id]);
@@ -96,7 +97,7 @@ router.patch('/:id/status', requireAuth, requireAdmin, asyncHandler(async (req, 
   res.json({ id: Number(req.params.id), status, message: 'Đã cập nhật trạng thái đơn hàng.' });
 }));
 
-router.delete('/:id', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
+router.delete('/:id', requireAuth, requirePermission('orders', 'delete'), asyncHandler(async (req, res) => {
   const result = await run('DELETE FROM orders WHERE id = ?', [req.params.id]);
   if (!result.changes) return res.status(404).json({ message: 'Không tìm thấy đơn hàng.' });
   res.json({ message: 'Đã xóa đơn hàng.', id: Number(req.params.id) });
