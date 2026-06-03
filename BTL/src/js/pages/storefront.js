@@ -78,7 +78,7 @@ function toast(message, type = 'success') {
   box.timer = setTimeout(() => box.classList.remove('show'), 1800);
 }
 
-window.handleNewsletterSubmit = function (button) {
+window.handleNewsletterSubmit = async function (button) {
   const input = button?.closest('.newsletter')?.querySelector('input[type="email"]');
   if (!input) return toast('Không tìm thấy ô nhập email.', 'error');
   input.setCustomValidity('');
@@ -92,8 +92,14 @@ window.handleNewsletterSubmit = function (button) {
     input.focus();
     return;
   }
-  toast('Đăng ký nhận tin thành công!');
+  const email = input.value.trim();
   input.value = '';
+  try {
+    const result = await api('/newsletter', { method: 'POST', body: JSON.stringify({ email }) });
+    toast(result.alreadyExists ? 'Email này đã được đăng ký trước đó.' : 'Đăng ký nhận tin thành công!');
+  } catch {
+    toast('Không thể đăng ký nhận tin. Vui lòng thử lại.', 'error');
+  }
 };
 
 function getWishlist() {
