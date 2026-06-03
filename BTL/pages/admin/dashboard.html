@@ -17,59 +17,175 @@
       <nav class="sidebar-nav">
         <a href="/index.html" class="nav-item">Về trang chủ</a>
         <a href="/pages/admin/dashboard.html" class="nav-item active" data-module="dashboard">Dashboard</a>
-        <a href="/pages/admin/products.html" class="nav-item" data-module="products">Quản lý sách & danh mục</a>
+        <a href="/pages/admin/analytics.html" class="nav-item" data-module="dashboard">Thống kê &amp; biểu đồ</a>
+        <a href="/pages/admin/products.html" class="nav-item" data-module="products">Quản lý sách &amp; danh mục</a>
         <a href="/pages/admin/accounts.html" class="nav-item" data-module="customers,staff">Quản lý tài khoản</a>
         <a href="/pages/admin/orders.html" class="nav-item" data-module="orders">Quản lý đơn hàng</a>
         <a href="/pages/admin/blogs.html" class="nav-item" data-module="blogs">Quản lý blog</a>
         <a href="/pages/admin/vouchers.html" class="nav-item" data-module="vouchers">Quản lý voucher</a>
-        <a href="/pages/admin/feedbacks.html" class="nav-item" data-module="feedbacks,newsletter">Thư phản hồi & nhận tin</a>
+        <a href="/pages/admin/feedbacks.html" class="nav-item" data-module="feedbacks,newsletter">Thư phản hồi &amp; nhận tin</a>
         <a href="/pages/admin/roles.html" class="nav-item" data-module="roles">Vai trò &amp; phân quyền</a>
       </nav>
     </aside>
 
     <main class="admin-main">
-      <div class="admin-header">
-        <div><h1>Dashboard quản trị</h1><p>Tổng quan nhanh về sản phẩm, tài khoản, đơn hàng, doanh thu, voucher và phản hồi.</p></div>
-        <div class="admin-actions"><button class="btn-add light" onclick="reloadAdminData()">Tải lại</button></div>
+
+      <!-- WELCOME BAR -->
+      <div class="db-welcome">
+        <div class="db-welcome-text">
+          <h1>Tổng quan hệ thống</h1>
+          <p id="dbDate">Đang tải...</p>
+        </div>
+        <div class="db-welcome-actions">
+          <a href="/pages/admin/analytics.html" class="btn-db-analytics">Xem thống kê chi tiết</a>
+          <button class="btn-add light" onclick="reloadAdminData()">Tải lại</button>
+        </div>
       </div>
-      <section class="admin-dashboard-grid">
-        <article class="admin-dashboard-card"><span>Sản phẩm</span><strong id="dashboardProducts">0</strong><small>Đang hiển thị trên web</small></article>
-        <article class="admin-dashboard-card"><span>Danh mục</span><strong id="dashboardCategories">0</strong><small>Nhóm phân loại sản phẩm</small></article>
-        <article class="admin-dashboard-card"><span>Tài khoản</span><strong id="dashboardUsers">0</strong><small>Người dùng và admin</small></article>
-        <article class="admin-dashboard-card"><span>Đơn hàng</span><strong id="dashboardOrders">0</strong><small>Tổng số đơn trong hệ thống</small></article>
-        <article class="admin-dashboard-card"><span>Doanh thu đã giao</span><strong id="dashboardRevenue">0đ</strong><small>Tính theo đơn đã giao</small></article>
-        <article class="admin-dashboard-card"><span>Đơn chờ xử lý</span><strong id="dashboardPending">0</strong><small>Chờ lấy hàng/đang chuẩn bị</small></article>
-        <article class="admin-dashboard-card"><span>Voucher</span><strong id="dashboardVouchers">0</strong><small>Mã ưu đãi đang quản lý</small></article>
-        <article class="admin-dashboard-card"><span>Phản hồi mới</span><strong id="dashboardFeedbacks">0</strong><small>Cần đọc hoặc phản hồi</small></article>
-        <article class="admin-dashboard-card warning-card"><span>Sắp hết hàng</span><strong id="dashboardLowStock">0</strong><small>Sản phẩm còn từ 10 trở xuống</small></article>
-      </section>
-      <section class="admin-chart-grid">
-        <div class="admin-section chart-card">
-          <div class="section-title-row"><h2>Trạng thái đơn hàng</h2><p>Tỷ lệ theo từng trạng thái</p></div>
+
+      <!-- KPI CARDS ROW 1 - 4 chỉ số chính -->
+      <div class="db-kpi-grid">
+        <div class="db-kpi-card kpi-revenue">
+          <div class="db-kpi-icon">💰</div>
+          <div class="db-kpi-content">
+            <span class="db-kpi-label">Doanh thu</span>
+            <strong class="db-kpi-value" id="dashboardRevenue">0đ</strong>
+            <small>Tính theo đơn đã giao</small>
+          </div>
+        </div>
+        <div class="db-kpi-card kpi-orders">
+          <div class="db-kpi-icon">📦</div>
+          <div class="db-kpi-content">
+            <span class="db-kpi-label">Tổng đơn hàng</span>
+            <strong class="db-kpi-value" id="dashboardOrders">0</strong>
+            <small>Toàn bộ trong hệ thống</small>
+          </div>
+        </div>
+        <div class="db-kpi-card kpi-pending">
+          <div class="db-kpi-icon">⏳</div>
+          <div class="db-kpi-content">
+            <span class="db-kpi-label">Đang xử lý</span>
+            <strong class="db-kpi-value" id="dashboardPending">0</strong>
+            <small>Chờ lấy / chuẩn bị / giao</small>
+          </div>
+        </div>
+        <div class="db-kpi-card kpi-users">
+          <div class="db-kpi-icon">👥</div>
+          <div class="db-kpi-content">
+            <span class="db-kpi-label">Tài khoản</span>
+            <strong class="db-kpi-value" id="dashboardUsers">0</strong>
+            <small>Người dùng và nhân viên</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECONDARY METRICS -->
+      <div class="db-meta-row">
+        <div class="db-meta-card">
+          <span class="db-meta-icon">📚</span>
+          <div>
+            <strong id="dashboardProducts">0</strong>
+            <label>Sản phẩm</label>
+          </div>
+        </div>
+        <div class="db-meta-card">
+          <span class="db-meta-icon">🗂️</span>
+          <div>
+            <strong id="dashboardCategories">0</strong>
+            <label>Danh mục</label>
+          </div>
+        </div>
+        <div class="db-meta-card">
+          <span class="db-meta-icon">🎟️</span>
+          <div>
+            <strong id="dashboardVouchers">0</strong>
+            <label>Voucher</label>
+          </div>
+        </div>
+        <div class="db-meta-card">
+          <span class="db-meta-icon">💬</span>
+          <div>
+            <strong id="dashboardFeedbacks">0</strong>
+            <label>Phản hồi mới</label>
+          </div>
+        </div>
+        <div class="db-meta-card db-meta-warn">
+          <span class="db-meta-icon">⚠️</span>
+          <div>
+            <strong id="dashboardLowStock">0</strong>
+            <label>Sắp hết hàng</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS + LOW STOCK -->
+      <div class="db-content-grid">
+        <div class="admin-section db-chart-section">
+          <div class="section-title-row">
+            <div><h2>Trạng thái đơn hàng</h2><p>Tỷ lệ theo từng trạng thái</p></div>
+            <a href="/pages/admin/orders.html" class="db-link-more">Xem tất cả</a>
+          </div>
           <div id="dashboardStatusChart" class="dashboard-chart-bars"></div>
         </div>
-        <div class="admin-section chart-card">
-          <div class="section-title-row"><h2>Sản phẩm theo danh mục</h2><p>Top nhóm nhiều sản phẩm</p></div>
+
+        <div class="admin-section db-chart-section">
+          <div class="section-title-row">
+            <div><h2>Sản phẩm theo danh mục</h2><p>Top nhóm nhiều sản phẩm</p></div>
+            <a href="/pages/admin/products.html" class="db-link-more">Xem tất cả</a>
+          </div>
           <div id="dashboardCategoryChart" class="dashboard-chart-bars"></div>
         </div>
-        <div class="admin-section chart-card low-stock-card">
-          <div class="section-title-row"><h2>Cảnh báo tồn kho</h2><p>Cần nhập thêm</p></div>
+
+        <div class="admin-section db-chart-section db-lowstock-section">
+          <div class="section-title-row">
+            <div><h2>Cảnh báo tồn kho</h2><p>Cần nhập thêm hàng</p></div>
+          </div>
           <ul id="dashboardLowStockList" class="low-stock-list"></ul>
         </div>
-      </section>
-      <section class="admin-mini-grid">
+      </div>
+
+      <!-- RECENT ACTIVITY -->
+      <div class="db-activity-grid">
         <div class="admin-section">
-          <div class="section-title-row"><h2>Đơn hàng gần đây</h2><p>5 đơn mới nhất</p></div>
-          <table class="admin-table"><thead><tr><th>ID</th><th>Khách hàng</th><th>Tổng tiền</th><th>Trạng thái</th></tr></thead><tbody id="dashboardRecentOrders"></tbody></table>
+          <div class="section-title-row">
+            <div><h2>Đơn hàng gần đây</h2><p>5 đơn mới nhất</p></div>
+            <a href="/pages/admin/orders.html" class="db-link-more">Xem tất cả</a>
+          </div>
+          <table class="admin-table">
+            <thead><tr><th>ID</th><th>Khách hàng</th><th>Tổng tiền</th><th>Trạng thái</th></tr></thead>
+            <tbody id="dashboardRecentOrders"></tbody>
+          </table>
         </div>
+
         <div class="admin-section">
-          <div class="section-title-row"><h2>Phản hồi gần đây</h2><p>Từ trang liên hệ</p></div>
+          <div class="section-title-row">
+            <div><h2>Phản hồi gần đây</h2><p>Từ trang liên hệ</p></div>
+            <a href="/pages/admin/feedbacks.html" class="db-link-more">Xem tất cả</a>
+          </div>
           <div id="dashboardRecentFeedbacks" class="feedback-admin-list"></div>
         </div>
-      </section>
+      </div>
+
+      <!-- ANALYTICS CTA -->
+      <div class="db-analytics-cta">
+        <div class="db-cta-text">
+          <h3>Xem thống kê chi tiết</h3>
+          <p>Biểu đồ doanh thu theo tháng, xu hướng đơn hàng, sản phẩm bán chạy và phân bổ danh mục.</p>
+        </div>
+        <a href="/pages/admin/analytics.html" class="btn-cta-analytics">Mở trang thống kê →</a>
+      </div>
+
       <footer class="admin-footer-minimal">© 2026 MOT Store Admin</footer>
     </main>
   </div>
+
   <script type="module" src="/src/js/entries/admin.js"></script>
+  <script>
+    (function() {
+      const el = document.getElementById('dbDate');
+      if (el) el.textContent = new Intl.DateTimeFormat('vi-VN', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      }).format(new Date());
+    })();
+  </script>
 </body>
 </html>

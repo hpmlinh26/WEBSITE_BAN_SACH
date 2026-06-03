@@ -231,6 +231,150 @@ function renderDashboard() {
   }
 }
 
+function renderAnalytics() {
+  if (!window.Chart) return;
+
+  const COLORS = ['#c92127','#2563eb','#16a34a','#7c3aed','#f97316','#0d9488','#ca8a04','#db2777'];
+
+  function makeChart(id, config) {
+    const canvas = document.getElementById(id);
+    if (!canvas) return;
+    const existing = window.Chart.getChart(canvas);
+    if (existing) existing.destroy();
+    return new window.Chart(canvas, config);
+  }
+
+  function lastNMonths(n) {
+    const result = [];
+    const now = new Date();
+    for (let i = n - 1; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      result.push({ year: d.getFullYear(), month: d.getMonth(), label: `T${d.getMonth() + 1}/${String(d.getFullYear()).slice(2)}` });
+    }
+    return result;
+  }
+
+  const months = lastNMonths(6);
+
+  const revenueByMonth = months.map((m) =>
+    state.orders
+      .filter((o) => o.status === 'completed')
+      .filter((o) => { const d = new Date(o.date || o.createdAt || ''); return d.getFullYear() === m.year && d.getMonth() === m.month; })
+      .reduce((s, o) => s + Number(o.total || 0), 0)
+  );
+
+  makeChart('chartRevenue', {
+    type: 'line',
+    data: {
+      labels: months.map((m) => m.label),
+      datasets: [{
+        label: 'Doanh thu',
+        data: revenueByMonth,
+        borderColor: '#c92127',
+        backgroundColor: 'rgba(201,33,39,0.08)',
+        tension: 0.4,
+        fill: true,
+        pointBackgroundColor: '#c92127',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+      }],
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => money(ctx.raw) } } },
+      scales: { y: { beginAtZero: true, ticks: { callback: (v) => (v >= 1000000 ? (v / 1000000).toFixed(1) + 'M' : v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v) } } },
+    },
+  });
+
+  const statusKeys = ['pending','packing','shipping','completed','return','cancelled'];
+  const statusLabels = { pending:'Chờ lấy hàng', packing:'Đang chuẩn bị', shipping:'Chờ giao', completed:'Đã giao', return:'Trả hàng', cancelled:'Hủy' };
+  const statusCounts = statusKeys.map((k) => state.orders.filter((o) => o.status === k).length);
+  const statusColors = ['#f97316','#2563eb','#7c3aed','#16a34a','#ca8a04','#c92127'];
+
+  makeChart('chartOrderStatus', {
+    type: 'doughnut',
+    data: { labels: statusKeys.map((k) => statusLabels[k]), datasets: [{ data: statusCounts, backgroundColor: statusColors, borderWidth: 2, borderColor: '#fff' }] },
+    options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { padding: 14, font: { size: 12 } } } }, cutout: '60%' },
+  });
+
+  const monthlyOrderCount = months.map((m) =>
+    state.orders.filter((o) => { const d = new Date(o.date || o.createdAt || ''); return d.getFullYear() === m.year && d.getMonth() === m.month; }).length
+  );
+
+  makeChart('chartMonthlyOrders', {
+    type: 'bar',
+    data: { labels: months.map((m) => m.label), datasets: [{ label: 'Số đơn', data: monthlyOrderCount, backgroundColor: 'rgba(37,99,235,0.72)', borderRadius: 8, borderSkipped: false }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } },
+  });
+
+  const productCounts = {};
+  state.orders.forEach((o) => {
+    (o.items || []).forEach((item) => {
+      const key = String(item.productId || item.id || item.name || '');
+      if (key) productCounts[key] = (productCounts[key] || 0) + (Number(item.quantity) || 1);
+    });
+  });
+  const topProducts = Object.entries(productCounts)
+    .map(([id, qty]) => {
+      const p = state.products.find((x) => String(x.id) === id || x.name === id);
+      return { name: p ? (p.name || p.title || `#${id}`) : `#${id}`, qty };
+    })
+    .sort((a, b) => b.qty - a.qty)
+    .slice(0, 8);
+
+  makeChart('chartTopProducts', {
+    type: 'bar',
+    data: {
+      labels: topProducts.map((p) => (p.name.length > 22 ? p.name.slice(0, 20) + '…' : p.name)),
+      datasets: [{ label: 'Số lượng bán', data: topProducts.map((p) => p.qty), backgroundColor: COLORS.map((c) => c + 'bb'), borderRadius: 6 }],
+    },
+    options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } },
+  });
+
+  const catData = state.categories
+    .map((c) => ({ name: c.name, count: state.products.filter((p) => (p.category || p.category_slug) === c.slug).length }))
+    .filter((c) => c.count > 0)
+    .sort((a, b) => b.count - a.count);
+
+  makeChart('chartCategories', {
+    type: 'bar',
+    data: {
+      labels: catData.map((c) => c.name),
+      datasets: [{ label: 'Số sản phẩm', data: catData.map((c) => c.count), backgroundColor: COLORS.map((c) => c + 'bb'), borderRadius: 6 }],
+    },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } },
+  });
+
+  const revByCategory = state.categories.map((c) => {
+    const catProducts = state.products.filter((p) => (p.category || p.category_slug) === c.slug);
+    const catProductIds = new Set(catProducts.map((p) => String(p.id)));
+    return {
+      name: c.name,
+      revenue: state.orders
+        .filter((o) => o.status === 'completed')
+        .reduce((sum, o) => {
+          const itemRev = (o.items || [])
+            .filter((it) => catProductIds.has(String(it.productId || it.id || '')))
+            .reduce((s, it) => s + Number(it.price || 0) * Number(it.quantity || 1), 0);
+          return sum + itemRev;
+        }, 0),
+    };
+  }).filter((c) => c.revenue > 0).sort((a, b) => b.revenue - a.revenue);
+
+  makeChart('chartRevenueByCategory', {
+    type: 'bar',
+    data: {
+      labels: revByCategory.map((c) => c.name),
+      datasets: [{ label: 'Doanh thu', data: revByCategory.map((c) => c.revenue), backgroundColor: COLORS.map((c) => c + 'bb'), borderRadius: 8 }],
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => money(ctx.raw) } } },
+      scales: { y: { beginAtZero: true, ticks: { callback: (v) => (v >= 1000000 ? (v / 1000000).toFixed(1) + 'M' : v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v) } } },
+    },
+  });
+}
+
 function renderCategories() {
   const wrap = document.getElementById('categoriesList');
   if (!wrap) return;
@@ -434,6 +578,7 @@ async function reloadAll() {
   renderBlogs();
   renderNewsletterSubscribers();
   renderDashboard();
+  renderAnalytics();
   showBackendStatus();
   applyNavGating();
   applyActionGating();

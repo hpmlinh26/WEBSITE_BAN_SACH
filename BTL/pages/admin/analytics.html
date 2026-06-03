@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Thống kê &amp; Phân tích</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body class="admin-analytics-page">
+  <div class="admin-container">
+
+    <aside class="admin-sidebar">
+      <div class="sidebar-header"><h2>MOT Admin</h2><p>Quản trị bán hàng</p></div>
+      <nav class="sidebar-nav">
+        <a href="/index.html" class="nav-item">Về trang chủ</a>
+        <a href="/pages/admin/dashboard.html" class="nav-item" data-module="dashboard">Dashboard</a>
+        <a href="/pages/admin/analytics.html" class="nav-item active" data-module="dashboard">Thống kê &amp; biểu đồ</a>
+        <a href="/pages/admin/products.html" class="nav-item" data-module="products">Quản lý sách &amp; danh mục</a>
+        <a href="/pages/admin/accounts.html" class="nav-item" data-module="customers,staff">Quản lý tài khoản</a>
+        <a href="/pages/admin/orders.html" class="nav-item" data-module="orders">Quản lý đơn hàng</a>
+        <a href="/pages/admin/blogs.html" class="nav-item" data-module="blogs">Quản lý blog</a>
+        <a href="/pages/admin/vouchers.html" class="nav-item" data-module="vouchers">Quản lý voucher</a>
+        <a href="/pages/admin/feedbacks.html" class="nav-item" data-module="feedbacks,newsletter">Thư phản hồi &amp; nhận tin</a>
+        <a href="/pages/admin/roles.html" class="nav-item" data-module="roles">Vai trò &amp; phân quyền</a>
+      </nav>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <div>
+          <h1>Thống kê &amp; Phân tích</h1>
+          <p>Biểu đồ doanh thu, xu hướng đơn hàng, sản phẩm bán chạy và phân bổ danh mục.</p>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-add light" onclick="reloadAdminData()">Tải lại</button>
+        </div>
+      </div>
+
+      <!-- KPI SUMMARY (dùng lại từ dashboard) -->
+      <div class="db-kpi-grid" style="margin-bottom:28px">
+        <div class="db-kpi-card kpi-revenue">
+          <div class="db-kpi-icon">💰</div>
+          <div class="db-kpi-content">
+            <span class="db-kpi-label">Doanh thu</span>
+            <strong class="db-kpi-value" id="dashboardRevenue">0đ</strong>
+            <small>Đơn đã giao</small>
+          </div>
+        </div>
+        <div class="db-kpi-card kpi-orders">
+          <div class="db-kpi-icon">📦</div>
+          <div class="db-kpi-content">
+            <span class="db-kpi-label">Tổng đơn hàng</span>
+            <strong class="db-kpi-value" id="dashboardOrders">0</strong>
+            <small>Toàn bộ</small>
+          </div>
+        </div>
+        <div class="db-kpi-card kpi-pending">
+          <div class="db-kpi-icon">⏳</div>
+          <div class="db-kpi-content">
+            <span class="db-kpi-label">Đang xử lý</span>
+            <strong class="db-kpi-value" id="dashboardPending">0</strong>
+            <small>Chờ / chuẩn bị / giao</small>
+          </div>
+        </div>
+        <div class="db-kpi-card kpi-users">
+          <div class="db-kpi-icon">👥</div>
+          <div class="db-kpi-content">
+            <span class="db-kpi-label">Tài khoản</span>
+            <strong class="db-kpi-value" id="dashboardUsers">0</strong>
+            <small>Users &amp; nhân viên</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- BIỂU ĐỒ 1: DOANH THU THEO THÁNG (full width) -->
+      <div class="admin-section analytics-chart-full">
+        <div class="section-title-row">
+          <div><h2>Doanh thu theo tháng</h2><p>6 tháng gần nhất — tính theo đơn đã giao</p></div>
+        </div>
+        <div class="analytics-canvas-wrap">
+          <canvas id="chartRevenue"></canvas>
+        </div>
+      </div>
+
+      <!-- BIỂU ĐỒ 2: TRẠNG THÁI ĐƠN (doughnut) + SỐ ĐƠN THEO THÁNG (bar) -->
+      <div class="analytics-2col">
+        <div class="admin-section">
+          <div class="section-title-row">
+            <div><h2>Tỷ lệ trạng thái đơn hàng</h2><p>Phân bổ theo từng trạng thái</p></div>
+          </div>
+          <div class="analytics-doughnut-wrap">
+            <canvas id="chartOrderStatus"></canvas>
+          </div>
+        </div>
+
+        <div class="admin-section">
+          <div class="section-title-row">
+            <div><h2>Số lượng đơn theo tháng</h2><p>6 tháng gần nhất</p></div>
+          </div>
+          <div class="analytics-canvas-wrap">
+            <canvas id="chartMonthlyOrders"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- BIỂU ĐỒ 3: SÁCH BÁN CHẠY (horizontal bar) + DANH MỤC (bar) -->
+      <div class="analytics-2col">
+        <div class="admin-section">
+          <div class="section-title-row">
+            <div><h2>Sách bán chạy nhất</h2><p>Dựa trên số lượng bán ra</p></div>
+          </div>
+          <div class="analytics-canvas-wrap analytics-tall">
+            <canvas id="chartTopProducts"></canvas>
+          </div>
+        </div>
+
+        <div class="admin-section">
+          <div class="section-title-row">
+            <div><h2>Sản phẩm theo danh mục</h2><p>Số đầu sách mỗi nhóm</p></div>
+          </div>
+          <div class="analytics-canvas-wrap analytics-tall">
+            <canvas id="chartCategories"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- BIỂU ĐỒ 4: DOANH THU THEO DANH MỤC (full width) -->
+      <div class="admin-section analytics-chart-full">
+        <div class="section-title-row">
+          <div><h2>Doanh thu theo danh mục</h2><p>Tính trên đơn đã hoàn thành</p></div>
+        </div>
+        <div class="analytics-canvas-wrap">
+          <canvas id="chartRevenueByCategory"></canvas>
+        </div>
+      </div>
+
+      <footer class="admin-footer-minimal">© 2026 MOT Store Admin</footer>
+    </main>
+  </div>
+
+  <script type="module" src="/src/js/entries/admin.js"></script>
+</body>
+</html>
