@@ -36,11 +36,13 @@ const state = {
   customers: [],
   staff: [],
   vouchers: [],
+  blogs: [],
+  newsletter: [],
   rolesData: null, // { modules, roles, matrix }
 };
 
 const ADMIN_PAGE_SIZE = 20;
-const pageState = { products: 1, orders: 1, customers: 1, staff: 1, vouchers: 1, feedbacks: 1 };
+const pageState = { products: 1, orders: 1, customers: 1, staff: 1, vouchers: 1, feedbacks: 1, blogs: 1, newsletter: 1 };
 
 function adminPaginate(items, key, navId, onPageChange) {
   const totalPages = Math.max(1, Math.ceil(items.length / ADMIN_PAGE_SIZE));
@@ -75,7 +77,7 @@ function adminPaginate(items, key, navId, onPageChange) {
 async function loadFromBackend() {
   try {
     // Tai theo quyen: moi loi quyen (403) chi lam rong phan tuong ung, khong vo trang.
-    const [categories, products, orders, feedbacks, customers, staff, vouchers] = await Promise.all([
+    const [categories, products, orders, feedbacks, customers, staff, vouchers, blogs, newsletter] = await Promise.all([
       api('/categories'),
       api('/products'),
       can('orders', 'view') ? api('/orders').catch(() => []) : Promise.resolve([]),
@@ -83,8 +85,10 @@ async function loadFromBackend() {
       can('customers', 'view') ? api('/users?group=customers').catch(() => []) : Promise.resolve([]),
       can('staff', 'view') ? api('/users?group=staff').catch(() => []) : Promise.resolve([]),
       can('vouchers', 'view') ? api('/vouchers').catch(() => []) : Promise.resolve([]),
+      can('blogs', 'view') ? api('/blogs/all').catch(() => []) : Promise.resolve([]),
+      can('newsletter', 'view') ? api('/newsletter').catch(() => []) : Promise.resolve([]),
     ]);
-    Object.assign(state, { categories, products, orders, feedbacks, customers, staff, vouchers });
+    Object.assign(state, { categories, products, orders, feedbacks, customers, staff, vouchers, blogs, newsletter });
     window.categories = categories;
     window.products = products;
     window.orders = orders;
@@ -283,7 +287,7 @@ function renderOrders() {
       <td>${money(o.total)}</td>
       <td><span class="status-pill status-${o.status}">${statusText[o.status] || escapeHtml(o.status)}</span></td>
       <td>${escapeHtml(o.date || String(o.createdAt || '').slice(0, 10))}</td>
-      <td class="cell-actions"><button class="btn-edit" onclick="openOrderModal(${o.id})">Xem chi tiết</button>${can('orders', 'delete') ? `<button class="btn-delete" onclick="deleteOrder(${o.id})">Xóa</button>` : ''}</td>
+      <td class="cell-actions"><button class="btn-edit" onclick="openOrderModal(${o.id})">Xem chi tiết</button>${can('orders', 'edit') && ['pending', 'packing'].includes(o.status) ? `<button class="btn-delete" onclick="cancelOrderAdmin(${o.id})">Hủy</button>` : ''}${can('orders', 'delete') ? `<button class="btn-delete" onclick="deleteOrder(${o.id})">Xóa</button>` : ''}</td>
     </tr>`
       )
       .join('') || `<tr><td colspan="6">Chưa có đơn hàng.</td></tr>`;
@@ -309,6 +313,45 @@ function renderFeedbacks() {
     </article>`
       )
       .join('') || `<div class="empty-admin">Chưa có phản hồi nào.</div>`;
+}
+
+function renderBlogs() {
+  const tbody = document.getElementById('blogsList');
+  if (!tbody) return;
+  const visible = adminPaginate(state.blogs, 'blogs', 'blogsPageNav', renderBlogs);
+  const blogStatusText = { published: 'Đã xuất bản', draft: 'Nháp' };
+  tbody.innerHTML =
+    visible
+      .map(
+        (b) => `
+    <tr>
+      <td>#${b.id}</td>
+      <td><strong>${escapeHtml(b.title)}</strong></td>
+      <td><small>${escapeHtml(b.slug)}</small></td>
+      <td>${escapeHtml(b.tag || '—')}</td>
+      <td><span class="status-pill ${b.status === 'published' ? 'status-completed' : 'status-cancelled'}">${blogStatusText[b.status] || escapeHtml(b.status)}</span></td>
+      <td>${escapeHtml(String(b.createdAt || '').slice(0, 10))}</td>
+      ${rowActions('blogs', b.id, 'editBlog', 'deleteBlog')}
+    </tr>`
+      )
+      .join('') || `<tr><td colspan="7">Chưa có bài viết nào.</td></tr>`;
+}
+
+function renderNewsletterSubscribers() {
+  const tbody = document.getElementById('newsletterList');
+  if (!tbody) return;
+  const visible = adminPaginate(state.newsletter, 'newsletter', 'newsletterPageNav', renderNewsletterSubscribers);
+  tbody.innerHTML =
+    visible
+      .map(
+        (s) => `
+    <tr>
+      <td>#${s.id}</td>
+      <td>${escapeHtml(s.email)}</td>
+      <td>${escapeHtml(String(s.createdAt || '').slice(0, 10))}</td>
+    </tr>`
+      )
+      .join('') || `<tr><td colspan="3">Chưa có email đăng ký nào.</td></tr>`;
 }
 
 // Nut Sua/Xoa cho 1 dong, an theo quyen cua module.
@@ -388,6 +431,8 @@ async function reloadAll() {
   renderCustomers();
   renderStaff();
   renderVouchers();
+  renderBlogs();
+  renderNewsletterSubscribers();
   renderDashboard();
   showBackendStatus();
   applyNavGating();
@@ -662,6 +707,16 @@ window.deleteOrder = async function (id) {
     alert(error.message);
   }
 };
+window.cancelOrderAdmin = async function (id) {
+  if (!confirm('Hủy đơn hàng này? Tồn kho sẽ được hoàn lại.')) return;
+  try {
+    await api(`/orders/${id}/cancel`, { method: 'PATCH' });
+    await reloadAll();
+    alert('Đã hủy đơn hàng.');
+  } catch (error) {
+    alert(error.message);
+  }
+};
 
 // Users (tach 2 nhom: customers / staff)
 // Chuyen tab Khach hang <-> Nguoi quan tri.
@@ -839,6 +894,65 @@ window.markFeedback = async function (id, status) {
   }
 };
 
+// Blogs
+window.openAddBlog = function () {
+  document.querySelector('#blogModal form')?.reset();
+  document.getElementById('blogId').value = '';
+  document.getElementById('blogAuthor').value = 'MOT Store';
+  document.getElementById('blogStatus').value = 'published';
+  document.getElementById('blogModalTitle').textContent = 'Thêm bài viết';
+  modal('blogModal');
+};
+window.editBlog = function (id) {
+  const b = state.blogs.find((x) => Number(x.id) === Number(id));
+  if (!b) return;
+  document.getElementById('blogId').value = b.id;
+  document.getElementById('blogTitle').value = b.title || '';
+  document.getElementById('blogSlug').value = b.slug || '';
+  document.getElementById('blogTag').value = b.tag || '';
+  document.getElementById('blogAuthor').value = b.author || 'MOT Store';
+  document.getElementById('blogImage').value = b.image || '';
+  document.getElementById('blogStatus').value = b.status || 'published';
+  document.getElementById('blogExcerpt').value = b.excerpt || '';
+  document.getElementById('blogContent').value = b.content || '';
+  document.getElementById('blogModalTitle').textContent = 'Sửa bài viết';
+  modal('blogModal');
+};
+window.handleSaveBlog = async function (event) {
+  event.preventDefault();
+  if (!validateNativeForm(event.target)) return;
+  const id = document.getElementById('blogId').value;
+  const title = document.getElementById('blogTitle').value.trim();
+  const payload = {
+    title,
+    slug: document.getElementById('blogSlug').value.trim() || slugify(title),
+    tag: document.getElementById('blogTag').value.trim(),
+    author: document.getElementById('blogAuthor').value.trim() || 'MOT Store',
+    image: document.getElementById('blogImage').value.trim(),
+    status: document.getElementById('blogStatus').value,
+    excerpt: document.getElementById('blogExcerpt').value.trim(),
+    content: document.getElementById('blogContent').value.trim(),
+  };
+  try {
+    await api(id ? `/blogs/${id}` : '/blogs', { method: id ? 'PATCH' : 'POST', body: JSON.stringify(payload) });
+    closeModal();
+    await reloadAll();
+    alert('Đã lưu bài viết.');
+  } catch (error) {
+    alert(error.message);
+  }
+};
+window.deleteBlog = async function (id) {
+  if (!confirm('Xóa bài viết này?')) return;
+  try {
+    await api(`/blogs/${id}`, { method: 'DELETE' });
+    await reloadAll();
+    alert('Đã xóa bài viết.');
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
 // ===== Vai trò & phân quyền =====
 const ACTION_LABELS = { view: 'Xem', create: 'Thêm', edit: 'Sửa', delete: 'Xóa' };
 const MATRIX_COLUMNS = ['view', 'create', 'edit', 'delete'];
@@ -942,4 +1056,26 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Lay quyen moi nhat tu server truoc khi render (phong khi admin vua doi phan quyen).
   await refreshPermissions();
   await reloadAll();
+
+  // Tu dong tai lai du lieu moi 15 giay; dung khi tab bi an de tiet kiem tai nguyen.
+  let pollTimer = null;
+  function startPoll() {
+    if (pollTimer) return;
+    pollTimer = setInterval(async () => {
+      await loadFromBackend();
+      renderOrders();
+      renderFeedbacks();
+      renderNewsletterSubscribers();
+      renderDashboard();
+      showBackendStatus();
+    }, 15000);
+  }
+  function stopPoll() {
+    clearInterval(pollTimer);
+    pollTimer = null;
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopPoll(); else startPoll();
+  });
+  startPoll();
 });
