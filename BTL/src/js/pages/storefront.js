@@ -999,15 +999,10 @@ function initPayPage() {
     }
   }
 
-  addressForm?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (validateCustomerForm()) toast('Đã lưu địa chỉ giao hàng.');
-  });
-  paymentForm?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    updatePaymentQR();
-    toast('Đã lưu phương thức thanh toán.');
-  });
+  // Khong con nut "Luu thay doi" rieng: dia chi + phuong thuc duoc xac nhan ngay o nut "Xac nhan thanh toan".
+  // Chi chan submit mac dinh (vi du nhan Enter) de tranh reload trang.
+  addressForm?.addEventListener('submit', (e) => e.preventDefault());
+  paymentForm?.addEventListener('submit', (e) => e.preventDefault());
   paymentForm?.querySelectorAll("input[name='payment']").forEach((radio) => radio.addEventListener('change', updatePaymentQR));
   promoButton?.addEventListener('click', applyPromo);
   confirmBtn.addEventListener('click', submitOrder);

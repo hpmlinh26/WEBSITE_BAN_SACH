@@ -210,6 +210,53 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Dien san thong tin tai khoan hien tai vao form Ho so + Dia chi.
+  function splitFullName(fullName) {
+    const parts = String(fullName || '').trim().split(/\s+/).filter(Boolean);
+    if (parts.length <= 1) return { first: parts[0] || '', last: '' };
+    return { first: parts.slice(0, -1).join(' '), last: parts.slice(-1).join(' ') };
+  }
+
+  function setFieldValue(form, name, value) {
+    const field = form?.querySelector(`[name="${name}"]`);
+    if (field && value != null && value !== '') field.value = value;
+  }
+
+  function prefillAccountForms() {
+    const user = currentUser();
+    if (!user) return;
+    const { first, last } = splitFullName(user.fullName);
+
+    const profileForm = document.querySelector('.profile-form[data-form-type="profile"]');
+    if (profileForm) {
+      setFieldValue(profileForm, 'firstName', first);
+      setFieldValue(profileForm, 'lastName', last);
+      setFieldValue(profileForm, 'phone', user.phone);
+      setFieldValue(profileForm, 'email', user.email);
+      if (user.gender) {
+        const genderRadio = profileForm.querySelector(`[name="gender"][value="${user.gender}"]`);
+        if (genderRadio) genderRadio.checked = true;
+      }
+    }
+
+    const addressForm = document.querySelector('.profile-form[data-form-type="address"]');
+    if (addressForm) {
+      setFieldValue(addressForm, 'firstName', first);
+      setFieldValue(addressForm, 'lastName', last);
+      setFieldValue(addressForm, 'phone', user.phone);
+      const addr = user.address;
+      if (addr && typeof addr === 'object') {
+        setFieldValue(addressForm, 'city', addr.city);
+        setFieldValue(addressForm, 'district', addr.district);
+        setFieldValue(addressForm, 'ward', addr.ward);
+        setFieldValue(addressForm, 'address', addr.address);
+        setFieldValue(addressForm, 'note', addr.note);
+      }
+    }
+  }
+
+  prefillAccountForms();
+
   const copyButtons = document.querySelectorAll('.btn-copy');
   copyButtons.forEach((button) => {
     button.addEventListener('click', function (e) {
